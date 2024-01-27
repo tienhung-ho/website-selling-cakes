@@ -8,7 +8,6 @@ const Schema = mongoose.Schema
 const productsSchema = new Schema({
 
   name: String,
-  flavor: Array,
   description: String,
   ingredients: Array,
   price: Number,

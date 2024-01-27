@@ -8,7 +8,7 @@ class ProductServices {
   extractProductData(payload) {
     const product = {
       name: payload.name,
-      flavor: payload.flavor,
+      // flavor: payload.flavor,
       description: payload.description,
       ingredients: payload.ingredients,
       price: payload.price,
@@ -37,15 +37,29 @@ class ProductServices {
 
     }
 
-    // console.log(result);
+    const productCategoryServices = new ProductCategoryServices()
+    let records = []
+    let query = result
+    if (payload.flavor) {
+      records =  await productCategoryServices.findByCategory(payload.flavor)
+      const recordsId = records.map(item => item._id)
 
-    const products = await Product.find(
-        result
-      ).sort({
-        quantity: 'desc'
-      }).limit().skip()
-    // console.log(products);
-    return products
+      if (recordsId.length == 0 ) {
+        query = {  _id: { $in: []} }
+      }
+      else {
+        query = { $and: [{ _id: { $in: recordsId } }, result] }
+      }
+    }
+
+
+      const products = await Product.find(query).sort({
+          quantity: 'desc'
+        }).limit().skip()
+      // console.log(products);
+  
+      return products
+
   }
 
 
@@ -58,19 +72,42 @@ class ProductServices {
   }
 
   async create(payload) {
-    payload.quantity = await Product.count() + 1
+    payload.data.quantity = await Product.count() + 1
 
-    const result = this.extractProductData(payload)
+    const result = this.extractProductData(payload.data)
     const product = new Product(result)
     const productCategoryServices = new ProductCategoryServices()
-    await productCategoryServices.createProductCategory(product.flavor, product._id)
+    await productCategoryServices.createProductCategory(payload.flavor, product._id)
     product.save()
     return product
   }
 
+  async delete (id) {
+    try {
+
+      console.log(id);
+      const updatedProduct = await Product.findOneAndUpdate(
+        { _id: id },
+        {
+          deleted: true
+        },
+        { new: true } // Trả về document đã được cập nhật
+      );
+
+      if (!updatedProduct) {
+        throw new Error('Product not found');
+      }
+
+      return updatedProduct;
+    } catch (err) {
+      console.error(err);
+      throw new Error('Error updating product status');
+    }
+  }
 
   async changeStatus(payload, id) {
     try {
+      // console.log(payload);
       const result = this.extractProductData(payload)
 
       if (result.available !== undefined) {
@@ -84,6 +121,10 @@ class ProductServices {
       if (result.deleted !== undefined) {
         result.deleted = true
       }
+
+
+      const productCategoryServices = new ProductCategoryServices()
+      await productCategoryServices.editProductCategory(payload.flavor, id)
 
       const updatedProduct = await Product.findOneAndUpdate(
         { _id: id },
@@ -102,10 +143,14 @@ class ProductServices {
     }
   }
 
+
   async findBySlug(slug) {
     if (slug) {
       try {
         const product = await Product.findOne({ slug });
+        const productCategoryServices = new ProductCategoryServices()
+        const flavors = await productCategoryServices.findByProduct(slug)
+        // console.log(flavors, slug);
         if (!product) {
           // Nếu không tìm thấy sản phẩm, trả về một phản hồi lỗi hoặc xử lý theo nhu cầu của bạn.
           return res.status(404).json({ error: "Product not found" });

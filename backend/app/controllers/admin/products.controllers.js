@@ -6,19 +6,21 @@ const ProductServices = require('../../services/admin/product.services');
 // [GET], /api/admin/products
 module.exports.find = async (req, res, next) => {
   let conditions = {}
-
   try {
     if (!req?.query) {
       res.status(404).json({ error: "Data not found" });
     }
     else {
-      const { status, name } = req.query
+      const { status, name, _} = req.query
 
       if (name) {
-
         conditions.name = searchRegex(name).name
         // // console.log(this.conditions.name);
         // conditions.name = { $regex: new RegExp(name, 'i') };
+      }
+
+      if (req.query.flavor) {
+        conditions.flavor = req.query.flavor
       }
 
       if (status) {
@@ -32,6 +34,7 @@ module.exports.find = async (req, res, next) => {
 
       conditions.deleted = false
       const productServices = new ProductServices()
+
       const products = await productServices.find(
         conditions,
       )
@@ -64,7 +67,6 @@ module.exports.findLike = async (req, res, next) => {
 module.exports.changeStatus = async (req, res, next) => {
   try {
     const { filter, _ } = req.body.params;
-    
 
     if (/^[0-9a-fA-F]{24}$/.test(filter)) {
       const updateFields = req.body.params;
@@ -93,12 +95,35 @@ module.exports.changeStatus = async (req, res, next) => {
 
 }
 
+module.exports.delete = async (req, res, next) => {
+  try {
+    const filter = req.params;
+    const productServices = new ProductServices()
+    const updatedProduct = await productServices.delete(filter.id);
+
+    if (!updatedProduct) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    return res.json(updatedProduct);
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+
+}
+
 // [PATCH], /api/admin/products/edit/:slug
 module.exports.edit = async (req, res, next) => {
   try {
-    const { _id, _ } = req.body.params;
+    const { _id, _ } = req.body.params.data;
+    const flavor = req.body.params.flavor
     if (/^[0-9a-fA-F]{24}$/.test(_id)) {
-      const updateFields = req.body.params;
+      const updateFields = req.body.params.data;
+      if (flavor != undefined || flavor.length != 0) {
+        updateFields.flavor = flavor
+      }
       const productServices = new ProductServices()
       const updatedProduct = await productServices.changeStatus(updateFields, _id,
         { new: true } // Trả về document đã được cập nhật
@@ -124,15 +149,15 @@ module.exports.edit = async (req, res, next) => {
 // [POST], /api/admin/products/create
 module.exports.create = async (req, res, next) => {
   try {
-    const product = req.body.params
+    const data = req.body.params
     const productServices = new ProductServices()
-    const new_product = await productServices.create(product)
+    const new_product = await productServices.create(data)
     if (!new_product) {
       return res.status(404).json({ error: 'Product not found' });
     }
-    
+
     return res.json(new_product)
-    
+
   }
   catch (err) {
     console.log(err);

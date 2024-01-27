@@ -31,8 +31,9 @@ class FlavorProductServices {
     // const productId = productCategory.map(item => item.product_id)
     const products = await this.Product.find({
       _id: { $in: productId },
-      deleted: false
+      // deleted: false
     })
+
 
     return products
   }
