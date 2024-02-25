@@ -24,17 +24,17 @@
         // {
         //   link: "/admin",name: "Dashboard", tooltip: "Dashboard", icon: "bx-grid-alt" 
         // },
-        // {
-        //   link: "/admin",name: "User", tooltip: "User", icon: "bx-user-circle" 
-        // },
         {
-          link: { name: 'Products' },name: "Products", tooltip: "Products", icon: "bx-cabinet" 
+          link: { name: 'Products' }, name: "Products", tooltip: "Products", icon: "bx-cabinet" 
         },
         {
-          link: { name: 'Like' },name: "Save", tooltip: "Save", icon: "bx-heart-circle" 
+          link: { name: 'Like' }, name: "Save", tooltip: "Save", icon: "bx-heart-circle" 
         },
         {
-          link: "/admin",name: "Setting", tooltip: "Setting", icon: "bx-cog" 
+          link: {name: 'Staff'  } ,name: "Staff", tooltip: "Staff", icon: "bx-user-circle" 
+        },
+        {
+          link: "/admin", name: "Setting", tooltip: "Setting", icon: "bx-cog" 
         },
       ]
       }

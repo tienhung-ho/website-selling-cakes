@@ -10,7 +10,7 @@
 
 <script>
 
-import ButtonCustom from '../patials/ButtonCustom.vue';
+import ButtonCustom from '@/views/admin/patials/ButtonCustom.vue';
 import ProductsServices from '@/services/admin/products.services.js'
 import { mapActions } from 'vuex';
 
@@ -35,7 +35,7 @@ export default {
     async onChangeStatus() {
       try {
         // Gọi action để cập nhật trạng thái trong store
-        await this.updateProductStatus({ productId: this.id, available: this.available });
+        await this.updateProductStatus({ productId: this.id, available: !this.available });
         // await this.$store.dispatch('setEventChanged', this.available)
         this.$emit('changedStatus')
       } catch (err) {

@@ -16,10 +16,10 @@ export default createStore({
   mutations: {
 
 
-    updateProductStatus(state, { productId, available }) {
+    updateProductStatus(state, { productId, type }) {
       const productIndex = state.products.findIndex(product => product._id === productId);
       if (productIndex !== -1) {
-        state.products[productIndex].available = available;
+        state.products[productIndex].available = type;
       }
     },
 
@@ -34,10 +34,10 @@ export default createStore({
       }
     },
 
-    deletedProducts(state, { productId, deleted }) {
+    deletedProducts(state, { productId, type }) {
       const productIndex = state.products.findIndex(product => product._id === productId);
       if (productIndex !== -1) {
-        state.products[productIndex].deleted = deleted;
+        state.products[productIndex].deleted = type;
       }
     },
 
@@ -104,10 +104,10 @@ export default createStore({
         console.log(err)
       }
     },
-    async deletedProducts({ commit }, { productId, deleted }) {
+    async deletedProducts({ commit }, { productId, type }) {
       try {
-        await ProductsServices.findAndUpdate({ filter: productId, deleted })
-        commit('deletedProducts', { productId, deleted })
+        await ProductsServices.delete({ filter: productId, type })
+        commit('deletedProducts', { productId, type })
       }
       catch (err) {
         console.log(err)

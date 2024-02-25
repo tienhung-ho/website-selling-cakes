@@ -44,7 +44,6 @@ import Multiselect from 'vue-multiselect';
 import Paginate from 'vuejs-paginate'
 
 
-
 const app = createApp(App)
 
 app.component('vue-sidebar-menu-akahon', VueSidebarMenuAkahon)
@@ -55,6 +54,7 @@ app.component('paginate', Paginate)
 
 app
   .use(VueSweetalert2)
+
   .use(router)
   .use(store)
   .mount('#app')

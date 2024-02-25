@@ -76,7 +76,7 @@ export default {
 <style lang="scss" scoped>
 @import url('https://fonts.cdnfonts.com/css/mignone');
 @import url('https://fonts.cdnfonts.com/css/double-pivot');
-@import '../../../assets//client//css/variables.scss';
+@import '@/assets//client//css/variables.scss';
 
 a {
   text-decoration: none;

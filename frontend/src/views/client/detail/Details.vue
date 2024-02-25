@@ -69,7 +69,7 @@
 <script>
 
 import CakesServices from "@/services/client/cakes.services"
-import ButtonCustom from "@/components/admin/patials/ButtonCustom.vue";
+import ButtonCustom from "@/components/ButtonCustom.vue";
 
 export default {
 

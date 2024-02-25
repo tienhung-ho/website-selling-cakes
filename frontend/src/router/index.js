@@ -8,7 +8,7 @@ const routesClient = [
     path: '/',
     redirect: '/home', 
     name: 'Layout',
-    component: () => import('@/components/client/layout/Layout.vue'),
+    component: () => import('@/views/client/layout/Layout.vue'),
     children: [
       {
         path: '/home',
@@ -67,7 +67,7 @@ const routesAdmin = [
     path: '/admin',
     redirect: '/admin/products',
     name: 'LayoutAd',
-    component: () => import('@/components/admin/layout/Layout.vue'),
+    component: () => import('@/views/admin/layout/Layout.vue'),
     children: [
       {
         path: '/admin/products',
@@ -93,6 +93,26 @@ const routesAdmin = [
         component: () => import('@/views/admin/product/Edit.vue')
       },
 
+      {
+        path: 'staff',
+        name: 'Staff',
+        component: () => import('@/views/admin/staffs/Staff.vue'),
+        children: [
+        ]
+      },
+
+      {
+        path: 'staff/create',
+        name: 'CreateStaff',
+        component: () => import('@/views/admin/staffs/Create.vue')
+      },
+
+      {
+        path: 'staff/edit/:slug',
+        name: 'EditStaff',
+        component: () => import('@/views/admin/staffs/Edit.vue')
+      },
+      
     ]
   }
 

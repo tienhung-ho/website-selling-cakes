@@ -75,9 +75,11 @@
   
 <script>
 
-import Title from '@/components/admin/patials/Title.vue';
+// import Title from '@/components/admin/patials/Title.vue';
+import Title from '@/views/admin/patials/Title.vue';
 import ProductsServices from '@/services/admin/products.services'
-import Filter from '@/components/admin/patials/Filter.vue';
+// import Filter from '@/components/admin/patials/Filter.vue';
+import Filter from '@/views/admin/patials/Filter.vue';
 import Options from './Options.vue';
 import ButtonCustom from '../patials/ButtonCustom.vue';
 import ActiveButton from './Active.Button.vue';

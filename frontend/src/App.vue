@@ -5,16 +5,12 @@
 </template>
 
 <script>
-import Layout from './components/client/layout/Layout.vue';
-import Header from './components/client/patials/Header.vue'
-import userServices from './services/user/users.services';
+// import Layout from './components/client/layout/Layout.vue';
+// import Header from './components/client/patials/Header.vue'
+// import userServices from './services/user/users.services';
 
 export default {
   name: 'App',
-  components: {
-    Header,
-    Layout
-  },
   methods: {
     async getAccount() {
 

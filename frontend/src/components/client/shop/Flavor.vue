@@ -108,8 +108,8 @@ export default {
     },
     async filters (slug) {
       this.cakes = await CakesServices.getByFlavor(slug)
+      console.log('test');
       this.number = this.cakes.length + 1
-      console.log(this.cakes, this.number);
     }
 
   },

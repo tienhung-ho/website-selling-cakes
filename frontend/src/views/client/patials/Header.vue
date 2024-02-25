@@ -101,7 +101,7 @@
 
 <script>
 
-import usersServices from '../../../services/user/users.services';
+import usersServices from '@/services/user/users.services';
 
 export default {
   name: 'Header',

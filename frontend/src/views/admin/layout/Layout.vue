@@ -10,8 +10,8 @@
 
 <script>
 
-import Sidebar from '@/components/admin/patials/Sidebar.vue';
-
+import Sidebar from '@/views/admin/patials/Sidebar.vue';
+  
 export default {
   name: 'Layout',
 

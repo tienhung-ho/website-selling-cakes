@@ -6,8 +6,8 @@
 
 <script>
 
-import Header from '../patials/Header.vue';
-import Footer from '../patials/Footer.vue';
+import Header from '@/views/client/patials/Header.vue';
+import Footer from '@/views/client/patials/Footer.vue';
 
 export default {
 

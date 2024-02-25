@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import Content from '@/components/client/patials/Content.vue';
+import Content from '@/views/client/patials/Content.vue';
 import ButtonCustom from '@/components/ButtonCustom.vue';
 
 export default {
@@ -70,7 +70,7 @@ export default {
 
 <style lang="scss" scoped>
 
-@import '../../assets/client/css/variables.scss';
+@import '@/assets/client/css/variables.scss';
 @import url('https://fonts.cdnfonts.com/css/natural-precision');
 @import url('https://fonts.cdnfonts.com/css/pathway-extreme');
 @import url('https://fonts.cdnfonts.com/css/vintage-glory');

@@ -21,7 +21,7 @@ export default {
 
 <style lang="scss" scoped>
 
-@import '../../../assets/client/css/variables.scss';
+@import '@/assets/client/css/variables.scss';
 
 @import url('https://fonts.cdnfonts.com/css/share-techmono-2');
 

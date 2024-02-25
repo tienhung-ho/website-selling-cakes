@@ -39,9 +39,9 @@
 
 <script>
 
-import Banner from '@/components/client/Banner.vue';
+import Banner from '@/views/client/Banner.vue';
 import Flavor from '@/components/client/shop/Flavor.vue';
-import Content from '@/components/client/patials/Content.vue';
+import Content from '@/views/client/patials/Content.vue';
 
 export default {
   name: 'Shop',

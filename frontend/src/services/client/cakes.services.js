@@ -23,6 +23,10 @@ class CakesService {
     return (await this.api.get(`flavor/${slug}`)).data
   }
 
+  async getFlavorByProduct (slug) {
+    return (await this.api.get(`flavor/${slug}`)).data
+  }
+
 }
 
 export default new CakesService();

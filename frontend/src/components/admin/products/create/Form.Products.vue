@@ -1,15 +1,17 @@
+
 <template>
   <div class="edit">
     <Title :title="title" />
-    <Form action="" @submit="handleSubmit" class="edit-form container-fluid" :validation-schema="productFormSchema">
+    <Form @submit="isEdit ? onEdit($event) : onCreate($event)" class="edit-form container-fluid"
+      :validation-schema="productFormSchema">
 
       <Field v-model="product.name" class="edit-form__name" type="text" name="name" id="name" placeholder="Name..." />
       <ErrorMessage name="name" class="error-feedback" />
-<!-- 
-      <Field v-model="product.flavor" class="edit-form__flavor" type="text" name="flavor" id="flavor"
-        placeholder="Flavor..." /> -->
-      <Multiselect v-model="product.flavor" :selected="flavorValue" :track-by="'value'"  mode="multiple"  :close-on-select="false"
-        :options="flavorArray" placeholder="Flavor" class="multiselect" />
+      <!-- 
+        <Field v-model="product.flavor" class="edit-form__flavor" type="text" name="flavor" id="flavor"
+          placeholder="Flavor..." /> -->
+      <Multiselect v-model="defaultFlavor" :selected="flavorValue" :track-by="'value'" mode="multiple"
+        :close-on-select="false" :options="flavorArray" placeholder="Flavor" class="multiselect" />
       <ErrorMessage name="flavor" class="error-feedback" />
 
       <label for="description">Description:</label>
@@ -23,30 +25,50 @@
 
       <Multiselect v-model="product.ingredients" :selected="value" :track-by="'value'" mode="multiple"
         :close-on-select="false" :options="options" placeholder="Choose ingredients" class="multiselect" />
-
-      <Field v-model="product.quantity" class="edit-form__quantity" type="number" name="quantity" id="quantity"
-        placeholder="Quantity..." />
-      <ErrorMessage name="quantity" class="error-feedback" />
-
-      <Field v-model="product.thumbnail" class="edit-form__thumbnail" type="text" name="thumbnail" id="thumbnail"
-        placeholder="Thumbnail..." />
-      <ErrorMessage name="thumbnail" class="error-feedback" />
-
-
-      <div class="edit-form__submit">
-        <ButtonCustom v-if="isEdit" color="black" content="Submit" borderColor="green" width="30rem" @click="onEdit"/>
-        <ButtonCustom v-else color="black" content="Submit" borderColor="green" width="30rem" @click="onCreate" />
+        
+        <div class="d-flex justify-content-space-between w-100">
+          
+          <Field v-model="product.quantity" class="edit-form__quantity w-50 me-5" type="number" name="quantity" id="quantity"
+          placeholder="Quantity..." />
+          
+          <div class="d-flex justify-content-around align-items-center w-25">
+            <input v-model="product.available" checked class="me-4 radio" type="radio" value="true" name="available" id="available">
+            <label for="available">Available</label>
+            
+            <input v-model="product.available" class="ms-4 me-4 radio" type="radio" :value="false" name="available"
+            id="unavailable">
+            <label for="unavailable">Unavailable</label>
+          </div>
+        </div>
+        <ErrorMessage name="quantity" class="error-feedback" />
+      <div class="d-flex w-75 justify-content-between">
+        <Field v-model="product.discountPercentage" class="edit-form__discountPercentage w-50" type="number" name="discountPercentage" id="discountPercentage"
+          placeholder="Discount Percentage" />
+        
+          <Field v-model="product.position" class="edit-form__position w-25 me-5" type="number" name="position" id="position"
+          placeholder="Position..." />
       </div>
 
+      <div class="mb-3 w-100">
+        <label for="formFile" class="form-label">Chọn ảnh</label>
+        <input :v-model="product.thumbnail" class="form-control h-100 p-3" type="file" id="thumbnail" name="thumbnail"
+          accept="image/*" @change="handleImageUpload($event)">
+      </div>
+
+      <img v-if="this.image || this.product.thumbnail" :v-model="this.thumbnail"
+        :src="this.image || this.product.thumbnail" :alt="product.slug" class="w-25 pb-4 rounded">
+      <!-- <ErrorMessage name="thumbnail" class="error-feedback" /> -->
+      <button type="submit" class="btn btn-outline-primary w-100">Submit</button>
     </Form>
   </div>
 </template>
-
+  
+  
 <script>
 
 import Multiselect from '@vueform/multiselect'
-import Title from '../../patials/Title.vue';
-import ButtonCustom from '@/components/admin/patials/ButtonCustom.vue';
+import Title from '@/views/admin/patials/Title.vue';
+import ButtonCustom from '@/views/admin/patials/ButtonCustom.vue';
 import ProductsServices from '@/services/admin/products.services'
 import Editor from '@tinymce/tinymce-vue'
 import CakesServices from '@/services/client/cakes.services';
@@ -75,12 +97,6 @@ export default {
         .required("Name is required.")
         .min(2, "Name must be at least 2 characters.")
         .max(50, "Name can be at most 50 characters."),
-      flavor: yup
-        .string()
-        .required("Flavor is required."),
-      description: yup
-        .string()
-        .required("Description is required."),
       price: yup
         .number()
         .required("Price is required.")
@@ -89,9 +105,6 @@ export default {
         .number()
         .required("Quantity is required.")
         .positive("Quantity must be a positive number."),
-      thumbnail: yup
-        .string()
-        .required("Thumbnail is required."),
     })
     return {
       value: [],  // Ensure value is initialized as an array
@@ -124,11 +137,16 @@ export default {
       product: {},
       productFormSchema,
       editProduct: {},
-      success: false
+      success: false,
+      defaultFlavor: [],
+      image: '',
+      thumbnail: '',
+      slug: '',
+      available: true
     }
   },
   props: {
-    slug: {
+    title: {
       type: String,
       default: ''
     },
@@ -136,119 +154,165 @@ export default {
       type: Boolean,
       default: false
     },
-    title: {
-      type: String,
-      default: ''
+    defaultFlavorEdit: {
+      type: Array,
+      default: []
+    },
+    flavorArrayEdit: {
+      type: Array,
+      default: []
+    },
+    productEdit: {
+      type: Object,
+      default: {}
     }
 
   },
   methods: {
 
-
-
-    async onCreate() {
-      // await this.getValue()
-
-      try {
-        this.$swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Your work has been saved",
-          showConfirmButton: false,
-          timer: 1500
-        });
-        await ProductsServices.createProduct(this.product)
-        window.history.back()
-      }
-
-      catch (err) {
-        console.log(err);
-      }
-
-    },
-
-
-    async onEdit() {
-      try {
-        this.$swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Your work has been saved",
-          showConfirmButton: false,
-          timer: 1500
-        });
-        await ProductsServices.findAndEdit(this.product, this.slug)
-        // this.setValue()
-      }
-
-      catch (err) {
-        console.log(err);
-      }
-    },
-
-    async getProoduct(slug) {
-      try {
-        if (slug) {
-          const response = await ProductsServices.getBySlug(slug);
-          // Kiểm tra xem phản hồi có dữ liệu hay không
-          if (response) {
-            this.product = {...response};
-            // Nếu là mảng, truy cập phần tử đầu tiên
-            console.log(this.product);
-            this.setValue()
-          } else {
-            console.error("Empty response from API");
-          }
+    handleImageUpload($event) {
+      const file = $event.target.files[0];
+      if (file) {
+        this.thumbnail = file;
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          this.image = reader.result;
         }
-      } catch (err) {
-        console.error(err);
+        reader.readAsDataURL(file);
       }
     },
 
-    setValue() {
-      this.name = this.editProduct.name
-      this.flavor = this.editProduct.flavor
-      this.description = this.editProduct.description
-      this.price = parseInt(this.editProduct.price)
-      this.quantity = parseInt(this.editProduct.quantity)
-      this.thumbnail = this.editProduct.thumbnail
-      this.value = this.editProduct.ingredients
-    },
+    async onCreate(e) {
 
-    handleSubmit() {
-
-    },
-    async getAllFlavor() {
       try {
-        let fl = await CakesServices.getAllFlavor()
-        fl.forEach(item => {
-          this.flavorArray.push(item.flavor)
+        this.$swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Your work has been saved",
+          showConfirmButton: false,
+          timer: 1500
+        });
+        if (this.thumbnail != undefined) {
+
+          this.product.thumbnail = this.thumbnail
+        }
+
+        if (this.defaultFlavor != undefined) {
+
+          this.product.flavor = this.defaultFlavor
+        }
+        if (this.product.available == undefined) {
+          this.product.available = true
+        }
+        const data = new FormData()
+        Object.entries(this.product).forEach(([key, value]) => {
+          data.append(key, value)
 
         })
-        console.log(this.flavorArray);
+        await ProductsServices.createProduct(data)
+        this.$router.push('/admin/products')
       }
+
+      catch (err) {
+        console.log(err);
+      }
+
+    },
+
+    async onEdit($event) {
+      try {
+        this.$swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Your work has been saved",
+          showConfirmButton: false,
+          timer: 1500
+        });
+
+        if ('deleted' in this.product) {
+          // Sử dụng toán tử delete để xóa thuộc tính 'deleted'
+          delete this.product.deleted;
+        }
+
+        if ('liked' in this.product) {
+          // Sử dụng toán tử delete để xóa thuộc tính 'deleted'
+          delete this.product.liked;
+        }
+
+        if (this.thumbnail != undefined && this.thumbnail != '' && this.thumbnail != null) {
+          this.product.thumbnail = this.thumbnail
+        }
+
+        if (this.defaultFlavor != undefined) {
+          this.product.flavor = this.defaultFlavor
+        }
+
+        console.log(this.product.available);
+        if (this.product.available == undefined) {
+          console.log(123123123123);
+        }
+
+        const data = new FormData()
+        Object.entries(this.product).forEach(([key, value]) => {
+          data.append(key, value)
+
+        })
+
+        await ProductsServices.findAndEdit(data, this.slug)
+        this.$router.push('/admin/products');
+      }
+
       catch (err) {
         console.log(err);
       }
     },
+
+
   },
 
   async created() {
-    this.getProoduct(this.slug)
-    this.getAllFlavor()
+    this.slug = this.$route.params.slug
+    // this.getProoduct(this.slug)
+    // this.getAllFlavor(this.slug)
+  },
+  watch: {
+    productEdit: {
+      handler: function(newVal, oldVal) {
+        this.product = { ...newVal };
+        console.log(this.product);
+      },
+      deep: true
+    },
+
+    flavorArrayEdit:{
+      handler: function(newVal, oldVal) {
+        this.flavorArray = newVal
+      },
+      deep: true
+    },
+
+    defaultFlavorEdit:{
+      handler: function(newVal, oldVal) {
+        this.defaultFlavor = newVal;
+      },
+      deep: true
+    }
+
   }
 }
 </script>
-
+  
 <style src="@vueform/multiselect/themes/default.css"></style>
-
+  
+  
 <style lang="scss" scoped> .edit {
+
 
 
    .edit-form {
      display: flex;
      justify-content: space-around;
-     align-items: start;
+     align-items: flex-start;
      flex-direction: column;
      padding: 2rem;
 
@@ -281,4 +345,10 @@ export default {
 
    }
 
- }</style>
+   .radio {
+    width: 2rem !important;
+   }
+
+ }
+</style>
+  

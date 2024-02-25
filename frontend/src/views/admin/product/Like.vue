@@ -1,15 +1,12 @@
 <template>
 
-  <Products title="Save"
-    :isFilter="false"
-    :isSave="true"
-  />
+  <Products   />
   
 </template>
 
 <script>
 
-import Products from '@/components/admin/products/Products.vue';
+import Products from '@/views/admin/product/Products.vue';
 
 export default {
   name: 'Like',
