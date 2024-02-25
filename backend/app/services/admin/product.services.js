@@ -19,6 +19,10 @@ class ProductServices {
       liked: payload.liked,
       deleted: payload.deleted,
       available: payload.available,
+      position: payload.position,
+      discountPercentage: payload.discountPercentage
+      
+
       // views: payload.available,
     }
 
@@ -41,24 +45,23 @@ class ProductServices {
     let records = []
     let query = result
     if (payload.flavor) {
-      records =  await productCategoryServices.findByCategory(payload.flavor)
+      records = await productCategoryServices.findByCategory(payload.flavor)
       const recordsId = records.map(item => item._id)
 
-      if (recordsId.length == 0 ) {
-        query = {  _id: { $in: []} }
+      if (recordsId.length == 0) {
+        query = { _id: { $in: [] } }
       }
       else {
         query = { $and: [{ _id: { $in: recordsId } }, result] }
       }
     }
 
+    const products = await Product.find(query).sort({
+      position: 'desc',
+    }).limit().skip()
+    // console.log(products);
 
-      const products = await Product.find(query).sort({
-          quantity: 'desc'
-        }).limit().skip()
-      // console.log(products);
-  
-      return products
+    return products
 
   }
 
@@ -72,17 +75,16 @@ class ProductServices {
   }
 
   async create(payload) {
-    payload.data.quantity = await Product.count() + 1
-
-    const result = this.extractProductData(payload.data)
-    const product = new Product(result)
+    payload.position = await Product.count() + 1
+    const result = this.extractProductData(payload)
+    const product = new Product(result) 
     const productCategoryServices = new ProductCategoryServices()
     await productCategoryServices.createProductCategory(payload.flavor, product._id)
     product.save()
     return product
   }
 
-  async delete (id) {
+  async delete(id) {
     try {
 
       console.log(id);
@@ -107,12 +109,10 @@ class ProductServices {
 
   async changeStatus(payload, id) {
     try {
-      // console.log(payload);
       const result = this.extractProductData(payload)
-
-      if (result.available !== undefined) {
-        result.available = !result.available
-      }
+      // if (result.available !== undefined) {
+      //   result.available = !result.available
+      // }
 
       if (result.liked !== undefined) {
         result.liked = !result.liked
@@ -122,9 +122,15 @@ class ProductServices {
         result.deleted = true
       }
 
+      if (result.thumbnail === undefined) {
 
+      }
+
+      
       const productCategoryServices = new ProductCategoryServices()
-      await productCategoryServices.editProductCategory(payload.flavor, id)
+      if (payload.flavor) {
+        await productCategoryServices.editProductCategory(payload.flavor, id)
+      }
 
       const updatedProduct = await Product.findOneAndUpdate(
         { _id: id },
@@ -137,34 +143,96 @@ class ProductServices {
       }
 
       return updatedProduct;
+      
     } catch (err) {
       console.error(err);
       throw new Error('Error updating product status');
     }
   }
 
+  async changeMultiple(type, data) {
+    let conditions = {}
+    switch (type) {
+      case 'delete':
+        try {
+          await Product.updateMany(
+            {
+              slug: { $in: data },
+            },
+            {
+              $set: { deleted: true },
+            }
+          );
+
+          console.log(`Deleted records with slugs: ${data}`);
+        } catch (error) {
+          console.error(error);
+        }
+        return
+      
+        case 'available':
+          try {
+            await Product.updateMany(
+              {
+                slug: { $in: data },
+              },
+              {
+                $set: { available: true },
+              }
+            );
+  
+            console.log(`Set avialable records with slugs: ${data}`);
+          } catch (error) {
+            console.error(error);
+          }
+          return
+        
+          case 'unavailable':
+            try {
+              await Product.updateMany(
+                {
+                  slug: { $in: data },
+                },
+                {
+                  $set: { available: false },
+                }
+              );
+    
+              console.log(`Set avialable records with slugs: ${data}`);
+            } catch (error) {
+              console.error(error);
+            }
+            return
+    }
+
+  }
+
 
   async findBySlug(slug) {
     if (slug) {
       try {
-        const product = await Product.findOne({ slug });
+        const product = await Product.findOne({ 
+          slug,
+          deleted: false,
+          // available: true
+          
+        });
         const productCategoryServices = new ProductCategoryServices()
         const flavors = await productCategoryServices.findByProduct(slug)
         // console.log(flavors, slug);
         if (!product) {
           // Nếu không tìm thấy sản phẩm, trả về một phản hồi lỗi hoặc xử lý theo nhu cầu của bạn.
-          return res.status(404).json({ error: "Product not found" });
+          console.log('Product do not exist');
         }
         // Trả về sản phẩm nếu tìm thấy.
         return product;
       } catch (err) {
         // Xử lý lỗi nếu có.
         console.error(err);
-        res.status(500).json({ error: "Internal Server Error" });
       }
     } else {
       // Nếu không có slug được cung cấp, trả về một phản hồi lỗi.
-      res.status(400).json({ error: "Invalid request" });
+      console.log('Invailid request');
     }
   };
 

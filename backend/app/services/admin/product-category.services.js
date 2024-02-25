@@ -9,26 +9,26 @@ const ProductServices = require('../../services/admin/product.services')
 
 class FlavorProductServices {
 
-  constructor () {
+  constructor() {
     this.Flavor = Flavor
-    this.Product= Product
+    this.Product = Product
     this.productCategory = productCategory
   }
 
-  async findProductIdsWithCategoryId (id) {
+  async findProductIdsWithCategoryId(id) {
     const productCategory = await this.productCategory.find({ flavor_id: id })
     const productId = await productCategory.map(item => item.product_id)
-    
+
     return productId
   }
 
-  async findCategoryIdsWithProductId (id) {
+  async findCategoryIdsWithProductId(id) {
     const productCategory = await this.productCategory.find({ product_id: id })
     const categoryId = await productCategory.map(item => item.flavor_id)
     return categoryId
   }
 
-  async editProductCategory (arrCategory, productId) {
+  async editProductCategory(arrCategory, productId) {
     let productCategory = {
       product_id: '',
       flavor_id: ''
@@ -42,7 +42,7 @@ class FlavorProductServices {
 
     const test = await this.productCategory.deleteMany({
       product_id: productId,
-      flavor_id: { $nin: flavorIds}
+      flavor_id: { $nin: flavorIds }
     })
 
     for (const item of flavorIds) {
@@ -66,7 +66,7 @@ class FlavorProductServices {
 
   }
 
-  async createProductCategory (arrCategory, productId) {
+  async createProductCategory(arrCategory, productId) {
     let productCategory = {
       product_id: '',
       flavor_id: ''
@@ -86,8 +86,8 @@ class FlavorProductServices {
     }
   }
 
-  async findByProduct (slug) {
-    const product= await this.Product.findOne({
+  async findByProduct(slug) {
+    const product = await this.Product.findOne({
       slug: slug
     }).select('_id')
     const categoryId = await this.findCategoryIdsWithProductId(product._id)
@@ -98,7 +98,7 @@ class FlavorProductServices {
     return categories
   }
 
-  async findByCategory (categorySlug) {
+  async findByCategory(categorySlug) {
     const flavorInstaint = new FlavorServices()
     const flavor = await flavorInstaint.findBySlug(categorySlug)
     const productId = await this.findProductIdsWithCategoryId(flavor.id)

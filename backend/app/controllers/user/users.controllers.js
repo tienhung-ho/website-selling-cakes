@@ -7,17 +7,17 @@ const jwt = require('jsonwebtoken');
 module.exports.createUser = async (req, res, next) => {
 
   try {
-    const product = req.body.params
+    const record = req.body.params
     const salt = await bcrypt.genSalt(10)
-    const hashedPassword = await bcrypt.hash(product.password, salt)
+    const hashedPassword = await bcrypt.hash(record.password, salt)
     console.log(hashedPassword);
 
     const user = new User({
-      username: product.username,
+      username: record.username,
       password: hashedPassword,
-      email: product.email,
-      phone: product.phone,
-      cart: product.cart
+      email: record.email,
+      phone: record.phone,
+      cart: record.cart
 
     })
 

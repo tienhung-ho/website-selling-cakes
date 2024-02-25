@@ -15,6 +15,8 @@ const productsSchema = new Schema({
   expiryDate: Date,
   quantity: Number,
   views: Number,
+  position: Number,
+  discountPercentage: Number,
   available: {
     type: Boolean,
     default: true

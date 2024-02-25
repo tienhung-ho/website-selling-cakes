@@ -1,7 +1,7 @@
 const Flavor = require('../../models/flavor.model')
 const ProductCategory = require('../../services/admin/product-category.services')
 
-
+// [GET] admin/flavor/
 module.exports.find =  async (req, res, next) => {
   // let document = []
   
@@ -10,6 +10,7 @@ module.exports.find =  async (req, res, next) => {
   res.send(flavors)
 }
 
+// [GET] admin/flavor/:slug
 module.exports.filterByCategory = async (req, res, next) => {
   const findObj = {};
   if (req.params.slug) {
@@ -36,7 +37,7 @@ module.exports.filterByCategory = async (req, res, next) => {
   }
 };
 
-
+// [GET] admin/flavor/products/:slug
 module.exports.findByProuduct =  async (req, res, next) => {
   try {
     const slug = req.params.slug

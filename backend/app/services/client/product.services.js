@@ -26,11 +26,12 @@ class ProductServices {
   }
 
   async find() {
-  
+    
     const products = await Product.find({
       available: true,
-      deleted: false
+      deleted: false,
     }).sort({ liked: -1 })
+    
     return products
   }
 
@@ -42,8 +43,10 @@ async findBySlug (slug) {
       const product = await Product.findOne(
         {
           slug,
-          deleted: false
+          deleted: false,
+          available: true
         }
+      
       );
       if (!product) {
         // Nếu không tìm thấy sản phẩm, trả về một phản hồi lỗi hoặc xử lý theo nhu cầu của bạn.

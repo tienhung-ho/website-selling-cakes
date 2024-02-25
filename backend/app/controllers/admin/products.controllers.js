@@ -70,8 +70,6 @@ module.exports.changeStatus = async (req, res, next) => {
 
     if (/^[0-9a-fA-F]{24}$/.test(filter)) {
       const updateFields = req.body.params;
-      // updateFields.liked = !updateFields.liked; 
-      // updateFields.available = !updateFields.available;
       _id = filter
       const productServices = new ProductServices()
       const updatedProduct = await productServices.changeStatus(updateFields, _id,
@@ -95,6 +93,25 @@ module.exports.changeStatus = async (req, res, next) => {
 
 }
 
+// [PATCH], /api/admin/products/change-multiple
+module.exports.changeMultiple = async (req, res, next) => {
+  try {
+    
+    const { type, data } = req.body.params;
+    
+    if (type != '') {
+      const productServices = new ProductServices()
+      const updatedProducts = await productServices.changeMultiple(type, data)
+    }
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+
+}
+
+// [delete], /api/admin/products/:id
 module.exports.delete = async (req, res, next) => {
   try {
     const filter = req.params;
@@ -117,13 +134,14 @@ module.exports.delete = async (req, res, next) => {
 // [PATCH], /api/admin/products/edit/:slug
 module.exports.edit = async (req, res, next) => {
   try {
-    const { _id, _ } = req.body.params.data;
-    const flavor = req.body.params.flavor
+    const data = req.body
+    const _id = data._id
+    data.ingredients = req.body.ingredients.split(',')
+    data.flavor = req.body.flavor.split(',')
+
     if (/^[0-9a-fA-F]{24}$/.test(_id)) {
-      const updateFields = req.body.params.data;
-      if (flavor != undefined || flavor.length != 0) {
-        updateFields.flavor = flavor
-      }
+      const updateFields = data;
+
       const productServices = new ProductServices()
       const updatedProduct = await productServices.changeStatus(updateFields, _id,
         { new: true } // Trả về document đã được cập nhật
@@ -149,9 +167,12 @@ module.exports.edit = async (req, res, next) => {
 // [POST], /api/admin/products/create
 module.exports.create = async (req, res, next) => {
   try {
-    const data = req.body.params
+    const data = req.body
+    data.ingredients = req.body.ingredients.split(',')
+    data.flavor = req.body.flavor.split(',')
     const productServices = new ProductServices()
-    const new_product = await productServices.create(data)
+    const new_product = await productServices.create(data) 
+    
     if (!new_product) {
       return res.status(404).json({ error: 'Product not found' });
     }
