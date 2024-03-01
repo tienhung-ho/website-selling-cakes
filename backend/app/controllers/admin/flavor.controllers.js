@@ -7,7 +7,7 @@ module.exports.find =  async (req, res, next) => {
   
   const flavors = await Flavor.find({})
 
-  res.send(flavors)
+  res.json(flavors)
 }
 
 // [GET] admin/flavor/:slug
@@ -43,7 +43,7 @@ module.exports.findByProuduct =  async (req, res, next) => {
     const slug = req.params.slug
     const productCategoryServices = new ProductCategory()
     const flavors = await productCategoryServices.findByProduct(slug)
-    res.send(flavors)
+    res.json(flavors)
 
   }
   catch(err) {

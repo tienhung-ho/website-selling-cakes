@@ -1,0 +1,24 @@
+
+import createApiAdmin from "../api.services"
+
+class staffService {
+
+  constructor(baseUrl = "/api/admin/roles") {
+    this.api = createApiAdmin(baseUrl);
+  }
+
+  async getAllRoles() {
+    return (await this.api.get("/")).data
+  }
+
+
+  async createRole(data) {
+    return (await this.api.post("/create", {
+      params: data
+    })).data
+  }
+
+  
+}
+
+export default new staffService();

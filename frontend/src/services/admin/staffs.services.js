@@ -41,7 +41,7 @@ class staffService {
   }
 
   async delete(data) {
-    console.log(data);
+    
     return (await this.api.delete(`/delete/${data}`))
   }
 }

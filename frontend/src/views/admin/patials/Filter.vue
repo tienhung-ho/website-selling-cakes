@@ -1,8 +1,8 @@
 <template>
-  <div class="container-fluid">
+  <div class="q-ontainer">
     <div class="row">
 
-      <div class="filter container-fluid d-flex justify-content-between">
+      <div class="filter q-ontainer d-flex justify-content-between">
         <div class="row filter__title d-flex ps-4 justify-content-around">
           <input type="text" placeholder="Search...." v-model="this.nameValue" @input="onSearch">
         </div>
@@ -68,6 +68,10 @@ import Multiselect from '@vueform/multiselect'
 import { Form, Field, ErrorMessage } from "vee-validate"
 import ProductsServices from '@/services/admin/products.services';
 import ChangeMultiple from '@/components/admin/filters/ChangeMultiple.vue'
+
+// import 'bootstrap/dist/css/bootstrap.css';
+// import 'popper.js';
+// import 'bootstrap/dist/js/bootstrap';
 
 export default {
   name: 'Filter',
@@ -213,6 +217,9 @@ export default {
 <style src="@vueform/multiselect/themes/default.css"></style>
 
 <style lang="scss" scoped>
+
+@import url('https://example.com/path/to/external/bootstrap.css');
+
 a {
   list-style-type: none;
 }

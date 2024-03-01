@@ -6,12 +6,13 @@
         <router-link :to="{ name: 'CreateStaff' }">
           <ButtonCustom content="Create New +" width="12rem" height="3.2rem" borderColor="black" borderRadius="10px"
             color="black" backgroundColor="" />
-          
+
         </router-link>
 
       </div>
-  
+
     </div>
+
     <div class="cakes__table">
       <div class="table__title row">
         <div class="col-1 table__title--no">
@@ -35,9 +36,9 @@
         </div>
 
       </div>
-
+      <ProductsList v-if="isShow" />
       <!-- Sample row -->
-      <div class="table__row row" v-for="staff, index in this.staffs">
+      <div v-else class="table__row row" v-for="staff, index in this.staffs">
 
         <div class=" col-1 table__cell--cakes">
           {{ index + 1 }}
@@ -52,18 +53,13 @@
           {{ staff.fullName }}
         </div>
         <div class="col-2 table__cell--flavor">
-          {{ staff.role_id }}
+          {{ staff.role }}
         </div>
         <div class="col-1 table__cell--status">
-          <ActiveButton  :status="staff.status"
-            v-model:changeStatus="conditions.status" 
-            :fullName="staff.fullName"
-          />
+          <ActiveButton :status="staff.status" v-model:changeStatus="conditions.status" :fullName="staff.fullName" />
         </div>
         <div class="col-3 table__cell--action">
-          <Options :slug="staff.slug"
-            @changeDeleted="getStaff"
-          />
+          <Options :slug="staff.slug" @changeDeleted="getStaff" />
         </div>
       </div>
     </div>
@@ -78,45 +74,97 @@ import Filter from '@/views/admin/patials/Filter.vue';
 import ButtonCustom from '@/views/admin/patials/ButtonCustom.vue';
 import StaffsServices from '@/services/admin/staffs.services'
 import ActiveButton from '@/components/admin/staffs/Active.Button.vue';
+import { useQuasar } from 'quasar'
+import ProductsList from '@/components/admin/ui/skeletons/Products-list.vue'
+
+// import 'bootstrap/dist/css/bootstrap.css';
+// import 'popper.js';
+// import 'bootstrap/dist/js/bootstrap';
 
 export default {
   name: 'Staff',
+  setup() {
+    const $q = useQuasar()
+    let timer
+
+    // onUnmounted(() => {
+    //   if (timer !== void 0) {
+    //     clearTimeout(timer)
+    //     $q.loading.hide()
+    //   }
+    // })
+
+    return {
+      showLoading() {
+        $q.loading.show({
+          message: 'Some important process  is in progress. Hang on...'
+        })
+        // hiding in 3s
+        timer = setTimeout(() => {
+          $q.loading.hide()
+          timer = void 0
+        }, 1000)
+      }
+    }
+  },
+
   components: {
     Title,
     Filter,
     ButtonCustom,
     Options,
-    ActiveButton
+    ActiveButton,
+    ProductsList,
   },
 
-  data () {
+  data() {
     return {
       staffs: [],
-      conditions: {}
+      conditions: {},
+      isShow: true,
     }
   },
+
 
   methods: {
-    async getStaff () {
+    timeOut() {
+      setTimeout(() => {
+        this.isShow = false
+      }, 5000)
+    },
+    async getStaff() {
       this.staffs = await StaffsServices.getAllStaff()
+      // this.isShow = true
+
+      // this.timeOut()
+      this.showLoading()
 
     }
   },
 
-  created () {
+  created() {
     this.getStaff()
+    this.showLoading()
+    setTimeout(() => {
+      this.isShow = false
+    }, 5000)
   },
 
   watch: {
     $route: 'getStaff',
 
-    condition: {
+    conditions: {
       handler() {
         this.getStaff()
-        // console.log(this.condition.currentPage);
+        // console.log(this.conditions.currentPage);
       },
       deep: true
     },
+    isShow: {
+      handler() {
+
+      }
+    }
   }
 }
 
@@ -125,6 +173,10 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/admin/scss/variables.scss';
+
+/* Import JavaScript */
+@import url('https://link-to-your-javascript.js');
+
 
 .cakes {
   width: 100%;

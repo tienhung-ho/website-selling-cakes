@@ -35,6 +35,10 @@
 <script>
 import ButtonCustom from '@/components/ButtonCustom.vue'; 
 
+import 'bootstrap/dist/css/bootstrap.css';
+import 'popper.js';
+import 'bootstrap/dist/js/bootstrap';
+
 export default {
   name: 'Contact',
 

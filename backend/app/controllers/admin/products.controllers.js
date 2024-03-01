@@ -11,7 +11,10 @@ module.exports.find = async (req, res, next) => {
       res.status(404).json({ error: "Data not found" });
     }
     else {
+      
       const { status, name, _} = req.query
+
+      const { currentPage } = req.query
 
       if (name) {
         conditions.name = searchRegex(name).name
@@ -32,14 +35,20 @@ module.exports.find = async (req, res, next) => {
         }
       }
 
+
       conditions.deleted = false
+      conditions.currentPage = currentPage
+      
       const productServices = new ProductServices()
 
-      const products = await productServices.find(
+      const { products, totalPage } = await productServices.find(
         conditions,
       )
       // console.log(products);
-      res.send(products)
+      res.json({
+        products,
+        totalPage
+      })
     }
 
   }

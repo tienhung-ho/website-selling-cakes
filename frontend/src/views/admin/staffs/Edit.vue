@@ -2,7 +2,7 @@
 <template>
   <Title title="Edit" />
   <div class="edit">
-   <FormStaff :isEdit="true" :defaultStaff="this.staff || {}"/>
+   <FormStaff :isEdit="true" :defaultStaff="this.staff || {}" :role="role"/>
   </div>
 </template>
 
@@ -11,6 +11,9 @@ import FormStaff from '@/components/admin/staffs/Form.Staff.vue';
 import Title from '@/views/admin/patials/Title.vue';
 import staffsServices from '@/services/admin/staffs.services';
 
+// import 'bootstrap/dist/css/bootstrap.css';
+// import 'popper.js';
+// import 'bootstrap/dist/js/bootstrap';
 
 export default {
   name: 'Edit',
@@ -22,7 +25,8 @@ export default {
   data () {
     return {
       slug: '',
-      staff: ''
+      staff: '',
+      role: ''
     }
   },
   methods: {
@@ -32,8 +36,9 @@ export default {
           const response = await staffsServices.getStaffbySlug(slug)
           // Kiểm tra xem phản hồi có dữ liệu hay không
           if (response) {
-            this.staff = { ...response }
-            // console.log(this.staff);
+            this.staff = { ...response.staff }
+            this.role = response.role
+            console.log(this.staff);
             
             // Nếu là mảng, truy cập phần tử đầu tiên
             // console.log(this.product);
@@ -60,6 +65,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+/* Import CSS */
+@import url('https://link-to-your-stylesheet.css');
 
 
 </style>

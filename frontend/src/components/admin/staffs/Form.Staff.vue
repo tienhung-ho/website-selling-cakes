@@ -19,7 +19,7 @@
       <Field v-model="staff.phone" class="create-form__phone" type="number" name="phone" id="phone"
         placeholder="Phone..." />
 
-      <Field v-if="!isEdit" class="create-form__password" type="password" name="password" id="password"
+      <Field v-model="staff.password" v-if="!isEdit" class="create-form__password" type="password" name="password" id="password"
         placeholder="password..." />
 
       <div class="mb-3 w-100">
@@ -30,7 +30,7 @@
 
       <img :v-model="this.avatar" :src="this.image || defaultStaff.avatar" alt="" class="w-25 pb-4 rounded">
       <!-- <ErrorMessage name="thumbnail" class="error-feedback" /> -->
-      <Multiselect v-model="staff.role_id" :selected="roleValue" :track-by="'value'" :close-on-select="false"
+      <Multiselect v-model="this.staffRole" :selected="roleValue" :track-by="'value'" :close-on-select="false"
         :options="rolesArray" placeholder="Role......" class="multiselect mb-4" />
       <button type="submit" class="btn btn-outline-primary w-100 ">Submit</button>
     </Form>
@@ -45,9 +45,10 @@ import StaffsServices from '@/services/admin/staffs.services'
 import Editor from '@tinymce/tinymce-vue'
 import Multiselect from '@vueform/multiselect'
 
-
+import RolesServices from '@/services/admin/roles.services';
 import * as yup from "yup"
 import { Form, Field, ErrorMessage } from "vee-validate"
+import { Thumbs } from 'swiper/modules';
 
 
 
@@ -82,8 +83,9 @@ export default {
       // staffFormSchema,
       roleValue: '',
       rolesArray: [
-        'test'
+
       ],
+      rolesArrayId: [],
       staff: {
         fullName: '',
         email: '',
@@ -94,7 +96,8 @@ export default {
       },
       avatar: '',
       image: '',
-      slug: ''
+      slug: '',
+      staffRole: '',
 
 
     }
@@ -107,9 +110,17 @@ export default {
     isEdit: {
       type: Boolean,
       default: false
-    }
+    },
+    role: {
+      type: String,
+      default: ''
+    },
   },
   methods: {
+
+    getRoleId (staffName) {
+      return this.rolesArrayId[this.rolesArray.indexOf(staffName)]
+    },
 
     handleImageUpload($event) {
       const file = $event.target.files[0];
@@ -126,32 +137,40 @@ export default {
     async onCreate(e) {
 
       try {
-        this.$swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Your work has been saved",
-          showConfirmButton: false,
-          timer: 1500
-        });
         if (this.avatar != undefined) {
           this.staff.avatar = this.avatar
         }
-        const data = new FormData()
-        Object.entries(this.staff).forEach(([key, value]) => {
-          data.append(key, value)
 
-        })
+        const allValuesEmpty = Object.values(this.staff).every(value => value !== '')
+        this.staff.role_id = this.getRoleId(this.staffRole)
+        
+
+          this.$swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Your work has been saved",
+            showConfirmButton: false,
+            timer: 1500
+          });
 
 
-        // Log thông tin từ FormData
-        // for (const entry of data) {
-        //   console.log(entry);
-        // }
-        // console.log(this.staff);
+          const data = new FormData()
+          Object.entries(this.staff).forEach(([key, value]) => {
+            data.append(key, value)
 
-        await StaffsServices.createStaff(data)
+          })
 
-        this.$router.push('/admin/staff')
+
+          // Log thông tin từ FormData
+          // for (const entry of data) {
+          //   console.log(entry);
+          // }
+          // console.log(this.staff);
+
+          await StaffsServices.createStaff(data)
+
+          this.$router.push('/admin/staff')
+        
       }
 
       catch (err) {
@@ -173,6 +192,9 @@ export default {
           this.staff.avatar = this.avatar
         }
 
+        
+        this.staff.role_id = this.getRoleId(this.staffRole)
+        
         const data = new FormData()
         Object.entries(this.staff).forEach(([key, value]) => {
           data.append(key, value)
@@ -186,8 +208,8 @@ export default {
         // }
         // console.log(this.staff);
 
-        const test = await StaffsServices.editStaff(data, this.staff.slug)
-        console.log(test);
+        await StaffsServices.editStaff(data, this.staff.slug)
+        
         this.$router.push('/admin/staff')
       }
 
@@ -195,19 +217,34 @@ export default {
         console.log(err);
       }
 
+    },
+
+    async getRoles() {
+      const roles = await RolesServices.getAllRoles()
+
+      this.rolesArray = roles.map(item => item.title)
+      this.rolesArrayId = roles.map(item => item._id)
+
     }
 
 
   },
   created() {
-    // this.onEdit()
+    this.getRoles()
   },
 
   watch: {
     defaultStaff: {
-      handler: function(newVal, oldVal) {
+      handler: function (newVal, oldVal) {
         this.staff = { ...newVal };
-        console.log(this.staff);
+        
+      },
+      deep: true
+    },
+
+    role: {
+      handler: function (newVal, oldVal) {
+        this.staffRole = newVal
       },
       deep: true
     },

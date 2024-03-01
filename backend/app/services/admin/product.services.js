@@ -2,7 +2,7 @@ const Product = require('../../models/products.model');
 const searchRegex = require('../../helpers/search.helpers')
 const ProductCategory = require('../../models/product-category.model')
 const ProductCategoryServices = require('../../services/admin/product-category.services')
-
+const paginationHelper = require('../../helpers/pagination.helpers')
 
 class ProductServices {
   extractProductData(payload) {
@@ -35,12 +35,20 @@ class ProductServices {
 
   async find(payload) {
     const result = this.extractProductData(payload)
-    let pagination = {
-      currentPage: 1,
-      limitItem: 4,
+    const totalProducts = await Product.countDocuments({
+      deleted: false
+    })
 
+    let pagination = {
+      currentPage: payload.currentPage,
+      limit: 5,
+      totalProducts,
     }
 
+    let pagiObj = paginationHelper(payload.currentPage, pagination)
+
+    
+    const totalPage = pagiObj.totalPage
     const productCategoryServices = new ProductCategoryServices()
     let records = []
     let query = result
@@ -58,10 +66,10 @@ class ProductServices {
 
     const products = await Product.find(query).sort({
       position: 'desc',
-    }).limit().skip()
-    // console.log(products);
+    }).limit(pagiObj.limit).skip(pagiObj.skip)
+  
 
-    return products
+    return { products, totalPage: pagiObj.totalPage }
 
   }
 

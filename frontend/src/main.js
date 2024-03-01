@@ -1,14 +1,16 @@
 import './assets/client/css/reset.css'
 
 
+
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router/index'
 import store from './store/store.js'
 
-import 'bootstrap/dist/css/bootstrap.css';
-import 'popper.js';
-import 'bootstrap/dist/js/bootstrap';
+import 'quasar/src/css/index.sass'
+import '@quasar/extras/material-icons/material-icons.css'
+
+
 
 
 
@@ -23,7 +25,7 @@ import { faCartShopping } from '@fortawesome/free-solid-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 
-import '@/assets/admin/scss/reset.scss';
+// import '@/assets/admin/scss/reset.scss';
 
 /* add icons to the library */
 library.add(faCartShopping, far, fas)
@@ -41,7 +43,9 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 
 import Multiselect from 'vue-multiselect';
 
-import Paginate from 'vuejs-paginate'
+
+import { Quasar, Loading } from 'quasar'
+
 
 
 const app = createApp(App)
@@ -49,12 +53,15 @@ const app = createApp(App)
 app.component('vue-sidebar-menu-akahon', VueSidebarMenuAkahon)
 app.component('font-awesome-icon', FontAwesomeIcon)
 app.component('multiselect', Multiselect)
-app.component('paginate', Paginate)
 
 
 app
   .use(VueSweetalert2)
-
+  .use(Quasar, {
+    plugins: {
+      Loading
+    },
+  })
   .use(router)
   .use(store)
   .mount('#app')

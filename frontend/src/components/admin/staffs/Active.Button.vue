@@ -32,6 +32,7 @@ export default {
   },
   emits: ['update:changeStatus'],
   methods: {
+
     async changeStatus () {
       try {
 
@@ -42,7 +43,10 @@ export default {
 
         await StaffsServices.changeStatus(record)
 
+        console.log(record);
+
         this.$emit('update:changeStatus', record)
+        
 
       }
       catch(err) {
@@ -51,6 +55,10 @@ export default {
 
     }
   },
+
+  watch () {
+    
+  }
 
 }
 

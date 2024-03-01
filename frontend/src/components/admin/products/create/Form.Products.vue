@@ -31,7 +31,7 @@
           <Field v-model="product.quantity" class="edit-form__quantity w-50 me-5" type="number" name="quantity" id="quantity"
           placeholder="Quantity..." />
           
-          <div class="d-flex justify-content-around align-items-center w-25">
+          <div class="flex justify-content-around align-items-center w-25">
             <input v-model="product.available" checked class="me-4 radio" type="radio" value="true" name="available" id="available">
             <label for="available">Available</label>
             
@@ -77,6 +77,10 @@ import CakesServices from '@/services/client/cakes.services';
 import * as yup from "yup"
 import { Form, Field, ErrorMessage } from "vee-validate"
 
+
+// import 'bootstrap/dist/css/bootstrap.css';
+import 'popper.js';
+import 'bootstrap/dist/js/bootstrap';
 
 
 export default {

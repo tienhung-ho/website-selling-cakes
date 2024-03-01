@@ -134,6 +134,10 @@
 import CakesServices from '../../../services/client/cakes.services'
 import usersServices from '../../../services/user/users.services';
 
+import 'bootstrap/dist/css/bootstrap.css';
+import 'popper.js';
+import 'bootstrap/dist/js/bootstrap';
+
 export default {
   name: 'Cart',
 

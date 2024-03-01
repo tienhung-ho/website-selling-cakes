@@ -34,6 +34,12 @@
           link: {name: 'Staff'  } ,name: "Staff", tooltip: "Staff", icon: "bx-user-circle" 
         },
         {
+          link: { name: 'Roles'  }, name: "Roles", tooltip: "Roles", icon: "bx-shape-square"
+        },
+        {
+          link: { name: 'Permissions'  }, name: "Permissions", tooltip: "Permissons", icon: "bx-shield" 
+        },
+        {
           link: "/admin", name: "Setting", tooltip: "Setting", icon: "bx-cog" 
         },
       ]

@@ -1,6 +1,6 @@
 <template>
-  <div class="title container-fluid">
-    <div class="title__header row">
+  <div class="title q-container">
+    <div class="title__header q-layout">
       <div class="title__header--logo col-3">
         THE TASTEAT
       </div>
@@ -30,7 +30,7 @@
       </div>
 
     </div>
-    <div class="title__content row">
+    <div class="title__content q-layout">
       <h1>
         {{ title }}
       </h1>
@@ -73,7 +73,7 @@ export default {
 
 .title {
   width: 100%;
-  height: 17rem;
+  height: 20rem;
   background-color: rgba($color: $sidebar-color, $alpha: .92);
   justify-content: center;
   align-items: center;

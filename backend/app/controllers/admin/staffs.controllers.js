@@ -1,17 +1,33 @@
-const StaffModel = require('../../models/staffs.model')
+
 const StaffService = require('../../services/admin/staffs.services')
-const ProductCategory = require('../../services/admin/product-category.services')
+const RolesServices = require('../../services/admin/roles.services')
+
 
 // [GET] admin/staff/
-module.exports.find =  async (req, res, next) => {
+module.exports.find = async (req, res, next) => {
   try {
     const staffService = new StaffService
-    const staffs =  await staffService.find({}) 
+    const staffs = await staffService.find()
 
     if (!staffs) {
       res.send('Staffs not found')
     }
-    return res.json(staffs)
+
+    const newStaffs = []
+
+    const rolesServices = new RolesServices
+    for (let staff of staffs) {
+      let staffObj = staff.toObject()
+      let role = await rolesServices.findById(staff.role_id);
+
+      staffObj.role = role.title
+
+      newStaffs.push(staffObj)
+
+    }
+    // console.log(newStaffs);
+
+    return res.json(newStaffs)
   }
   catch (err) {
     console.log(err, "Err add find controller of staff");
@@ -19,18 +35,26 @@ module.exports.find =  async (req, res, next) => {
 }
 
 // [GET] admin/staff/:slug
-module.exports.findBySlug =  async (req, res, next) => {
+module.exports.findBySlug = async (req, res, next) => {
   try {
 
     const slug = req.params.slug
 
     const staffService = new StaffService
-    const staff =  await staffService.findBySlug(slug) 
+    const staff = await staffService.findBySlug(slug)
 
     if (!staff) {
       res.send('Staff not found')
     }
-    return res.json(staff)
+
+    const rolesServices = new RolesServices
+
+    let role = await rolesServices.findById(staff.role_id);
+
+    return res.json({
+      staff,
+      role: role.title
+    })
   }
   catch (err) {
     console.log(err, "Err add find controller of staff");
@@ -38,12 +62,12 @@ module.exports.findBySlug =  async (req, res, next) => {
 }
 
 // [POST] admin/staff/create
-module.exports.create =  async (req, res, next) => {
+module.exports.create = async (req, res, next) => {
   try {
-    
+
     const data = req.body
-    console.log(data);
-    if (data) {
+    
+    if (data.fullName) {
       const staffService = new StaffService()
       const records = staffService.create(data)
       if (!records) {
@@ -53,8 +77,8 @@ module.exports.create =  async (req, res, next) => {
       return res.json(records)
     }
 
-  } 
-  catch(err) {
+  }
+  catch (err) {
     res.json({
       code: 400,
       message: "Can not create"
@@ -63,9 +87,9 @@ module.exports.create =  async (req, res, next) => {
 }
 
 // [PATCH] admin/staff/edit/:slug
-module.exports.edit =  async (req, res, next) => {
+module.exports.edit = async (req, res, next) => {
   try {
-    
+
     const data = req.body
 
     const slug = req.params.slug
@@ -74,7 +98,7 @@ module.exports.edit =  async (req, res, next) => {
 
       if (data.avatar == '') {
         delete data.avatar
-        
+
       }
 
       const records = staffService.edit(data, slug)
@@ -88,8 +112,8 @@ module.exports.edit =  async (req, res, next) => {
       })
     }
 
-  } 
-  catch(err) {
+  }
+  catch (err) {
     res.json({
       code: 400,
       message: "Could not edit!"
@@ -98,20 +122,20 @@ module.exports.edit =  async (req, res, next) => {
 }
 
 // [PATCH] admin/staff/change-status
-module.exports.changeStatus =  async (req, res, next) => {
+module.exports.changeStatus = async (req, res, next) => {
   try {
     const { fullName, _ } = req.body.params
-    
+
     if (!fullName) {
       res.send('Name do not exist!')
     }
     const data = req.body.params
-    
     const staffService = new StaffService()
-    const staff = staffService.changeStatus(fullName, data)
+
+    const staff = await staffService.changeStatus(fullName, data)
     
     return res.json(staff)
-    
+
     // return res.json(staff)
   }
   catch (err) {
@@ -120,9 +144,9 @@ module.exports.changeStatus =  async (req, res, next) => {
 }
 
 // [DELETE] admin/staff/delete
-module.exports.delete =  async (req, res, next) => {
+module.exports.delete = async (req, res, next) => {
   try {
-    
+
     const slug = req.params.slug
     if (slug) {
       const staffService = new StaffService()
@@ -138,8 +162,8 @@ module.exports.delete =  async (req, res, next) => {
       })
     }
 
-  } 
-  catch(err) {
+  }
+  catch (err) {
     res.json({
       code: 400,
       message: "Could not edit!"

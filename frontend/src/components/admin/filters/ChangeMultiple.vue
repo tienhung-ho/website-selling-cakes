@@ -45,7 +45,7 @@ export default {
     },
     changeProducts: {
       type: String,
-      default: ''
+      default: ""
     }
   },
 

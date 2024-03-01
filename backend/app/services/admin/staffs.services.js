@@ -31,6 +31,8 @@ class StaffServices {
       deleted: false
     })
 
+    
+
     return records
   }
 
@@ -47,7 +49,7 @@ class StaffServices {
     
     const result = new StaffModel(payload)
     await result.save()
-    console.log(result);
+    
     return result
   }
 
@@ -72,14 +74,13 @@ class StaffServices {
   async changeStatus (fullName, data) {
   
     const result = this.extractStaffData(data)
-
+    
     const staff = await StaffModel.findOneAndUpdate({
       fullName: fullName,
 
     }, result,
-    { new: true }
+    // { new: true }
     )
-
     return staff
 
   }

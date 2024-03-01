@@ -1,7 +1,8 @@
 
 <template>
   <div class="create">
-    <FormProducts :slug="slug" :isEdit="true" title="Edit" :productEdit="this.product" :flavorArrayEdit="flavorArray" :defaultFlavorEdit="defaultFlavor"/>
+    <FormProducts :slug="slug" :isEdit="true" title="Edit" :productEdit="this.product" :flavorArrayEdit="flavorArray"
+      :defaultFlavorEdit="defaultFlavor" />
   </div>
 </template>
 
@@ -9,6 +10,10 @@
 
 import FormProducts from '@/components/admin/products/create/Form.Products.vue';
 import ProductsServices from '@/services/admin/products.services'
+
+// import 'bootstrap/dist/css/bootstrap.css';
+import 'popper.js';
+import 'bootstrap/dist/js/bootstrap';
 
 export default {
   name: 'Create',
@@ -21,7 +26,7 @@ export default {
     return {
       product: {},
       slug: '',
-      defaultFlavor: [  ],
+      defaultFlavor: [],
       flavorArray: []
     }
   },
@@ -67,7 +72,7 @@ export default {
   },
 
   created() {
-    this.slug = this.$route.params.slug 
+    this.slug = this.$route.params.slug
     this.getAllFlavor(this.slug)
     this.getProduct(this.slug)
   },
@@ -76,5 +81,7 @@ export default {
 
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+</style>
 

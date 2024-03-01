@@ -12,6 +12,10 @@
 import ProductsServices from '@/services/admin/products.services'
 import FormProducts from '@/components/admin/products/create/Form.Products.vue';
 
+// import 'bootstrap/dist/css/bootstrap.css';
+// import 'popper.js';
+// import 'bootstrap/dist/js/bootstrap';
+
 export default {
   name: 'Create',
 

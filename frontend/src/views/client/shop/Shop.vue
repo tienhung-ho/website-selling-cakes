@@ -39,15 +39,19 @@
 
 <script>
 
-import Banner from '@/views/client/Banner.vue';
+// import Banner from '@/views/client/Banner.vue';
 import Flavor from '@/components/client/shop/Flavor.vue';
 import Content from '@/views/client/patials/Content.vue';
+
+import 'bootstrap/dist/css/bootstrap.css';
+import 'popper.js';
+import 'bootstrap/dist/js/bootstrap';
 
 export default {
   name: 'Shop',
 
   components: {
-    Banner,
+    
     Flavor,
     Content
   },

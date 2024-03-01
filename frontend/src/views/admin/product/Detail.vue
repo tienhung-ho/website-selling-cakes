@@ -1,41 +1,33 @@
-<template>
-  <div class="container-fluid details">
 
-    <div class="details__element" v-if="cake">
+<template>
+  <Title title="Detail" />
+  <div class="container-fluid details d-flex">
+
+    <div class="details__element" v-if="product">
       <div class="details__element--img">
-        <img :src="`${cake.thumbnail}`" alt="">
+        <img :src="`${product.thumbnail}`" alt="">
       </div>
 
       <div class="details__element--content">
         <h1 class="title">
-          {{ cake.name }}
+          {{ product.name }}
         </h1>
 
-        <p class="description">
-          {{ cake.description }}
-        </p>
+        <button class="status btn btn-outline-success mb-2">
+          {{ product.available ? "Bánh vẫn còn" : "Không có sẵn" }}
+        </button>
 
         <p class="price">
-          <span>Price</span>
+          <span class="fs-4">Price</span>
           <br>
-          ${{ cake.price }}
+          ${{ this.price }}
         </p>
 
         <div class="details__element--action">
           <div class="action-quantity">
-            <label for="quantity">Quantity</label>
+            <label for="quantity">Số lượng</label>
             <div class="input-quantity">
-              <button-custom @click="reduceQuantity" :height="'3rem'" :content="'-'" :borderColor="'#292E36'"
-                :color="'#292E36'" />
-
-              <input v-model="quantity" id="qunatity" type="text" min="0" :max="`${cake.quantity}`" disabled>
-
-              <button-custom @click="increaseQuantity" :height="'3rem'" :content="'+'" :borderColor="'#292E36'"
-                :color="'#292E36'" />
-            </div>
-            <div class="action-select">
-              <button-custom @click="addToCart" :content="'Add to Cart'" :width="'20rem'" :borderColor="'#292E36'"
-                :color="'#292E36'" />
+              {{ product.quantity }}
             </div>
           </div>
           <div class="action-sale">
@@ -53,53 +45,67 @@
               </span>
               <br>
               Experience the delightful and enticing flavors at Sweet Delights,
-              the premier online cake shop where we bring
+              the premier online product shop where we bring
               you the finest cakes crafted by talented and passionate bakers.
             </p>
           </div>
         </div>
       </div>
 
+
     </div>
 
+    <div class="detail__description pt-5 ">
+      <h1>Mô tả</h1>
+      {{ product.description }}
+    </div>
 
   </div>
 </template>
 
 <script>
 
-import CakesServices from "@/services/client/cakes.services"
-import ButtonCustom from "@/components/ButtonCustom.vue";
+import ProductsServices from '@/services/admin/products.services'
+import Title from '@/views/admin/patials/Title.vue';
+import { calPrice } from '@/helpers/admin/prices.helpers.js';
 
-import 'bootstrap/dist/css/bootstrap.css';
-import 'popper.js';
-import 'bootstrap/dist/js/bootstrap';
+// import 'bootstrap/dist/css/bootstrap.css';
+// import 'popper.js';
+// import 'bootstrap/dist/js/bootstrap';
+
 
 export default {
-
   name: 'Detail',
 
   components: {
-    ButtonCustom
+    Title,
   },
-
   data() {
     return {
-      cake: {},
-      quantity: 1,
-      newPrice: 0,
+      slug: '',
+      product: {},
+      flavorArray: [],
+      price: 0
     }
   },
 
+  props: {
+
+  },
   methods: {
-    async getCake(slug) {
+    async getProduct(slug) {
       try {
         if (slug) {
-          const response = await CakesServices.getBySlug(slug);
+          const response = await ProductsServices.getBySlug(slug);
+
           // Kiểm tra xem phản hồi có dữ liệu hay không
           if (response) {
-            this.cake = response;
+            this.product = { ...response };
             // Nếu là mảng, truy cập phần tử đầu tiên
+            // console.log(this.product);
+            // this.setValue()
+            console.log(this.product.price, this.product.discountPercentage);
+            this.price = calPrice(this.product.price, this.product.discountPercentage)
           } else {
             console.error("Empty response from API");
           }
@@ -108,63 +114,42 @@ export default {
         console.error(err);
       }
     },
-
-    reduceQuantity() {
-      if (this.quantity > 1) {
-        this.quantity -= 1
-        this.newPrice = this.quantity * parseInt(this.cake.price)
+    async getAllFlavor(slug) {
+      try {
+        // if (slug === '') {
+        if (slug) {
+          let fl = await ProductsServices.getFlavorByProductSlug(this.slug)
+          fl.forEach(item => {
+            this.flavorArray.push(item.flavor)
+          })
+        }
       }
-    },
-
-    increaseQuantity() {
-      this.quantity += 1
-      this.newPrice = this.quantity * parseInt(this.cake.price)
-    },
-
-    addToCart() {
-
-      const item = {}
-      item._id = this.cake._id
-      item.slug = this.cake.slug
-      item.quantity = this.quantity
-      console.log(this.quantity);
-
-      this.$swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Your work has been saved",
-          showConfirmButton: false,
-          timer: 1500
-        });
-      this.$store.dispatch('addItemToCart', item);
+      catch (err) {
+        console.log(err);
+      }
     },
 
 
   },
   created() {
-
-    if (this.$route.params.slug) {
-      const slug = this.$route.params.slug;
-      this.getCake(slug)
-    }
-  },
-
-  computed: {
-  },
-
-  beforeMount() {
+    this.slug = this.$route.params.slug
+    this.getAllFlavor(this.slug)
+    this.getProduct(this.slug)
   }
-
 }
 
+
 </script>
-
-
 
 <style lang="scss" scoped>
 @import url('https://fonts.cdnfonts.com/css/qarinthen');
 @import url('https://fonts.cdnfonts.com/css/inclusive-sans-2');
 @import url('https://fonts.cdnfonts.com/css/lt-binary-neue');
+
+// @import '@/assets/admin/scss/variables.scss';
+
+/* Import JavaScript */
+@import url('https://link-to-your-javascript.js');
 
 .details {
   position: relative;
@@ -173,6 +158,7 @@ export default {
   padding: 4rem;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 
   &__element {
     display: flex;
@@ -298,3 +284,4 @@ export default {
   }
 }
 </style>
+

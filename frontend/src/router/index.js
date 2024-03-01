@@ -94,6 +94,12 @@ const routesAdmin = [
       },
 
       {
+        path: 'products/detail/:slug',
+        name: 'Detail',
+        component: () => import('@/views/admin/product/Detail.vue')
+      },
+
+      {
         path: 'staff',
         name: 'Staff',
         component: () => import('@/views/admin/staffs/Staff.vue'),
@@ -111,6 +117,24 @@ const routesAdmin = [
         path: 'staff/edit/:slug',
         name: 'EditStaff',
         component: () => import('@/views/admin/staffs/Edit.vue')
+      },
+
+      {
+        path: 'permissions',
+        name: 'Permissions',
+        component: () => import('@/views/admin/roles/Permissions.vue')
+      },
+
+      {
+        path: 'roles',
+        name: 'Roles',
+        component: () => import('@/views/admin/roles/Roles.vue')
+      },
+
+      {
+        path: 'roles/create',
+        name: 'CreateRoles',
+        component: () => import('@/views/admin/roles/Create.vue')
       },
       
     ]

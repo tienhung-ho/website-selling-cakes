@@ -1,14 +1,9 @@
 <template>
   <Title :title="this.title" />
   <div class="cakes container-fluid">
-    <Filter 
-      v-model:changeStatus="this.condition.status" 
-      v-model:search="this.condition.name"
-      v-model:changeProducts="this.condition.flavor"
-      v-model:changeMultiple="this.condition.multiple"
-      @changeMultiple="getProducts"
-      :checkedProducts="checkItem"
-      />
+    <Filter v-model:changeStatus="this.condition.status" v-model:search="this.condition.name"
+      v-model:changeProducts="this.condition.flavor" v-model:changeMultiple="this.condition.multiple"
+      @changeMultiple="getProducts" :checkedProducts="checkItem" />
     <div class="cakes__table">
       <div class="table__title row">
         <div class="col-1 table__title--no">
@@ -38,14 +33,12 @@
 
       </div>
 
-      <!-- Sample row -->
+      
       <div class="table__row row" v-for="product, index in this.products">
 
         <div class="col-1 table__cell--cakes">
           <input v-model="checkedProducts[index].checked" type="checkbox" class="checkItem" :name="product.slug"
-            :value="product.slug"
-              @click="handlerCheckItem(index)"
-            >
+            :value="product.slug" @click="handlerCheckItem(index)">
         </div>
 
 
@@ -79,14 +72,11 @@
           <Options :product="product" @changeLiked="isChangedLike" @changeDeleted="isChangedDeleted" />
         </div>
       </div>
+
+      <Pagination v-model:pagination="this.condition.currentPage" :totalPage="this.totalPage"/>
     </div>
   </div>
-  <!-- <div class="row d-flex align-items-center position-relative">
-    <Pagination :value="this.pagination" 
-      v-model:currentPage="this.condition.currentPage"
-      :totalItem="10"
-    />
-  </div> -->
+
 </template>
   
 <script>
@@ -98,7 +88,8 @@ import Filter from '@/views/admin/patials/Filter.vue';
 import Options from '@/components/admin/products/Options.vue';
 import ButtonCustom from '@/views/admin/patials/ButtonCustom.vue';
 import ActiveButton from '@/components/admin/products/Active.Button.vue';
-// import Pagination from '@/components/admin/products/Pagination.vue'
+import Pagination from '@/components/admin/ui/pagination/Pagination.vue'
+
 
 export default {
   name: 'Products',
@@ -109,7 +100,7 @@ export default {
     Options,
     ButtonCustom,
     ActiveButton,
-    // Pagination
+    Pagination
 
   },
 
@@ -123,7 +114,9 @@ export default {
       pagination: [],
       checkAll: false,
       checkItem: [],
-      checkedProducts: []
+      checkedProducts: [],
+      currentPage: 1,
+      totalPage: 0,
 
 
     }
@@ -134,9 +127,13 @@ export default {
   },
 
   methods: {
-    async getProducts() {
+    async getProducts(page) {
       try {
-        this.products = await ProductsServices.getAllProducts(this.condition)
+        
+        const payloat = await ProductsServices.getAllProducts(this.condition)
+        this.products = payloat.products
+        this.totalPage = payloat.totalPage
+        
         this.checkAll = false
         this.checkedProducts = this.products.map(item => {
           let data = {
@@ -178,7 +175,7 @@ export default {
 
     },
 
-    handlerCheckItem (index) {
+    handlerCheckItem(index) {
       this.checkedProducts[index].checked = !this.checkedProducts[index].checked
       this.checkItem.push(this.checkedProducts[index])
       if (!this.checkedProducts[index].checked) {
@@ -204,6 +201,7 @@ export default {
 
   created() {
     this.getProducts()
+
   },
 
   watch: {
@@ -212,7 +210,6 @@ export default {
     condition: {
       handler() {
         this.getProducts()
-        // console.log(this.condition.currentPage);
       },
       deep: true
     },
@@ -239,7 +236,7 @@ export default {
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
     border-radius: 10px;
     width: 100%;
-    height: 100%;
+    height: 109%;
     // display: flex;
     text-align: center;
 
