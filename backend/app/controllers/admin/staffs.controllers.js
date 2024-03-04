@@ -2,6 +2,9 @@
 const StaffService = require('../../services/admin/staffs.services')
 const RolesServices = require('../../services/admin/roles.services')
 
+// genarate
+const genarate = require('../../helpers/genarate.helpers')
+
 
 // [GET] admin/staff/
 module.exports.find = async (req, res, next) => {
@@ -69,7 +72,8 @@ module.exports.create = async (req, res, next) => {
     
     if (data.fullName) {
       const staffService = new StaffService()
-      const records = staffService.create(data)
+      const records = await staffService.create(data)
+
       if (!records) {
         return res.status(404).json({ error: 'Product not found' });
       }
@@ -167,6 +171,25 @@ module.exports.delete = async (req, res, next) => {
     res.json({
       code: 400,
       message: "Could not edit!"
+    })
+  }
+}
+
+// [POST] /admin/staff/login
+module.exports.login = async (req, res) => {
+  try {
+    const record = req.body.data
+
+    const staffService = new StaffService()
+
+    const staff = await staffService.login(record, res)
+
+    
+  }
+  catch(err) {
+    res.json({
+      code: 400,
+      message: 'Could not login!',
     })
   }
 }

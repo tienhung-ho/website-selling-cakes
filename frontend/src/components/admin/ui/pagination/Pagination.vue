@@ -5,7 +5,7 @@ https://quasar.dev/vue-components/pagination#example--with-boundary-numbers
 -->
   <div id="q-app" style="{}">
     <div class="q-pa-lg flex">
-      <q-pagination size="20px" v-model="current" color="black" :max="totalPage" :max-pages="6" boundary-numbers></q-pagination>
+      <q-pagination size="20px" v-model="current" color="black" :max="totalPage" direction-links icon-first icon-last icon-prev icon-next :max-pages="6" boundary-numbers></q-pagination>
     </div>
   </div>
 </template>

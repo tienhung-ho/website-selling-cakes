@@ -141,7 +141,7 @@ export default {
           this.staff.avatar = this.avatar
         }
 
-        const allValuesEmpty = Object.values(this.staff).every(value => value !== '')
+        
         this.staff.role_id = this.getRoleId(this.staffRole)
         
 

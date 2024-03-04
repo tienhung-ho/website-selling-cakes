@@ -77,10 +77,6 @@ import ActiveButton from '@/components/admin/staffs/Active.Button.vue';
 import { useQuasar } from 'quasar'
 import ProductsList from '@/components/admin/ui/skeletons/Products-list.vue'
 
-// import 'bootstrap/dist/css/bootstrap.css';
-// import 'popper.js';
-// import 'bootstrap/dist/js/bootstrap';
-
 export default {
   name: 'Staff',
   setup() {
@@ -130,14 +126,14 @@ export default {
     timeOut() {
       setTimeout(() => {
         this.isShow = false
-      }, 5000)
+      }, 3000)
     },
     async getStaff() {
       this.staffs = await StaffsServices.getAllStaff()
       // this.isShow = true
 
       // this.timeOut()
-      this.showLoading()
+      // this.showLoading()
 
     }
   },
@@ -175,7 +171,6 @@ export default {
 @import '@/assets/admin/scss/variables.scss';
 
 /* Import JavaScript */
-@import url('https://link-to-your-javascript.js');
 
 
 .cakes {

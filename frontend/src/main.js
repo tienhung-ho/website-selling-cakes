@@ -4,6 +4,7 @@ import './assets/client/css/reset.css'
 
 import { createApp } from 'vue'
 import App from './App.vue'
+import { createPinia } from 'pinia'
 import router from './router/index'
 import store from './store/store.js'
 
@@ -46,6 +47,7 @@ import Multiselect from 'vue-multiselect';
 
 import { Quasar, Loading } from 'quasar'
 
+const pinia = createPinia()
 
 
 const app = createApp(App)
@@ -62,6 +64,8 @@ app
       Loading
     },
   })
+
   .use(router)
+  .use(pinia)
   .use(store)
   .mount('#app')

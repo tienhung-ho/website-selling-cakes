@@ -38,6 +38,10 @@ router.route('/change-status')
 router.route('/delete/:slug')
   .delete(controllers.delete)
 
+
+  router.route('/login') 
+    .post(controllers.login)
+
 module.exports = router
 
 

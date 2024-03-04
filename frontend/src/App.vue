@@ -14,16 +14,16 @@ export default {
   methods: {
     async getAccount() {
 
-      try {
+      // try {
 
-        const response = await userServices.user()
-        console.log(response);
-        await this.$store.dispatch('updateMyObject', response);
-        await this.$store.dispatch('setAuth', true)
-      }
-      catch (err) {
-        await this.$store.dispatch('setAuth', false)
-      }
+      //   const response = await userServices.user()
+      //   console.log(response);
+      //   await this.$store.dispatch('updateMyObject', response);
+      //   await this.$store.dispatch('setAuth', true)
+      // }
+      // catch (err) {
+      //   await this.$store.dispatch('setAuth', false)
+      // }
     }
 
   },

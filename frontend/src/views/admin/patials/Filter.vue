@@ -69,10 +69,6 @@ import { Form, Field, ErrorMessage } from "vee-validate"
 import ProductsServices from '@/services/admin/products.services';
 import ChangeMultiple from '@/components/admin/filters/ChangeMultiple.vue'
 
-// import 'bootstrap/dist/css/bootstrap.css';
-// import 'popper.js';
-// import 'bootstrap/dist/js/bootstrap';
-
 export default {
   name: 'Filter',
 
@@ -218,7 +214,7 @@ export default {
 
 <style lang="scss" scoped>
 
-@import url('https://example.com/path/to/external/bootstrap.css');
+
 
 a {
   list-style-type: none;

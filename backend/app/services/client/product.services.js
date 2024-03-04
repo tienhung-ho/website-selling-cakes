@@ -30,7 +30,7 @@ class ProductServices {
     const products = await Product.find({
       available: true,
       deleted: false,
-    }).sort({ liked: -1 })
+    }).sort({ position: 'desc' })
     
     return products
   }

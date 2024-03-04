@@ -1,5 +1,9 @@
-
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 const StaffModel = require('../../models/staffs.model')
+// genarate
+const genarate = require('../../helpers/genarate.helpers')
+
 
 
 class StaffServices {
@@ -47,7 +51,14 @@ class StaffServices {
 
   async create (payload) {
     
+    const salt = await bcrypt.genSalt(parseInt(process.env.SALT))
+    const hashedPassword = await bcrypt.hash(payload.password, salt)
+    payload.password = hashedPassword
+
+
     const result = new StaffModel(payload)
+
+
     await result.save()
     
     return result
@@ -93,6 +104,56 @@ class StaffServices {
         deleted: true
       }
     )
+  }
+
+  async login (record, res) {
+    const existStaff = await StaffModel.findOne({
+      email: record.email,
+      deleted: false
+    })
+
+
+    if (existStaff) {
+
+      const corectUser = await bcrypt.compare(record.password, existStaff.password)
+
+      if (corectUser) {
+
+        const accessToken = genarate.genarateAccessToken(existStaff._id, 'user')
+        const refreshToken = genarate.genarateRefreshToken(existStaff._id)
+
+        // existStaff.tokenUser = accessToken
+        // existStaff.refreshTokenUser = refreshToken
+        // existStaff.save()
+
+
+        res.cookie('refreshToken', refreshToken, {
+          httpOnly: true,
+          maxAge: 60 * 60 * 1000
+        })
+
+        res.json({
+          code: 200,
+          message: 'Logined',
+          accessToken
+        })
+      }
+      else {
+        res.json({
+          code: 400,
+          message: 'Sai mật khẩu',
+        })
+      }
+
+
+    }
+    
+    else {
+      res.json({
+        code: 400,
+        message: 'Email is not exist!',
+      })
+    }
   }
 
 }

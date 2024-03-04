@@ -44,8 +44,5 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/admin/scss/variables.scss';
 
-/* Import JavaScript */
-@import url('https://link-to-your-javascript.js');
-
 </style>
 

@@ -2,7 +2,7 @@
 <template>
   <div class="edit">
     <Title :title="title" />
-    <Form @submit="isEdit ? onEdit($event) : onCreate($event)" class="edit-form container-fluid"
+    <Form @submit="isEdit ? onEdit($event) : onCreate($event)" class="edit-form  q-container"
       :validation-schema="productFormSchema">
 
       <Field v-model="product.name" class="edit-form__name" type="text" name="name" id="name" placeholder="Name..." />
@@ -25,28 +25,29 @@
 
       <Multiselect v-model="product.ingredients" :selected="value" :track-by="'value'" mode="multiple"
         :close-on-select="false" :options="options" placeholder="Choose ingredients" class="multiselect" />
-        
-        <div class="d-flex justify-content-space-between w-100">
-          
-          <Field v-model="product.quantity" class="edit-form__quantity w-50 me-5" type="number" name="quantity" id="quantity"
-          placeholder="Quantity..." />
-          
-          <div class="flex justify-content-around align-items-center w-25">
-            <input v-model="product.available" checked class="me-4 radio" type="radio" value="true" name="available" id="available">
-            <label for="available">Available</label>
-            
-            <input v-model="product.available" class="ms-4 me-4 radio" type="radio" :value="false" name="available"
+
+      <div class="lex justify-content-space-between w-100">
+
+        <Field v-model="product.quantity" class="edit-form__quantity w-50 me-5" type="number" name="quantity"
+          id="quantity" placeholder="Quantity..." />
+
+        <div class="q-flex row no-wrap justify-between  items-center content-center text-center">
+          <input v-model="product.available" checked class="me-4 radio" type="radio" value="true" name="available"
+            id="available">
+          <label for="available" class="text-center">Available</label>
+
+          <input v-model="product.available" class="ms-4 me-4 radio" type="radio" :value="false" name="available"
             id="unavailable">
-            <label for="unavailable">Unavailable</label>
-          </div>
+          <label for="unavailable" class="text-center">Unavailable</label>
         </div>
-        <ErrorMessage name="quantity" class="error-feedback" />
-      <div class="d-flex w-75 justify-content-between">
-        <Field v-model="product.discountPercentage" class="edit-form__discountPercentage w-50" type="number" name="discountPercentage" id="discountPercentage"
-          placeholder="Discount Percentage" />
-        
-          <Field v-model="product.position" class="edit-form__position w-25 me-5" type="number" name="position" id="position"
-          placeholder="Position..." />
+      </div>
+      <ErrorMessage name="quantity" class="error-feedback" />
+      <div class="q-flex row wrap justify-between  items-center content-center text-center w-100">
+        <Field v-model="product.discountPercentage" class="edit-form__discountPercentage flex-break" type="number"
+          name="discountPercentage" id="discountPercentage" placeholder="Discount Percentage" />
+
+        <Field v-model="product.position" class="edit-form__position" type="number" name="position"
+          id="position" placeholder="Position..." />
       </div>
 
       <div class="mb-3 w-100">
@@ -281,22 +282,22 @@ export default {
   },
   watch: {
     productEdit: {
-      handler: function(newVal, oldVal) {
+      handler: function (newVal, oldVal) {
         this.product = { ...newVal };
         console.log(this.product);
       },
       deep: true
     },
 
-    flavorArrayEdit:{
-      handler: function(newVal, oldVal) {
+    flavorArrayEdit: {
+      handler: function (newVal, oldVal) {
         this.flavorArray = newVal
       },
       deep: true
     },
 
-    defaultFlavorEdit:{
-      handler: function(newVal, oldVal) {
+    defaultFlavorEdit: {
+      handler: function (newVal, oldVal) {
         this.defaultFlavor = newVal;
       },
       deep: true
@@ -350,7 +351,7 @@ export default {
    }
 
    .radio {
-    width: 2rem !important;
+     width: 2rem !important;
    }
 
  }

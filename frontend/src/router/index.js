@@ -118,7 +118,6 @@ const routesAdmin = [
         name: 'EditStaff',
         component: () => import('@/views/admin/staffs/Edit.vue')
       },
-
       {
         path: 'permissions',
         name: 'Permissions',
@@ -136,9 +135,15 @@ const routesAdmin = [
         name: 'CreateRoles',
         component: () => import('@/views/admin/roles/Create.vue')
       },
+
       
     ]
-  }
+  },
+  {
+    path: '/staff/auth/login',
+    name: 'LoginAdmin',
+    component: () => import('@/views/admin/auth/Login.vue')
+  },
 
 ]
 
