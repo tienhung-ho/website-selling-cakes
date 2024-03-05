@@ -37,15 +37,34 @@ import { useQuasar } from 'quasar'
 import { ref } from 'vue'
 import { useAccountOfStaff } from '@/store/pinia.store'
 import AuthService from '@/services/admin/auth.services'
+import StaffServices from '@/services/admin/staffs.services'
+import router from '@/router'
 
 export default {
   name: 'FormAuth',
 
   setup() {
+    const $q = useQuasar()
+    let timer
 
+    // onUnmounted(() => {
+    //   if (timer !== void 0) {
+    //     clearTimeout(timer)
+    //     $q.loading.hide()
+    //   }
+    // })
 
     return {
-
+      showLoading() {
+        $q.loading.show({
+          message: 'Some important process  is in progress. Hang on...'
+        })
+        // hiding in 3s
+        timer = setTimeout(() => {
+          $q.loading.hide()
+          timer = void 0
+        }, 1000)
+      }
     }
   },
   data() {
@@ -66,11 +85,20 @@ export default {
 
       const staff = await AuthService.login(data)
 
-      console.log(staff.data.accessToken);
-
+      
       if (staff.data.accessToken) {
-        this.store.setStaff(staff.data.accessToken) // Call the mutation to set accessToken in store
+        // this.store.setStaff(staff.data.accessToken) // Call the mutation to set accessToken in store
+        const record = await StaffServices.getStaffWithAccessToken(staff.data.accessToken)
+        await this.store.setStaff(record._doc)
+
+        if (this.store.getStaff()) {
+          console.log(this.store.getStaff());
+          this.showLoading()
+          this.$router.push('/admin')
+        }
       }
+      
+
     }
   },
   created() {

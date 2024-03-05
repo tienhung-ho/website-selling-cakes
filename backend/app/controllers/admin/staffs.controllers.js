@@ -48,6 +48,7 @@ module.exports.findBySlug = async (req, res, next) => {
 
     if (!staff) {
       res.send('Staff not found')
+      return
     }
 
     const rolesServices = new RolesServices
@@ -185,6 +186,28 @@ module.exports.login = async (req, res) => {
     const staff = await staffService.login(record, res)
 
     
+  }
+  catch(err) {
+    res.json({
+      code: 400,
+      message: 'Could not login!',
+    })
+  }
+}
+
+// [POST] /admin/staff/login
+module.exports.getStaffByAccessToken = async (req, res) => {
+  try {
+    
+    const staffService = new StaffService()
+
+    const record = req.staff
+
+    const staff = await staffService.getStaffWithAccessToken(record)
+
+    res.json({
+      ...staff,
+    })
   }
   catch(err) {
     res.json({

@@ -11,12 +11,13 @@ const upload = multer()
 // cloud storage
 const uploadCloud = require('../../middlewares/admin/uploadCloud.js')
 
-
+// middlewares
+const middlewares = require('../../middlewares/admin/auth.middlewares.js')
 
 router.route('/')
   .get(controllers.find)
 
-router.route('/:slug')
+router.route('/get/:slug')
   .get(controllers.findBySlug)
 
 
@@ -39,8 +40,14 @@ router.route('/delete/:slug')
   .delete(controllers.delete)
 
 
-  router.route('/login') 
-    .post(controllers.login)
+router.route('/login') 
+  .post(controllers.login)
+
+router.route('/get-staff') 
+  .get(
+    middlewares.verifyAccessToken,
+    controllers.getStaffByAccessToken
+    )
 
 module.exports = router
 

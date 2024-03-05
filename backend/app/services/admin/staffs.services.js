@@ -119,7 +119,7 @@ class StaffServices {
 
       if (corectUser) {
 
-        const accessToken = genarate.genarateAccessToken(existStaff._id, 'user')
+        const accessToken = genarate.genarateAccessToken(existStaff._id, existStaff.role_id)
         const refreshToken = genarate.genarateRefreshToken(existStaff._id)
 
         // existStaff.tokenUser = accessToken
@@ -153,6 +153,16 @@ class StaffServices {
         code: 400,
         message: 'Email is not exist!',
       })
+    }
+  }
+
+  async getStaffWithAccessToken (payload) {
+    if (payload) {
+      const staff = await StaffModel.findOne({
+        _id: payload._id
+      }).select('-password')
+
+      return staff
     }
   }
 

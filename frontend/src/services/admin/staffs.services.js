@@ -12,7 +12,7 @@ class staffService {
   }
 
   async getStaffbySlug (slug) {
-    return (await this.api.get(`/${slug}`)).data
+    return (await this.api.get(`/get/${slug}`)).data
   }
 
   async createStaff(staff) {
@@ -44,6 +44,18 @@ class staffService {
     
     return (await this.api.delete(`/delete/${data}`))
   }
+
+  async getStaffWithAccessToken(token) {
+    return (await this.api.get(`/get-staff`, 
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+
+    }
+    )).data
+  }
+  
 }
 
 export default new staffService();
