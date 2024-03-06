@@ -58,11 +58,6 @@ import RolesServices from '@/services/admin/roles.services'
 import ActiveButton from '@/components/admin/staffs/Active.Button.vue';
 
 
-import 'bootstrap/dist/css/bootstrap.css';
-import 'popper.js';
-import 'bootstrap/dist/js/bootstrap';
-
-
 export default {
   name: 'Staff',
   components: {

@@ -1,5 +1,8 @@
 const RolesModel = require('../../models/roles.models')
 
+// helpers
+const transforms = require('../../helpers/tranforms.helpers')
+
 
 class RolesServices {
   extractStaffData(payload) {
@@ -20,29 +23,58 @@ class RolesServices {
 
   }
 
-  async find (_id) {
+  async find(_id) {
     const records = await this.RolesModel.find({
       deleted: false
     })
-    
+
     return records
   }
 
-  async findById (_id) {
+  async findById(_id) {
     const records = await this.RolesModel.findOne({
       _id,
     })
-    
+
     return records
   }
 
   async create(payload) {
     const role = this.extractStaffData(payload)
-    
-    await this.RolesModel.create(
-      role,
-    )
+
+    if (role) {
+      await this.RolesModel.create(
+        role,
+      )
+    }
+    else {
+      throw Error({ message: 'Could not create!' })
+    }
+
   }
+
+  async permissions(payload) {
+    
+    try {
+      const data = transforms.transformData(payload)
+      data.forEach( async item => {
+        
+        await this.RolesModel.findOneAndUpdate(
+          {
+            title: item.title
+          },
+          {
+            permissions: item.options
+          }
+        )
+      })
+      
+
+    } catch (error) {
+        console.error(`Lỗi khi thực hiện cập nhật: ${error}`);
+    }
+}
+
 
 
 }

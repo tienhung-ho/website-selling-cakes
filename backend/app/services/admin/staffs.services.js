@@ -126,17 +126,9 @@ class StaffServices {
         // existStaff.refreshTokenUser = refreshToken
         // existStaff.save()
 
+        return { accessToken, refreshToken }
 
-        res.cookie('refreshToken', refreshToken, {
-          httpOnly: true,
-          maxAge: 60 * 60 * 1000
-        })
-
-        res.json({
-          code: 200,
-          message: 'Logined',
-          accessToken
-        })
+        
       }
       else {
         res.json({

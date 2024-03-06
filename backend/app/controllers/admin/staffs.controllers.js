@@ -183,9 +183,20 @@ module.exports.login = async (req, res) => {
 
     const staffService = new StaffService()
 
-    const staff = await staffService.login(record, res)
+    const { accessToken, refreshToken } = await staffService.login(record, res)
 
     
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      maxAge: 60 * 60 * 1000
+    })
+
+    res.json({
+      code: 200,
+      message: 'Logined',
+      accessToken,
+    })
+
   }
   catch(err) {
     res.json({

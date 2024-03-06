@@ -19,7 +19,7 @@ module.exports.verifyAccessToken = async (req, res, next) => {
       }
 
       req.staff = decode
-      console.log(decode);
+      // console.log(decode);
       next()
     })
   }

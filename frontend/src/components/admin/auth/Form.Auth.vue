@@ -18,9 +18,9 @@
   border-radius: 8px;" color="dark" rounded size="md" label="Sign in" type="submit" no-caps class="full-width"></q-btn>
             </q-card-section>
             <q-card-section class="text-center q-pt-none">
-              <div class="text-grey-8">Don't have an account yet?
-                <a href="#" class="text-dark text-weight-bold" style="text-decoration: none">Sign
-                  up.</a>
+              <div class="text-grey-8">Don't have an account yet? Let contact with admin.
+                <!-- <a href="#" class="text-dark text-weight-bold" style="text-decoration: none">Sign
+                  up.</a> -->
               </div>
             </q-card-section>
 
@@ -87,6 +87,8 @@ export default {
 
       
       if (staff.data.accessToken) {
+
+        console.log(staff.data.accessToken);
         // this.store.setStaff(staff.data.accessToken) // Call the mutation to set accessToken in store
         const record = await StaffServices.getStaffWithAccessToken(staff.data.accessToken)
         await this.store.setStaff(record._doc)

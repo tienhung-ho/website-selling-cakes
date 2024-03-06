@@ -12,6 +12,9 @@ router.route('/')
 router.route('/create')
   .post(controllers.create)
 
+router.route('/permission')
+  .patch(controllers.permission)  
+
 
 module.exports = router
 

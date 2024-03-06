@@ -172,19 +172,20 @@ router.beforeEach((to, from, next) => {
   // const userInfo = store.getStaff();
   
   if (to.meta.requiresAuth) {
-    const isAuthenticated = requireAuth(to, from, next)
+  //   const isAuthenticated = requireAuth(to, from, next)
     
-    if (!isAuthenticated) {
-    //   // Chuyển hướng người dùng đến trang đăng nhập
-      next('/staff/auth/login');
-    } else {
-    //   // Cho phép tiếp tục điều hướng đến route mong muốn
-      next();
-    }
-  } else {
-    // Cho phép tiếp tục điều hướng đến các route không yêu cầu đăng nhập
-    next();
+  //   if (!isAuthenticated) {
+  //   //   // Chuyển hướng người dùng đến trang đăng nhập
+  //     next('/staff/auth/login');
+  //   } else {
+  //   //   // Cho phép tiếp tục điều hướng đến route mong muốn
+  //     next();
+  //   }
+  // } else {
+  //   // Cho phép tiếp tục điều hướng đến các route không yêu cầu đăng nhập
+  //   next();
   }
+  next()
 });
 router.beforeEach((to, from, next) => {
   window.scrollTo(0, 0);

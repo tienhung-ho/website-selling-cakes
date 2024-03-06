@@ -18,6 +18,12 @@ class staffService {
     })).data
   }
 
+  async permisson(data) {
+    return (await this.api.patch("/permission", {
+      params: data
+    })).data
+  }
+
   
 }
 
