@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const StaffModel = require('../../models/staffs.model')
+const RolesServices = require('../../services/admin/roles.services')
+
 // genarate
 const genarate = require('../../helpers/genarate.helpers')
 
@@ -30,17 +32,17 @@ class StaffServices {
 
   }
 
-  async find (payload) {
+  async find(payload) {
     const records = await this.StaffModel.find({
       deleted: false
     })
 
-    
+
 
     return records
   }
 
-  async findBySlug (slug) {
+  async findBySlug(slug) {
     const record = await this.StaffModel.findOne({
       slug,
       deleted: false
@@ -49,8 +51,8 @@ class StaffServices {
     return record
   }
 
-  async create (payload) {
-    
+  async create(payload) {
+
     const salt = await bcrypt.genSalt(parseInt(process.env.SALT))
     const hashedPassword = await bcrypt.hash(payload.password, salt)
     payload.password = hashedPassword
@@ -60,11 +62,11 @@ class StaffServices {
 
 
     await result.save()
-    
+
     return result
   }
 
-  async edit (payload, slug) {
+  async edit(payload, slug) {
     // const sl = slug
     const data = this.extractStaffData(payload)
     // if (data.password) {
@@ -82,31 +84,31 @@ class StaffServices {
     // return result
   }
 
-  async changeStatus (fullName, data) {
-  
+  async changeStatus(fullName, data) {
+
     const result = this.extractStaffData(data)
-    
+
     const staff = await StaffModel.findOneAndUpdate({
       fullName: fullName,
 
     }, result,
-    // { new: true }
+      // { new: true }
     )
     return staff
 
   }
 
-  async delete (slug) {
+  async delete(slug) {
     await this.StaffModel.findOneAndUpdate({
       slug
     },
-    {
+      {
         deleted: true
       }
     )
   }
 
-  async login (record, res) {
+  async login(record, res) {
     const existStaff = await StaffModel.findOne({
       email: record.email,
       deleted: false
@@ -128,7 +130,7 @@ class StaffServices {
 
         return { accessToken, refreshToken }
 
-        
+
       }
       else {
         res.json({
@@ -139,7 +141,7 @@ class StaffServices {
 
 
     }
-    
+
     else {
       res.json({
         code: 400,
@@ -148,13 +150,21 @@ class StaffServices {
     }
   }
 
-  async getStaffWithAccessToken (payload) {
+  async getStaffWithAccessToken(payload) {
     if (payload) {
+
+      const rolesServices = new RolesServices()
+
       const staff = await StaffModel.findOne({
         _id: payload._id
       }).select('-password')
 
-      return staff
+
+
+      const permissions = await rolesServices.findPermissionById(staff.role_id)
+
+
+      return { staff, permissions}
     }
   }
 

@@ -1,6 +1,6 @@
 <template>
-  <Title :title="this.title" />
-  <div class="cakes container-fluid">
+  <Title :title="this.title" v-if="permissions.includes('View Cake')"/>
+  <div class="cakes container-fluid" v-if="permissions.includes('View Cake')">
     <Filter v-model:changeStatus="this.condition.status" v-model:search="this.condition.name"
       v-model:changeProducts="this.condition.flavor" v-model:changeMultiple="this.condition.multiple"
       @changeMultiple="getProducts" :checkedProducts="checkItem" />
@@ -65,16 +65,19 @@
         <div class="col-1 table__cell--price">
           {{ product.price }}
         </div>
-        <div class="col-1 table__cell--status">
+        <div class="col-1 table__cell--status" v-if="permissions.includes('Edit Cake')">
           <ActiveButton :available="product.available" :id="product._id" @changedStatus="isChangedStatus" />
         </div>
-        <div class="col-2 table__cell--action">
+        <div class="col-2 table__cell--action" v-if="permissions.includes('Edit Cake')">
           <Options :product="product" @changeLiked="isChangedLike" @changeDeleted="isChangedDeleted" />
         </div>
       </div>
 
       <Pagination v-model:pagination="this.condition.currentPage" :totalPage="this.totalPage"/>
     </div>
+  </div>
+  <div v-else> 
+    <ErrorVue/>
   </div>
 
 </template>
@@ -89,7 +92,8 @@ import Options from '@/components/admin/products/Options.vue';
 import ButtonCustom from '@/views/admin/patials/ButtonCustom.vue';
 import ActiveButton from '@/components/admin/products/Active.Button.vue';
 import Pagination from '@/components/admin/ui/pagination/Pagination.vue'
-
+import { permissions } from '@/helpers/admin/get-staff.helpers'
+import ErrorVue from '@/views/admin/error/Error.vue'
 
 export default {
   name: 'Products',
@@ -100,7 +104,8 @@ export default {
     Options,
     ButtonCustom,
     ActiveButton,
-    Pagination
+    Pagination,
+    ErrorVue
 
   },
 
@@ -117,6 +122,7 @@ export default {
       checkedProducts: [],
       currentPage: 1,
       totalPage: 0,
+      permissions: [],
 
 
     }
@@ -201,6 +207,9 @@ export default {
 
   created() {
     this.getProducts()
+    this.permissions = permissions()
+    console.log(this.permissions);
+
 
   },
 

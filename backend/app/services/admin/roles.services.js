@@ -39,6 +39,14 @@ class RolesServices {
     return records
   }
 
+  async findPermissionById(_id) {
+    const records = await this.RolesModel.findOne({
+      _id,
+    }).select('permissions -_id')
+
+    return records.permissions
+  }
+
   async create(payload) {
     const role = this.extractStaffData(payload)
 

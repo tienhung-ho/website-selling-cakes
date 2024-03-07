@@ -11,6 +11,17 @@ module.exports.find =  async (req, res, next) => {
   res.json(roles)
 }
 
+// [GET] admin/roles/:id
+module.exports.findPermissionById =  async (req, res, next) => {
+  // let document = []
+  const { id } = req.params
+  const rolesServices = new RolesServices
+  const roles = await rolesServices.findPermissionById(id)
+
+  res.json(roles)
+}
+
+
 // [POST] admin/roles/creare
 module.exports.create =  async (req, res, next) => {
   

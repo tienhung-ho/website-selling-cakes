@@ -1,58 +1,59 @@
 <template>
   <div class="container-fliud">
-      <VueSidebarMenuAkahon 
-        :isUsedVueRouter="true"
-        menuTitle="THE TASTEAT"
-        menuIcon="bx-cake"
-        :menuItems="this.menuItems"
-        profileName="Jose fine"
-        profileRole="CEO & FOUNDER"
-        profileImg="https://images.pexels.com/photos/5273717/pexels-photo-5273717.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-      />
+    <VueSidebarMenuAkahon :isUsedVueRouter="true" menuTitle="THE TASTEAT" menuIcon="bx-cake" :menuItems="this.menuItems"
+      profileName="Jose fine" profileRole="CEO & FOUNDER"
+      profileImg="https://images.pexels.com/photos/5273717/pexels-photo-5273717.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" />
   </div>
 </template>
 
 <script>
-  import VueSidebarMenuAkahon from "vue-sidebar-menu-akahon";
-  
-  export default {
-    name: 'Header.vue',
-    components: {VueSidebarMenuAkahon},
-    data() {
-      return {
-        menuItems: [
+import VueSidebarMenuAkahon from "vue-sidebar-menu-akahon";
+
+export default {
+  name: 'Header.vue',
+  components: { VueSidebarMenuAkahon },
+  data() {
+    return {
+      menuItems: [
         // {
         //   link: "/admin",name: "Dashboard", tooltip: "Dashboard", icon: "bx-grid-alt" 
         // },
         {
-          link: { name: 'Products' }, name: "Products", tooltip: "Products", icon: "bx-cabinet" 
+          link: { name: 'Products' }, name: "Products", tooltip: "Products", icon: "bx-cabinet"
         },
         {
-          link: { name: 'Like' }, name: "Save", tooltip: "Save", icon: "bx-heart-circle" 
+          link: { name: 'Like' }, name: "Save", tooltip: "Save", icon: "bx-heart-circle"
         },
         {
-          link: {name: 'Staff'  } ,name: "Staff", tooltip: "Staff", icon: "bx-user-circle" 
+          link: { name: 'Staff' }, name: "Staff", tooltip: "Staff", icon: "bx-user-circle"
         },
         {
-          link: { name: 'Roles'  }, name: "Roles", tooltip: "Roles", icon: "bx-shape-square"
+          link: { name: 'Roles' }, name: "Roles", tooltip: "Roles", icon: "bx-shape-square"
         },
         {
-          link: { name: 'Permissions'  }, name: "Permissions", tooltip: "Permissons", icon: "bx-shield" 
+          link: { name: 'Permissions' }, name: "Permissions", tooltip: "Permissons", icon: "bx-shield"
         },
         {
-          link: "/admin", name: "Setting", tooltip: "Setting", icon: "bx-cog" 
+          link: "/admin", name: "Setting", tooltip: "Setting", icon: "bx-cog"
         },
-      ]
-      }
+      ],
     }
-  }
+  },
+  methods: {
+
+
+  },
+  created() {
+    
+    
+    // this.menuItems
+  },
+}
 </script>
 
 <style lang="scss" scoped>
-
 ul {
   padding: 0;
   margin: 0;
 }
-
 </style>

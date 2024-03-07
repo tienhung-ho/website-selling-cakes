@@ -8,6 +8,9 @@ const router = express.Router()
 router.route('/')
   .get(controllers.find)
 
+  
+router.route('/:id')
+.get(controllers.findPermissionById)
 
 router.route('/create')
   .post(controllers.create)

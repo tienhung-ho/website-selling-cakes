@@ -214,11 +214,14 @@ module.exports.getStaffByAccessToken = async (req, res) => {
 
     const record = req.staff
 
-    const staff = await staffService.getStaffWithAccessToken(record)
+    const data = await staffService.getStaffWithAccessToken(record)
+    const { staff, permissions } = data
 
-    res.json({
-      ...staff,
-    })
+    res.json(
+      {
+        staff,
+        permissions
+      })
   }
   catch(err) {
     res.json({

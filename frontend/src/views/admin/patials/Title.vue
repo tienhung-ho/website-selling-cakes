@@ -1,56 +1,237 @@
+
 <template>
-  <div class="title q-container">
-    <div class="title__header q-layout">
-      <div class="title__header--logo col-3">
-        THE TASTEAT
-      </div>
-      <div class="title__header--ops col-9">
-        <span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-            style="fill: rgba(225, 225, 225, 1);transform: ;msFilter:;">
-            <path
-              d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z">
-            </path>
-            <path
-              d="M11.412 8.586c.379.38.588.882.588 1.414h2a3.977 3.977 0 0 0-1.174-2.828c-1.514-1.512-4.139-1.512-5.652 0l1.412 1.416c.76-.758 2.07-.756 2.826-.002z">
-            </path>
-          </svg>
-        </span>
-        <span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-            style="fill: rgba(225, 225, 225, 1);transform: ;msFilter:;">
-            <path
-              d="M5 6a.4.4 0 0 0-.38.62l2 3.38-3.06 5.4a.45.45 0 0 0 0 .45.43.43 0 0 0 .38.19h2.87a.89.89 0 0 0 .79-.55s3-5.31 3.11-5.51l-2-3.46A.91.91 0 0 0 7.92 6zM17.16 2a.84.84 0 0 0-.77.55L10 13.93l4.09 7.52a.91.91 0 0 0 .81.55h2.88a.43.43 0 0 0 .38-.18.45.45 0 0 0 0-.45l-4.07-7.43 6.36-11.31a.45.45 0 0 0 0-.45.44.44 0 0 0-.38-.18z">
-            </path>
-          </svg>
-        </span>
-        <div class="header__img">
-          <img src="https://images.pexels.com/photos/5273717/pexels-photo-5273717.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="">
+  <q-layout class="bg-grey-1" style="min-height: 0;">
+    <q-header elevated class="text-white" style="background: #24292e" height-hint="61.59">
+      <q-toolbar class="q-py-sm q-px-md">
+        <q-btn round dense flat :ripple="false" :icon="fasCakeCandles" size="19px" color="white" class="q-mr-sm" no-caps />
+
+        <q-select ref="search" dark dense standout use-input hide-selected class="GL__toolbar-select" color="black"
+          :stack-label="false" label="Search or jump to..." v-model="text" :options="filteredOptions" @filter="filter"
+          style="width: 300px">
+
+          <template v-slot:append>
+            <!-- <img src="https://cdn.quasar.dev/img/layout-gallery/img-github-search-key-slash.svg"> -->
+            <i class="bx icon bx-cake"></i>
+          </template>
+
+          <template v-slot:no-option>
+            <q-item>
+              <q-item-section>
+                <div class="text-center">
+                  <q-spinner-pie color="grey-5" size="24px" />
+                </div>
+              </q-item-section>
+            </q-item>
+          </template>
+
+          <template v-slot:option="scope">
+            <q-item v-bind="scope.itemProps" class="GL__select-GL__menu-link">
+              <q-item-section side>
+                <q-icon name="collections_bookmark" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label v-html="scope.opt.label" />
+              </q-item-section>
+              <q-item-section side :class="{ 'default-type': !scope.opt.type }">
+                <q-btn outline dense no-caps text-color="blue-grey-5" size="12px" class="bg-grey-1 q-px-sm">
+                  {{ scope.opt.type || 'Jump to' }}
+                  <q-icon name="subdirectory_arrow_left" size="14px" />
+                </q-btn>
+              </q-item-section>
+            </q-item>
+          </template>
+        </q-select>
+
+        <div v-if="$q.screen.gt.sm"
+          class="GL__toolbar-link q-ml-xs q-gutter-md text-body2 text-weight-bold row items-center no-wrap">
+          <a href="javascript:void(0)" class="text-white">
+            Pull requests
+          </a>
+          <a href="javascript:void(0)" class="text-white">
+            Issues
+          </a>
+          <a href="javascript:void(0)" class="text-white">
+            Marketplace
+          </a>
+          <a href="javascript:void(0)" class="text-white">
+            Explore
+          </a>
+        </div>
+
+        <q-space />
+
+        <div class="q-pl-sm q-gutter-sm row items-center no-wrap">
+          <q-btn v-if="$q.screen.gt.xs" dense flat round size="sm" icon="notifications" />
+          <q-btn v-if="$q.screen.gt.xs" dense flat>
+            <div class="row items-center no-wrap">
+              <q-icon name="add" size="20px" />
+              <q-icon name="arrow_drop_down" size="16px" style="margin-left: -2px" />
+            </div>
+            <q-menu auto-close>
+              <q-list dense style="min-width: 100px">
+                <q-item clickable class="GL__menu-link">
+                  <q-item-section>New repository</q-item-section>
+                </q-item>
+                <q-item clickable class="GL__menu-link">
+                  <q-item-section>Import repository</q-item-section>
+                </q-item>
+                <q-item clickable class="GL__menu-link">
+                  <q-item-section>New gist</q-item-section>
+                </q-item>
+                <q-item clickable class="GL__menu-link">
+                  <q-item-section>New organization</q-item-section>
+                </q-item>
+                <q-separator />
+                <q-item-label header>This repository</q-item-label>
+                <q-item clickable class="GL__menu-link">
+                  <q-item-section>New issue</q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-btn>
+
+          <q-btn dense flat no-wrap>
+            <q-avatar rounded size="20px">
+              <img :src="staff.avatar">
+            </q-avatar>
+            <q-icon name="arrow_drop_down" size="16px" />
+
+            <q-menu auto-close>
+              <q-list dense>
+                <q-item class="GL__menu-link-signed-in">
+                  <q-item-section>
+                    <div>Signed in as <strong>{{ staff.fullName }}</strong></div>
+                  </q-item-section>
+                </q-item>
+                <q-separator />
+                <q-item clickable class="GL__menu-link-status">
+                  <q-item-section>
+                    <div>
+                      <q-icon name="tag_faces" color="blue-9" size="18px" />
+                      Set your status
+                    </div>
+                  </q-item-section>
+                </q-item>
+                <q-separator />
+                <q-item clickable class="GL__menu-link">
+                  <q-item-section>Your profile</q-item-section>
+                </q-item>
+                <q-item clickable class="GL__menu-link">
+                  <q-item-section>Your repositories</q-item-section>
+                </q-item>
+                <q-item clickable class="GL__menu-link">
+                  <q-item-section>Your projects</q-item-section>
+                </q-item>
+                <q-item clickable class="GL__menu-link">
+                  <q-item-section>Your stars</q-item-section>
+                </q-item>
+                <q-item clickable class="GL__menu-link">
+                  <q-item-section>Your gists</q-item-section>
+                </q-item>
+                <q-separator />
+                <q-item clickable class="GL__menu-link">
+                  <q-item-section>Help</q-item-section>
+                </q-item>
+                <q-item clickable class="GL__menu-link">
+                  <q-item-section>Settings</q-item-section>
+                </q-item>
+                <q-item clickable class="GL__menu-link">
+                  <q-item-section>Sign out</q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-btn>
+        </div>
+      </q-toolbar>
+    </q-header>
+
+    <q-page-container>
+      <div class="title">
+
+        <div class="title__content q-layout">
+          <h1>
+            {{ title }}
+          </h1>
+
+          <p>
+            {{ content }}
+          </p>
         </div>
       </div>
-
-    </div>
-    <div class="title__content q-layout">
-      <h1>
-        {{ title }}
-      </h1>
-
-      <p>
-        {{ content }}
-      </p>
-    </div>
-  </div>
+    </q-page-container>
+  </q-layout>
 </template>
 
 <script>
+import { ref } from 'vue'
+import { fabGithub, fasCakeCandles} from '@quasar/extras/fontawesome-v6'
+
+import { staff } from '@/helpers/admin/get-staff.helpers'
+
+const stringOptions = [
+  'quasarframework/quasar',
+  'quasarframework/quasar-awesome'
+]
 
 export default {
-  name: 'Title',
+  name: 'MyLayout',
 
-  components: {
+  setup() {
+    const text = ref('')
+    const options = ref(null)
+    const filteredOptions = ref([])
+    const search = ref(null) // $refs.search
 
+    function filter(val, update) {
+      if (options.value === null) {
+        // load data
+        setTimeout(() => {
+          options.value = stringOptions
+          search.value.filter('')
+        }, 2000)
+        update()
+        return
+      }
+
+      if (val === '') {
+        update(() => {
+          filteredOptions.value = options.value.map(op => ({ label: op }))
+        })
+        return
+      }
+
+      update(() => {
+        filteredOptions.value = [
+          {
+            label: val,
+            type: 'In this repository'
+          },
+          {
+            label: val,
+            type: 'All GitHub'
+          },
+          ...options.value
+            .filter(op => op.toLowerCase().includes(val.toLowerCase()))
+            .map(op => ({ label: op }))
+        ]
+      })
+    }
+
+    return {
+      fabGithub,
+      fasCakeCandles,
+      text,
+      options,
+      filteredOptions,
+      search,
+      filter
+    }
   },
-
+  data() {
+    return {
+      staff: {}
+    }
+  },
   props: {
     title: {
       type: String,
@@ -61,15 +242,85 @@ export default {
       type: String,
       default: 'We believe that the foundation of a great cake lies in the quality of its ingredients. That\'s why we use only the finest, freshest components to ensure each bite is a delightful experience.'
     },
+  },
+  methods: {
+    
+  },
+  created() {
+   this.staff = staff()
   }
 
 }
-
 </script>
 
-<style lang="scss" scoped>
-@import '@/assets/admin/scss/variables.scss';
+<style lang="scss">
 @import url('https://fonts.cdnfonts.com/css/lt-binary-neue');
+
+@import '@/assets/admin/scss/variables.scss';
+
+.GL {
+
+  &__select-GL__menu-link {
+    .default-type {
+      visibility: hidden;
+    }
+
+    &:hover {
+      background: #0366d6;
+      color: white;
+
+      .q-item__section--side {
+        color: white;
+      }
+
+      .default-type {
+        visibility: visible;
+      }
+    }
+  }
+
+  &__toolbar-link {
+    a {
+      color: white;
+      text-decoration: none;
+
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+  }
+
+  &__menu-link:hover {
+    background: #0366d6;
+    color: white;
+  }
+
+  &__menu-link-signed-in,
+  &__menu-link-status {
+    &:hover {
+      &>div {
+        background: white !important;
+      }
+    }
+  }
+
+  &__menu-link-status {
+    color: $blue-grey-6;
+
+    &:hover {
+      color: $light-blue-9;
+    }
+  }
+
+  &__toolbar-select.q-field--focused {
+    width: 450px !important;
+
+    .q-field__append {
+      display: none;
+    }
+  }
+}
+
 
 .title {
   width: 100%;
@@ -98,44 +349,5 @@ export default {
 
 
   }
-
-  &__header {
-    background-color: rgba($color: $sidebar-color, $alpha: .98);
-    color: white;
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-    vertical-align: middle;
-    height: 25%;
-
-    &--ops {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-
-      span {
-        margin-right: 1.8rem;
-      }
-      .header__img {
-        margin-right: 1rem;
-        border-radius: 100%;
-        width: 3rem;
-        height: 3rem;
-        background-color: white;
-
-        img {
-          object-fit: cover;
-          aspect-ratio: 16/9;
-          background-size: cover;
-          width: 100%;
-          height: 100%;
-          border-radius: 100%;
-        }
-      }
-    }
-
-  }
-
-
 }
 </style>
