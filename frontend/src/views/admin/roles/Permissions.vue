@@ -113,6 +113,17 @@ export default {
 
     async sendData() {
       if (this.selectedOptions.length > 0) {
+        const title =[]
+        for (const item of this.selectedOptions) {
+          title.push(item.split('-')[0])
+        }
+
+        const difference = this.roles.filter(item => !title.includes(item));
+
+        difference.forEach(item => {
+          this.selectedOptions.push(`${item}-`)
+        })
+
         console.log(this.selectedOptions);
         await RolesServices.permisson(this.selectedOptions)
       }
@@ -132,11 +143,25 @@ export default {
         // we're done, we reset loading state
         this.loading = false
       }, 2000)
+    },
+
+    async setPermission () {
+     const res = await RolesServices.getPermission()
+
+     if (res.code === 200) {
+      const data = res.data
+      this.selectedOptions = data
+     }
+     else {
+      throw Error('Error: 404, Could not found permissons')
+     }
+     
     }
   },
 
   created() {
     this.getRoles()
+    this.setPermission()
   }
 
 }

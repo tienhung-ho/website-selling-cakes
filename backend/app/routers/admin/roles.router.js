@@ -16,7 +16,10 @@ router.route('/create')
   .post(controllers.create)
 
 router.route('/permission')
-  .patch(controllers.permission)  
+  .patch(controllers.permission) 
+
+router.route('/permission/data')
+  .get(controllers.getPermission) 
 
 
 module.exports = router

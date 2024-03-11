@@ -62,11 +62,11 @@ class RolesServices {
   }
 
   async permissions(payload) {
-    
+
     try {
-      const data = transforms.transformData(payload)
-      data.forEach( async item => {
-        
+      const data = await transforms.transformData(payload)
+      data.forEach(async item => {
+        // console.log(item);
         await this.RolesModel.findOneAndUpdate(
           {
             title: item.title
@@ -76,12 +76,29 @@ class RolesServices {
           }
         )
       })
-      
+
 
     } catch (error) {
-        console.error(`Lỗi khi thực hiện cập nhật: ${error}`);
+      console.error(`Lỗi khi thực hiện cập nhật: ${error}`);
     }
-}
+  }
+
+  async getPermissions() {
+
+    try {
+
+      const data = await this.RolesModel.find({
+        deleted: false
+      })
+
+      const dataJson = await transforms.transformDataToJson(data)
+
+      return dataJson
+
+    } catch (error) {
+      console.error(`Lỗi khi chuyển đổi dữ liệu: ${error}`);
+    }
+  }
 
 
 

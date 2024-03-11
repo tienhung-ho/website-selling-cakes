@@ -12,10 +12,13 @@ class staffService {
   }
 
   async getRolesPermissionById(id) {
-    console.log(id);
+    // console.log(id);
     return (await this.api.get(`/${id}`)).data
   } 
 
+  async getPermission() {
+    return (await this.api.get(`/permission/data`)).data
+  }
 
   async createRole(data) {
     return (await this.api.post("/create", {

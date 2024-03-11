@@ -30,7 +30,7 @@ module.exports.create =  async (req, res, next) => {
   if (data) {
 
     const rolesServices = new RolesServices
-    const roles = rolesServices.create(data)
+    const roles = await rolesServices.create(data)
   
     res.json(roles)
 
@@ -45,22 +45,51 @@ module.exports.create =  async (req, res, next) => {
 
 // [PATCH] admin/roles/permission
 module.exports.permission =  async (req, res, next) => {
+  try {
+    const permissions = req.body.params
   
-  const permissions = req.body.params
-
-  if (permissions.length > 0) {
-
-    const rolesServices = new RolesServices
-    const roles = rolesServices.permissions(permissions)
+    if (permissions.length > 0) {
   
-    res.json(roles)
-
+      const rolesServices = new RolesServices
+      const roles = await rolesServices.permissions(permissions)
+    
+      res.json(roles)
+  
+    }
+    else {
+      res.json({
+        code: 400,
+        message: "Data not found, could not create!"
+      })
+    }
   }
-  else {
+  catch(err) {
     res.json({
       code: 400,
-      message: "Data not found, could not create!"
+      message: "Could no receive the data!"
     })
   }
+}
+
+// [GET] admin/roles/permission
+module.exports.getPermission =  async (req, res, next) => {
+  try {
+
+    const rolesServices = new RolesServices
+    const roles = await rolesServices.getPermissions()
+    res.json({
+      code: 200,
+      message: 'Completed get permissions!',
+      data: roles
+    })
+  }
+  catch(err) {
+    res.json({
+      code: 400,
+      message: 'Could not get permisson!'
+    })
+
+  }
+  
 }
 
