@@ -12,7 +12,6 @@ class staffService {
   }
 
   async getRolesPermissionById(id) {
-    // console.log(id);
     return (await this.api.get(`/${id}`)).data
   } 
 

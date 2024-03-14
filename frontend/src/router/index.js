@@ -1,13 +1,17 @@
 
 import { createWebHistory, createRouter } from "vue-router"
 
+import StaffServices from '@/services/admin/staffs.services'
+import RolesServices from '@/services/admin/roles.services'
+
 import routesAdmin from "./admin"
 import routesClient from "./client"
 
 import { useAccountOfStaff } from '@/store/pinia.store'
+import staffsServices from "@/services/admin/staffs.services"
 
 // middlewares
-import { requireAuth } from '@/middlewares/admin/auth.middlewares'
+
 
 
 // const routesClient = [
@@ -166,23 +170,34 @@ const router = createRouter({
   routes, // short for `routes: routes`
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
 
-  if (to.meta.requiresAuth) {
-    const isLoggedIn = useAccountOfStaff().getStaff();
-    if (!isLoggedIn.staff) {
-      //   // Chuyển hướng người dùng đến trang đăng nhập
-      next('/staff/auth/login');
-      throw new Error("Err: 404 Không tìm thấy người dùng!")
+  try {
+
+    if (to.meta.requiresAuth) {
+      const record = await staffsServices.getStaffWithAccessToken()
+      useAccountOfStaff().setStaff(record._doc)
+      if (to.name !== 'LoginAdmin' && !record._doc) {
+        next({ name: 'LoginAdmin' })
+        // return
+      }
+      else {
+        const staff = record._doc
+        const permissions = await RolesServices.getRolesPermissionById(staff.role_id)
+        useAccountOfStaff().setPermissions(permissions)
+        next()
+      }
+
     } else {
-      //   // Cho phép tiếp tục điều hướng đến route mong muốn
+      // Cho phép tiếp tục điều hướng đến các route không yêu cầu đăng nhập
       next();
     }
-  } else {
-    // Cho phép tiếp tục điều hướng đến các route không yêu cầu đăng nhập
-    next();
   }
-  // next()
+  catch (err) {
+    // console.log(err.config.url);
+    console.log(err);
+      return next('/staff/auth/login')
+  }
 });
 router.beforeEach((to, from, next) => {
   window.scrollTo(0, 0);

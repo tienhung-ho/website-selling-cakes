@@ -14,11 +14,28 @@ module.exports.find =  async (req, res, next) => {
 // [GET] admin/roles/:id
 module.exports.findPermissionById =  async (req, res, next) => {
   // let document = []
-  const { id } = req.params
-  const rolesServices = new RolesServices
-  const roles = await rolesServices.findPermissionById(id)
+  try {
+    const id = req.params.id
+    if (id) {
+      const rolesServices = new RolesServices
+      const roles = await rolesServices.findPermissionById(id)
+    
+      res.json(roles)
+    }
+    else {
+      res.json({
+        code: 404,
+        message: 'Could not found Id'
+      })
+    }
 
-  res.json(roles)
+  }
+  catch(err) {
+    res.json({
+      code: 500,
+      message: 'Could not found data to client!'
+    })
+  }
 }
 
 

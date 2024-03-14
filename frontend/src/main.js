@@ -45,12 +45,16 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 import Multiselect from 'vue-multiselect';
 
 
-import { Quasar, Loading } from 'quasar'
+import { Quasar, Loading, Notify } from 'quasar'
+
+// vue cookies
+import VueCookies from 'vue-cookies'
 
 const pinia = createPinia()
 
 
 const app = createApp(App)
+
 
 app.component('vue-sidebar-menu-akahon', VueSidebarMenuAkahon)
 app.component('font-awesome-icon', FontAwesomeIcon)
@@ -61,10 +65,11 @@ app
   .use(VueSweetalert2)
   .use(Quasar, {
     plugins: {
-      Loading
+      Loading,
+      Notify
     },
   })
-
+  .use(VueCookies)
   .use(router)
   .use(pinia)
   .use(store)

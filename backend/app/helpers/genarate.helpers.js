@@ -29,14 +29,13 @@ module.exports.genarateRanNumber = (length) => {
 }
 
 module.exports.genarateAccessToken = (id, role) => {
-  const token = jwt.sign({ _id: id, role}, keySecret, { expiresIn: '1h' })
+  const token = jwt.sign({ _id: id, role}, keySecret, { expiresIn: '30m' })
 
   return token
 }
 
 module.exports.genarateRefreshToken = (id) => {
-  const token = jwt.sign({ _id: id, }, keySecretRefresh, { expiresIn: '7d' })
-
+  const token = jwt.sign({ _id: id}, keySecretRefresh, { expiresIn: '30d' })
   return token
 
 }

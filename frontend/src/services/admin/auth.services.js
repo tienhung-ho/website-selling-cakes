@@ -10,7 +10,7 @@ class authService {
   async login(data) {
     return (await this.api.post("login", {
       data
-    }))
+    })).data
   }
 
 

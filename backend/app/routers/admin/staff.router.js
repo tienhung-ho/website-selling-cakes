@@ -45,8 +45,14 @@ router.route('/login')
 
 router.route('/get-staff') 
   .get(
-    middlewares.verifyAccessToken,
+    middlewares.verifyAccessTokenTwoAuth,
     controllers.getStaffByAccessToken
+    )
+
+router.route('/refreshtoken')
+    .get(
+      middlewares.verifyRefreshToken,
+      controllers.getAccessToken
     )
 
 module.exports = router

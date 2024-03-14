@@ -1,5 +1,5 @@
 <template>
-  <Title :title="this.title" v-if="permissions.includes('View Cake')"/>
+  <Title :title="this.title" v-if="permissions.includes('View Cake')" />
   <div class="cakes container-fluid" v-if="permissions.includes('View Cake')">
     <Filter v-model:changeStatus="this.condition.status" v-model:search="this.condition.name"
       v-model:changeProducts="this.condition.flavor" v-model:changeMultiple="this.condition.multiple"
@@ -33,8 +33,8 @@
 
       </div>
 
-      
-      <div class="table__row row" v-for="product, index in this.products">
+      <ProductsList v-if="isShow" />
+      <div v-else class="table__row row" v-for="product, index in this.products">
 
         <div class="col-1 table__cell--cakes">
           <input v-model="checkedProducts[index].checked" type="checkbox" class="checkItem" :name="product.slug"
@@ -56,30 +56,29 @@
           </div>
 
         </div>
-        <div class="col-2 table__cell--flavor">
+        <div class="col-2 table__cell--flavor table__cell--item">
           {{ product.position }}
         </div>
-        <div class="col-1 table__cell--quantity">
+        <div class="col-1 table__cell--quantity table__cell--item">
           {{ product.quantity }}
         </div>
-        <div class="col-1 table__cell--price">
+        <div class="col-1 table__cell--price table__cell--item">
           {{ product.price }}
         </div>
-        <div class="col-1 table__cell--status" v-if="permissions.includes('Edit Cake')">
+        <div class="col-1 table__cell--status table__cell--item" v-if="permissions.includes('Edit Cake')">
           <ActiveButton :available="product.available" :id="product._id" @changedStatus="isChangedStatus" />
         </div>
-        <div class="col-2 table__cell--action" v-if="permissions.includes('Edit Cake')">
+        <div class="col-2 table__cell--action table__cell--item" v-if="permissions.includes('Edit Cake')">
           <Options :product="product" @changeLiked="isChangedLike" @changeDeleted="isChangedDeleted" />
         </div>
       </div>
 
-      <Pagination v-model:pagination="this.condition.currentPage" :totalPage="this.totalPage"/>
+      <Pagination v-model:pagination="this.condition.currentPage" :totalPage="this.totalPage" />
     </div>
   </div>
-  <div v-else> 
-    <ErrorVue/>
+  <div v-else>
+    <ErrorVue />
   </div>
-
 </template>
   
 <script>
@@ -94,10 +93,35 @@ import ActiveButton from '@/components/admin/products/Active.Button.vue';
 import Pagination from '@/components/admin/ui/pagination/Pagination.vue'
 import { permissions } from '@/helpers/admin/get-staff.helpers'
 import ErrorVue from '@/views/admin/error/Error.vue'
+import { useQuasar } from 'quasar'
+import ProductsList from '@/components/admin/ui/skeletons/Products-list.vue'
 
 export default {
   name: 'Products',
+  setup() {
+    const $q = useQuasar()
+    let timer
 
+    // onUnmounted(() => {
+    //   if (timer !== void 0) {
+    //     clearTimeout(timer)
+    //     $q.loading.hide()
+    //   }
+    // })
+
+    return {
+      showLoading() {
+        $q.loading.show({
+          message: 'Some important process  is in progress. Hang on...'
+        })
+        // hiding in 3s
+        timer = setTimeout(() => {
+          $q.loading.hide()
+          timer = void 0
+        }, 1000)
+      }
+    }
+  },
   components: {
     Title,
     Filter,
@@ -105,7 +129,8 @@ export default {
     ButtonCustom,
     ActiveButton,
     Pagination,
-    ErrorVue
+    ErrorVue,
+    ProductsList
 
   },
 
@@ -123,6 +148,7 @@ export default {
       currentPage: 1,
       totalPage: 0,
       permissions: [],
+      isShow: true,
 
 
     }
@@ -135,11 +161,12 @@ export default {
   methods: {
     async getProducts(page) {
       try {
-        
-        const payloat = await ProductsServices.getAllProducts(this.condition)
-        this.products = payloat.products
-        this.totalPage = payloat.totalPage
-        
+        // this.isShow = true
+        const payload = await ProductsServices.getAllProducts(this.condition)
+        this.isShow = false
+        this.products = payload.products
+        this.totalPage = payload.totalPage
+
         this.checkAll = false
         this.checkedProducts = this.products.map(item => {
           let data = {
@@ -149,7 +176,8 @@ export default {
           return data
         })
 
-        // console.log(this.checkedProducts);
+
+        // console.log(this.$cookies.get("PayloadAccessToken"));
       }
       catch (err) {
         console.log(err);
@@ -209,8 +237,7 @@ export default {
     this.getProducts()
     this.permissions = permissions()
     console.log(this.permissions);
-
-
+    this.showLoading()
   },
 
   watch: {
@@ -258,6 +285,11 @@ export default {
       // .col-2 {
       //   // Adjust spacing or styles for the empty column
       // }
+      .table__cell--item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     }
 
     .table__title {
@@ -273,6 +305,10 @@ export default {
     .table__cell {
 
       &--cakes {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+
         .cakes-img {
           height: 5rem;
           width: 5rem;
@@ -287,6 +323,10 @@ export default {
 
           }
         }
+
+        .cakes-name {
+          width: 30%;
+        }
       }
 
 
@@ -299,6 +339,5 @@ export default {
   }
 }
 </style>
-
 
 

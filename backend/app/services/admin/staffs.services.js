@@ -161,10 +161,24 @@ class StaffServices {
 
 
 
-      const permissions = await rolesServices.findPermissionById(staff.role_id)
+      // const permissions = await rolesServices.findPermissionById(staff.role_id)
 
 
-      return { staff, permissions}
+      return staff
+    }
+  }
+
+  async getAccessTokenWithRefreshToken(payload) {
+    if (payload) {
+
+      const staff = await StaffModel.findOne({
+        _id: payload._id
+      }).select('_id role_id')
+
+      // console.log(staff);
+      const newAccesToken = genarate.genarateAccessToken(staff._id, staff.role_id)
+      
+      return newAccesToken
     }
   }
 

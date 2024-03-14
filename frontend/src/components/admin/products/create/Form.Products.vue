@@ -26,12 +26,12 @@
       <Multiselect v-model="product.ingredients" :selected="value" :track-by="'value'" mode="multiple"
         :close-on-select="false" :options="options" placeholder="Choose ingredients" class="multiselect" />
 
-      <div class="lex justify-content-space-between w-100">
+      <div class="quantity-status justify-content-space-between w-100">
 
         <Field v-model="product.quantity" class="edit-form__quantity w-50 me-5" type="number" name="quantity"
           id="quantity" placeholder="Quantity..." />
 
-        <div class="q-flex row no-wrap justify-between  items-center content-center text-center">
+        <div class="status q-flex row no-wrap justify-between  items-center content-center text-center">
           <input v-model="product.available" checked class="me-4 radio" type="radio" value="true" name="available"
             id="available">
           <label for="available" class="text-center">Available</label>
@@ -42,12 +42,12 @@
         </div>
       </div>
       <ErrorMessage name="quantity" class="error-feedback" />
-      <div class="q-flex row wrap justify-between  items-center content-center text-center w-100">
+      <div class="position-discount q-flex row wrap justify-between  items-center content-center text-center w-100">
         <Field v-model="product.discountPercentage" class="edit-form__discountPercentage flex-break" type="number"
           name="discountPercentage" id="discountPercentage" placeholder="Discount Percentage" />
 
-        <Field v-model="product.position" class="edit-form__position" type="number" name="position"
-          id="position" placeholder="Position..." />
+        <Field v-model="product.position" class="edit-form__position" type="number" name="position" id="position"
+          placeholder="Position..." />
       </div>
 
       <div class="mb-3 w-100">
@@ -321,6 +321,11 @@ export default {
      flex-direction: column;
      padding: 2rem;
 
+    img {
+      width: 30%;
+    }
+
+
      input {
        width: 90%;
        height: 4rem;
@@ -346,6 +351,35 @@ export default {
        justify-content: center;
 
 
+
+
+     }
+
+     .position-discount {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 90%;
+
+      .edit-form__discountPercentage, .edit-form__position {
+        width: 45%;
+      }
+
+     }
+
+     .quantity-status {
+       display: flex;
+       justify-content: space-between;
+       align-items: center;
+       width: 90%;
+
+       .edit-form__quantity {
+         width: 60%;
+       }
+
+       .status {
+        width: 30%;
+       }
      }
 
    }

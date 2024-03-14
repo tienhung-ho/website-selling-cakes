@@ -45,11 +45,23 @@ class staffService {
     return (await this.api.delete(`/delete/${data}`))
   }
 
-  async getStaffWithAccessToken(token) {
+  async getStaffWithAccessToken() {
+    const token = $cookies.get('PayloadAccessToken')
     return (await this.api.get(`/get-staff`, 
     {
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `AccessToken.Header.Payload ${token}`
+      },
+
+    }
+    )).data
+  }
+
+  async getAccessTokenWithRefreshToken(token) {
+    return (await this.api.get(`/refreshtoken`, 
+    {
+      headers: {
+        Authorization: `RefreshToken.Header.Paload ${token}`
       },
 
     }

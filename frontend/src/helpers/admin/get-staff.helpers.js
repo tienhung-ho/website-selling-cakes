@@ -4,7 +4,7 @@ const store = useAccountOfStaff()
 
 export function staff () {
   if (store.getStaff()) {
-    const staff = store.getStaff().staff
+    const staff = store.getStaff()
     
     return staff
   }
@@ -16,7 +16,7 @@ export function staff () {
 
 export function permissions () {
   if (store.getStaff()) {
-    const permissions = store.getStaff().permissions
+    const permissions = store.getPermissions()
     
     return permissions
   }

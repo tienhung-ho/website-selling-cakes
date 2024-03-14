@@ -45,7 +45,7 @@ module.exports.find = async (req, res, next) => {
         conditions,
       )
       // console.log(products);
-      res.json({
+      return res.status(200).json({
         products,
         totalPage
       })
@@ -54,7 +54,7 @@ module.exports.find = async (req, res, next) => {
   }
   catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 }
 
@@ -63,12 +63,12 @@ module.exports.findLike = async (req, res, next) => {
   try {
     const productServices = new ProductServices()
     const products = await productServices.findLike()
-    res.send(products)
+    return res.status(200).json(products)
 
   }
   catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 }
 
@@ -92,12 +92,12 @@ module.exports.changeStatus = async (req, res, next) => {
       return res.json(updatedProduct);
     }
     else {
-      res.status(400).json({ error: 'Product not true' })
+      return res.status(400).json({ error: 'Product not true' })
     }
   }
   catch (err) {
     console.log(err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 
 }
@@ -163,12 +163,12 @@ module.exports.edit = async (req, res, next) => {
       return res.json(updatedProduct);
     }
     else {
-      res.status(400).json({ error: 'Product not true' })
+     return res.status(400).json({ error: 'Product not true' })
     }
   }
   catch (err) {
     console.log(err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 
 }
@@ -191,6 +191,7 @@ module.exports.create = async (req, res, next) => {
   }
   catch (err) {
     console.log(err);
+    return
   }
 
 }
@@ -208,14 +209,14 @@ module.exports.findBySlug = async (req, res, next) => {
         return res.status(404).json({ error: "Product not found" });
       }
       // Trả về sản phẩm nếu tìm thấy.
-      res.json(product);
+      return res.json(product);
     } catch (err) {
       // Xử lý lỗi nếu có.
       console.error(err);
-      res.status(500).json({ error: "Internal Server Error" });
+      return res.status(500).json({ error: "Internal Server Error" });
     }
   } else {
     // Nếu không có slug được cung cấp, trả về một phản hồi lỗi.
-    res.status(400).json({ error: "Invalid request" });
+    return res.status(400).json({ error: "Invalid request" });
   }
 };

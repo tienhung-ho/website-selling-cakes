@@ -31,7 +31,8 @@
         <Multiselect v-model="optionFlavor" :selected="optionFlavor" :track-by="'value'" :close-on-select="true"
           :options="flavorArray" placeholder="Flavor" class="multiselect" />
 
-          <ButtonCustom class="ps-1" color="black" borderRadius="10px" content="Submit" borderColor="green" width="8rem" @click="onGetProductFocusFlavor"/>
+        <ButtonCustom class="ps-1" color="black" borderRadius="10px" content="Submit" borderColor="green" width="8rem"
+          @click="onGetProductFocusFlavor" />
       </Form>
 
       <div class="w-50 d-flex align-items-center flavor-content">
@@ -47,10 +48,11 @@
       </div>
       <Form action="" @submit="" class="edit-form d-flex">
 
-        <Multiselect v-model="option" :selected="option" :track-by="'value'" :close-on-select="true"
-          :options="options" placeholder="Custom" class="multiselect" />
+        <Multiselect v-model="option" :selected="option" :track-by="'value'" :close-on-select="true" :options="options"
+          placeholder="Custom" class="multiselect" />
 
-          <ButtonCustom class="ps-1" color="black" borderRadius="10px" content="Submit" borderColor="green" width="8rem" @click="handlerCustomer"/>
+        <ButtonCustom class="ps-1" color="black" borderRadius="10px" content="Submit" borderColor="green" width="8rem"
+          @click="handlerCustomer" />
       </Form>
 
     </div>
@@ -93,7 +95,7 @@ export default {
       type: String,
       default: ''
     },
-    
+
     checkedProducts: {
       type: Array,
       default: []
@@ -138,7 +140,7 @@ export default {
         'Unavailable'
       ],
       option: "",
-      
+
     }
   },
 
@@ -173,7 +175,7 @@ export default {
 
     async onGetProductFocusFlavor() {
       if (this.optionFlavor != '') {
-        
+
         // this.products = await ProductsServices.getByFlavor(this.optionFlavor)
         console.log(this.optionFlavor);
         this.$emit('update:changeProducts', this.optionFlavor)
@@ -182,7 +184,7 @@ export default {
     },
 
     async handlerCustomer() {
-      
+
       let slugs = this.checkedProducts.map(item => item.slug)
 
       let data = {
@@ -192,9 +194,9 @@ export default {
 
       this.$emit('update:changeMultiple', data.slug)
       this.$emit('changeMultiple')
-      
+
       await ProductsServices.changeMultiple(data)
-      
+
     }
   },
   watch: {
@@ -213,31 +215,45 @@ export default {
 <style src="@vueform/multiselect/themes/default.css"></style>
 
 <style lang="scss" scoped>
-
-
-
 a {
   list-style-type: none;
 }
 
 .filter {
   padding-bottom: 1rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
 
   &__title {
     width: 45%;
+
+    input {
+      height: 3rem;
+      padding: 0.2rem;
+      width: 50%;
+      border-radius: 4px;
+    }
   }
 
   &__ops {
     width: 25%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    // &--button {
+    // }
   }
-  
-  
-  
+
+
+
 }
 
 @import url('https://fonts.cdnfonts.com/css/noto-sans-bengali');
 
-.flavor-content p{
+.flavor-content p {
   font-family: 'Noto Sans Bengali', sans-serif;
   margin: 0;
 }

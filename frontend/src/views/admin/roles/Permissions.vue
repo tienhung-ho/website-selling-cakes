@@ -1,9 +1,10 @@
 <template>
+  <Title title="Permissions"/>
   <div id="q-app " class="q-ml-x" style="min-height: 100vh;">
     <div class="q-pa-md row">
       <div class="q-gutter-sm col" v-for="role in roles" :key="role">
         <!-- <br> -->
-        <div class="q-ml-x text-weight-bold text-h6" style="position: sticky; top: 0; height: 4rem; background-color: rgb(246, 241, 241);" > {{ role }} </div>
+        <div class="q-ml-x text-weight-bold text-h6 q-pa-md" style="position: sticky; top: 0; height: 4rem; background-color: rgb(246, 241, 241);" > {{ role }} </div>
 
         <q-list>
           <br>

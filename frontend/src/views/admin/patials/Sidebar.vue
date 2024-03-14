@@ -8,6 +8,8 @@
 
 <script>
 import VueSidebarMenuAkahon from "vue-sidebar-menu-akahon";
+import { useAccountOfStaff } from '@/store/pinia.store'
+import StaffServices from '@/services/admin/staffs.services'
 
 export default {
   name: 'Header.vue',
@@ -37,16 +39,17 @@ export default {
           link: "/admin", name: "Setting", tooltip: "Setting", icon: "bx-cog"
         },
       ],
+
+
+      store: useAccountOfStaff()
     }
   },
   methods: {
 
 
   },
-  created() {
-    
-    
-    // this.menuItems
+  async created() {
+
   },
 }
 </script>

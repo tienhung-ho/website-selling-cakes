@@ -1,4 +1,5 @@
 <template>
+  <Title title="NotFound" content="Could not have permissions for this!"/>
   <div class="center">
     <div class="error">
       <div class="number">4</div>
@@ -29,8 +30,13 @@
 
 <script>
 
+import Title from '@/views/admin/patials/Title.vue';
+
 export default {
   name: 'Error',
+  components: {
+    Title
+  },
 
   methods: {
     backHome() {

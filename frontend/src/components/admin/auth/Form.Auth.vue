@@ -81,24 +81,13 @@ export default {
       }
 
 
-      const staff = await AuthService.login(data)
+      const test = await AuthService.login(data)
+      const payloadAccess = this.$cookies.get('PayloadAccessToken')
+     
+        this.showLoading()
+        this.$router.push('/admin/products')
 
-      
-      if (staff.data.accessToken) {
 
-        // console.log(staff.data.accessToken);
-       // this.store.setStaff(staff.data.accessToken) // Call the mutation to set accessToken in store
-        const record = await StaffServices.getStaffWithAccessToken(staff.data.accessToken)
-        
-        await this.store.setStaff(record)
-  
-        if (this.store.getStaff()) {
-          console.log(this.store.getStaff());
-          this.showLoading()
-          this.$router.push('/admin')
-        }
-      }
-      
 
     }
   },

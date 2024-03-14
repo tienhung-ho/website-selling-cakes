@@ -1,7 +1,7 @@
 const routesAdmin = [
   {
     path: '/admin',
-    redirect: '/admin/products',
+    // redirect: '/admin/products',
     name: 'LayoutAd',
     component: () => import('@/views/admin/layout/Layout.vue'),
     children: [
