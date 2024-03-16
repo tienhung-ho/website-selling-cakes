@@ -67,7 +67,7 @@ import Title from '@/views/admin/patials/Title.vue';
 import { ref } from 'vue'
 import { useQuasar } from 'quasar'
 import RolesServices from '@/services/admin/roles.services'
-import { Thumbs } from 'swiper/modules';
+
 
 export default {
   name: 'Staff',

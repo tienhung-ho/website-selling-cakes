@@ -15,8 +15,10 @@
       <ErrorMessage name="flavor" class="error-feedback" />
 
       <label for="description">Description:</label>
-      <textarea v-model="product.description" class="edit-form__description" name="description" id="description" cols="30"
-        rows="10"></textarea>
+      <!-- <textarea v-model="product.description" class="edit-form__description" name="description" id="description" cols="30"
+        rows="10"></textarea> -->
+
+      <TextArea id="description" :initialDescription="product.description" @editorData="setDescription"/>
 
 
       <Field v-model="product.price" class="edit-form__price" type="number" name="price" id="price"
@@ -50,16 +52,22 @@
           placeholder="Position..." />
       </div>
 
-      <div class="mb-3 w-100">
+      <!-- <div class="mb-3 w-100">
         <label for="formFile" class="form-label">Chọn ảnh</label>
         <input :v-model="product.thumbnail" class="form-control h-100 p-3" type="file" id="thumbnail" name="thumbnail"
           accept="image/*" @change="handleImageUpload($event)">
-      </div>
+      </div> -->
+
+      <q-file color="teal" class="q-mb-md" filled :v-model="product.thumbnail || product.name + '-image'" label="Đăng tải hình ảnh" @update:model-value="handleImageUpload($event)">
+        <template v-slot:prepend >
+          <q-icon name="cloud_upload" />
+        </template>
+      </q-file>
 
       <img v-if="this.image || this.product.thumbnail" :v-model="this.thumbnail"
-        :src="this.image || this.product.thumbnail" :alt="product.slug" class="w-25 pb-4 rounded">
+        :src="this.image || this.product.thumbnail" :alt="product.slug" class="q-mb-md shadow-up-2">
       <!-- <ErrorMessage name="thumbnail" class="error-feedback" /> -->
-      <button type="submit" class="btn btn-outline-primary w-100">Submit</button>
+      <q-btn :loading="loading" color="secondary" @click="isEdit ? onEdit($event) : onCreate($event)" class="submit" label="Submit"/>
     </Form>
   </div>
 </template>
@@ -72,19 +80,23 @@ import Title from '@/views/admin/patials/Title.vue';
 import ButtonCustom from '@/views/admin/patials/ButtonCustom.vue';
 import ProductsServices from '@/services/admin/products.services'
 import Editor from '@tinymce/tinymce-vue'
-import CakesServices from '@/services/client/cakes.services';
+import TextArea from '../Text.Area.vue';
 
 
 import * as yup from "yup"
 import { Form, Field, ErrorMessage } from "vee-validate"
-
+import { ref } from 'vue'
 
 // import 'bootstrap/dist/css/bootstrap.css';
-import 'popper.js';
-import 'bootstrap/dist/js/bootstrap';
+// import 'popper.js';
+// import 'bootstrap/dist/js/bootstrap';
 
 
 export default {
+
+  setup () {
+
+  },
   components: {
     Multiselect,
     Title,
@@ -93,6 +105,7 @@ export default {
     Form,
     Field,
     ErrorMessage,
+    TextArea
 
   },
   data() {
@@ -147,7 +160,8 @@ export default {
       image: '',
       thumbnail: '',
       slug: '',
-      available: true
+      available: true,
+      loading: false
     }
   },
   props: {
@@ -176,17 +190,19 @@ export default {
   methods: {
 
     handleImageUpload($event) {
-      const file = $event.target.files[0];
-      if (file) {
-        this.thumbnail = file;
+      if ($event) {
+        this.thumbnail = $event;
         const reader = new FileReader();
         reader.onloadend = () => {
           this.image = reader.result;
         }
-        reader.readAsDataURL(file);
+        reader.readAsDataURL($event);
       }
     },
 
+    setDescription(e) {
+      this.product.description = e
+    },
     async onCreate(e) {
 
       try {
@@ -214,7 +230,9 @@ export default {
           data.append(key, value)
 
         })
+        this.loading = true
         await ProductsServices.createProduct(data)
+        this.loading = false
         this.$router.push('/admin/products')
       }
 
@@ -254,7 +272,7 @@ export default {
 
         console.log(this.product.available);
         if (this.product.available == undefined) {
-          console.log(123123123123);
+          console.log('Product status is underfined');
         }
 
         const data = new FormData()
@@ -262,8 +280,9 @@ export default {
           data.append(key, value)
 
         })
-
+        this.loading = true
         await ProductsServices.findAndEdit(data, this.slug)
+        this.loading = false
         this.$router.push('/admin/products');
       }
 
@@ -277,8 +296,6 @@ export default {
 
   async created() {
     this.slug = this.$route.params.slug
-    // this.getProoduct(this.slug)
-    // this.getAllFlavor(this.slug)
   },
   watch: {
     productEdit: {
@@ -323,6 +340,9 @@ export default {
 
     img {
       width: 30%;
+      border: 2px solid #EEEEEE;
+      border-radius: 10px;
+      background-color: #EEEEEE;
     }
 
 
@@ -388,6 +408,11 @@ export default {
      width: 2rem !important;
    }
 
+ }
+
+ .submit {
+  width: 20rem;
+  height: 2rem;
  }
 </style>
   
