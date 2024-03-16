@@ -39,7 +39,7 @@
         </div>
 
         <div class="col-5 ">
-          <Options
+          <Options :slug="role.slug"
             slug="test"
           />
         </div>
@@ -51,7 +51,7 @@
 <script>
 
 import Title from '@/views/admin/patials/Title.vue';
-import Options from '@/components/admin/staffs/Options.vue';
+import Options from '@/components/admin/roles/Options.vue';
 import Filter from '@/views/admin/patials/Filter.vue';
 import ButtonCustom from '@/views/admin/patials/ButtonCustom.vue';
 import RolesServices from '@/services/admin/roles.services'

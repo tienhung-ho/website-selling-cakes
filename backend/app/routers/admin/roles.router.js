@@ -15,6 +15,12 @@ router.route('/:id')
 router.route('/create')
   .post(controllers.create)
 
+router.route('/slug/:slug')
+  .get(controllers.findBySlug)
+
+router.route('/edit/:slug')
+  .patch(controllers.edit)
+
 router.route('/permission')
   .patch(controllers.permission) 
 

@@ -82,6 +82,12 @@ const routesAdmin = [
         component: () => import('@/views/admin/roles/Create.vue'),
         meta: { requiresAuth: true }
       },
+      {
+        path: 'roles/edit/:slug',
+        name: 'EditRoles',
+        component: () => import('@/views/admin/roles/Edit.vue'),
+        meta: { requiresAuth: true }
+      },
 
       
     ]

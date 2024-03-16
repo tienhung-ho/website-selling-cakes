@@ -28,11 +28,18 @@
           @change="handleImageUpload($event)">
       </div>
 
-      <img :v-model="this.avatar" :src="this.image || defaultStaff.avatar" alt="" class="w-25 pb-4 rounded">
+      <q-file color="teal" class="q-mb-md" filled :v-model="this.image || defaultStaff.avatar + '-image'" label="Đăng tải hình ảnh" @update:model-value="handleImageUpload($event)">
+        <template v-slot:prepend >
+          <q-icon name="cloud_upload" />
+        </template>
+      </q-file>
+
+      <img :v-model="this.avatar" :src="this.image || defaultStaff.avatar" alt="" class="w-25 q-mb-md rounded">
       <!-- <ErrorMessage name="thumbnail" class="error-feedback" /> -->
       <Multiselect v-model="this.staffRole" :selected="roleValue" :track-by="'value'" :close-on-select="false"
-        :options="rolesArray" placeholder="Role......" class="multiselect mb-4" />
-      <button type="submit" class="btn btn-outline-primary w-100 ">Submit</button>
+        :options="rolesArray" placeholder="Role......" class="multiselect q-mb-md" />
+      <!-- <button type="submit" class="btn btn-outline-primary w-100 ">Submit</button> -->
+      <q-btn :loading="loading" color="secondary" @click="isEdit ? onEdit($event) : onCreate($event)" class="submit q-mt-md" label="Submit"/>
     </Form>
   </div>
 </template>
@@ -46,9 +53,8 @@ import Editor from '@tinymce/tinymce-vue'
 import Multiselect from '@vueform/multiselect'
 
 import RolesServices from '@/services/admin/roles.services';
-import * as yup from "yup"
 import { Form, Field, ErrorMessage } from "vee-validate"
-import { Thumbs } from 'swiper/modules';
+
 
 
 
@@ -98,6 +104,7 @@ export default {
       image: '',
       slug: '',
       staffRole: '',
+      loading: false
 
 
     }
@@ -123,14 +130,13 @@ export default {
     },
 
     handleImageUpload($event) {
-      const file = $event.target.files[0];
-      if (file) {
-        this.avatar = file;
+      if ($event) {
+        this.avatar = $event;
         const reader = new FileReader();
         reader.onloadend = () => {
           this.image = reader.result;
         }
-        reader.readAsDataURL(file);
+        reader.readAsDataURL($event);
       }
     },
 
@@ -150,7 +156,6 @@ export default {
             icon: "success",
             title: "Your work has been saved",
             showConfirmButton: false,
-            timer: 1500
           });
 
 
@@ -167,8 +172,10 @@ export default {
           // }
           // console.log(this.staff);
 
+          this.loading = true
           await StaffsServices.createStaff(data)
-
+          this.loading = false
+          this.$swal.close()
           this.$router.push('/admin/staff')
         
       }
@@ -186,7 +193,7 @@ export default {
           icon: "success",
           title: "Your work has been saved",
           showConfirmButton: false,
-          timer: 1500
+          // timer: 1500
         });
         if (this.avatar != undefined) {
           this.staff.avatar = this.avatar
@@ -201,15 +208,10 @@ export default {
 
         })
 
-
-        // Log thông tin từ FormData
-        // for (const entry of data) {
-        //   console.log(entry);
-        // }
-        // console.log(this.staff);
-
+        this.loading = true
         await StaffsServices.editStaff(data, this.staff.slug)
-        
+        this.loading = false
+        this.$swal.close()
         this.$router.push('/admin/staff')
       }
 
@@ -256,9 +258,15 @@ export default {
 <style src="@vueform/multiselect/themes/default.css"></style>
 
 
-<style lang="scss" scoped> .create {
+<style lang="scss" scoped> 
+.create {
 
-
+  img {
+      width: 30%;
+      border: 2px solid #EEEEEE;
+      border-radius: 10px;
+      background-color: #EEEEEE;
+    }
 
    .create-form {
      display: flex;
@@ -296,6 +304,11 @@ export default {
 
    }
 
+ }
+
+ .submit {
+  width: 10rem;
+  height: 1rem;
  }
 </style>
 

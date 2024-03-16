@@ -1,9 +1,5 @@
 
 <template>
-  <!-- <FormProducts
-    title="Create"
-  /> -->
-
   <div class="create">
     <Form action="" @submit="isEdit ? onEdit() : onCreate($event)" class="create-form container-fluid">
 
@@ -13,10 +9,12 @@
       <Field v-model="role.description" class="create-form__email" type="text" name="description" id="description"
         placeholder="Description..." />
 
-      <button type="submit" class="btn btn-outline-primary w-50 ">Submit</button>
+      <q-btn :loading="loading" color="secondary" @click="isEdit ? onEdit($event) : onCreate($event)" class="submit q-mt-md" label="Submit"/>
     </Form>
   </div>
+
 </template>
+
 
 <script>
 
@@ -47,12 +45,20 @@ export default {
    
     return {
       // staffFormSchema,
-      role: {}
+      role: {},
+      loading: false
 
     }
   },
   props: {
-    
+    initalRole: {
+      type: Object || Array,
+      default: {} || []
+    },
+    isEdit: {
+      type: Boolean,
+      default: false
+    }
   },
   methods: {
 
@@ -69,9 +75,9 @@ export default {
             timer: 1500
           });
   
-  
+          this.loading = true
           await RolesServices.createRole(this.role)
-
+          this.loading = false
         }
 
         this.$router.push('/admin/roles')
@@ -90,28 +96,13 @@ export default {
           icon: "success",
           title: "Your work has been saved",
           showConfirmButton: false,
-          timer: 1500
+          // timer: 1500
         });
-        if (this.avatar != undefined) {
-          this.role.avatar = this.avatar
-        }
-
-        const data = new FormData()
-        Object.entries(this.role).forEach(([key, value]) => {
-          data.append(key, value)
-
-        })
-
-
-        // Log thông tin từ FormData
-        // for (const entry of data) {
-        //   console.log(entry);
-        // }
-        // console.log(this.role);
-
-        const test = await StaffsServices.editStaff(data, this.role.slug)
-        console.log(test);
-        this.$router.push('/admin/role')
+      
+        this.loading = true
+        await RolesServices.editRole(this.role)
+        this.loading = false
+        this.$router.push('/admin/roles')
       }
 
       catch (err) {
@@ -134,6 +125,11 @@ export default {
       },
       deep: true
     },
+    initalRole: {
+      handler: function(newVal, oldVal) {
+        this.role = { ...this.initalRole }
+      }
+    }
   }
 
 }

@@ -39,6 +39,14 @@ class RolesServices {
     return records
   }
 
+  async findBySlug(slug) {
+    const record = await this.RolesModel.findOne({
+      slug,
+    }).select('-_id -permissions')
+
+    return record
+  }
+
   async findPermissionById(_id) {
     const records = await this.RolesModel.findOne({
       _id,
@@ -60,6 +68,16 @@ class RolesServices {
     }
 
   }
+
+  async edit(data, slug) {
+
+   await this.RolesModel.findOneAndUpdate({
+    slug,
+   }, data)
+
+   return data
+  }
+
 
   async permissions(payload) {
 
@@ -99,8 +117,6 @@ class RolesServices {
       console.error(`Lỗi khi chuyển đổi dữ liệu: ${error}`);
     }
   }
-
-
 
 }
 

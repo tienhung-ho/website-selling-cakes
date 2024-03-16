@@ -38,8 +38,35 @@ module.exports.findPermissionById =  async (req, res, next) => {
   }
 }
 
+// [GET] admin/roles/slug/:slug
+module.exports.findBySlug =  async (req, res, next) => {
+  // let document = []
+  try {
+    const slug = req.params.slug
+    if (slug) {
+      const rolesServices = new RolesServices
+      const role = await rolesServices.findBySlug(slug)
+    
+      res.json(role)
+    }
+    else {
+      res.json({
+        code: 404,
+        message: 'Could not found slug'
+      })
+    }
 
-// [POST] admin/roles/creare
+  }
+  catch(err) {
+    res.json({
+      code: 500,
+      message: 'Could not found data to client!'
+    })
+  }
+}
+
+
+// [POST] admin/roles/create
 module.exports.create =  async (req, res, next) => {
   
   const data = req.body.params
@@ -50,6 +77,31 @@ module.exports.create =  async (req, res, next) => {
     const roles = await rolesServices.create(data)
   
     res.json(roles)
+
+  }
+  else {
+    res.json({
+      code: 400,
+      message: "Data not found, could not create!"
+    })
+  }
+}
+
+// [PATCH] admin/roles/create
+module.exports.edit =  async (req, res, next) => {
+  
+  const data = req.body.params
+  const slug = req.params.slug
+
+  if (data) {
+
+    const rolesServices = new RolesServices
+    const roles = await rolesServices.edit(data, slug)
+  
+    res.json.status(200).json({
+      code: 200,
+      message: 'Updated!!'
+    })
 
   }
   else {

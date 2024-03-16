@@ -10,6 +10,11 @@ const roleSchema = new Schema({
       type: Array,
       default: []
     },
+    slug: {
+      type: String,
+      slug: "title",
+      unique: true,
+    },
     deleted: {
         type: Boolean,
         default: false

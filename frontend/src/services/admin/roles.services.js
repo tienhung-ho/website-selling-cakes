@@ -11,6 +11,10 @@ class staffService {
     return (await this.api.get("/")).data
   }
 
+  async getRolebySlug(slug) {
+    return (await this.api.get(`/slug/${slug}`)).data
+  }
+
   async getRolesPermissionById(id) {
     return (await this.api.get(`/${id}`)).data
   } 
@@ -21,6 +25,15 @@ class staffService {
 
   async createRole(data) {
     return (await this.api.post("/create", {
+      params: data
+    })).data
+  }
+
+
+
+  async editRole(data) {
+    console.log(data.slug);
+    return (await this.api.patch(`/edit/${data.slug}`, {
       params: data
     })).data
   }
