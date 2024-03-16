@@ -36,19 +36,15 @@
 import { useQuasar } from 'quasar'
 import { useAccountOfStaff } from '@/store/pinia.store'
 import AuthService from '@/services/admin/auth.services'
-import StaffServices from '@/services/admin/staffs.services'
+
+
 
 export default {
   name: 'FormAuth',
 
   setup() {
     const $q = useQuasar()
-    // onUnmounted(() => {
-    //   if (timer !== void 0) {
-    //     clearTimeout(timer)
-    //     $q.loading.hide()
-    //   }
-    // })
+
 
     let timer
 
@@ -62,6 +58,17 @@ export default {
           $q.loading.hide()
           timer = void 0
         }, 1000)
+      },
+      showNotif(message, color) {
+        $q.notify({
+          message: "Trang web này cho biết: " + message,
+          color: color,
+          multiLine: true,
+          avatar: 'https://cdn.quasar.dev/img/boy-avatar.png',
+          actions: [
+            { label: 'Close', color: 'yellow', handler: () => { /* ... */ } }
+          ]
+        })
       }
     }
   },
@@ -76,17 +83,49 @@ export default {
   methods: {
     async onSubmit() {
       let data = {
-        email: this.email,
-        password: this.password
+        email: '',
+        password: ''
       }
 
+      if (this.email.length > 0) {
+        const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
+        if (emailRegex.test(this.email)) {
+          data.email = this.email
+        }
+        else {
+          this.showNotif('Bạn đã nhập sai định dạng email, vui lòng nhập lại!!!!', 'warning')
+          return
+        }
+      }
+      else {
+        this.showNotif('Email không được để trống!!!!', 'warning')
+        return
+      }
 
-      const test = await AuthService.login(data)
-      const payloadAccess = this.$cookies.get('PayloadAccessToken')
-     
+      if (this.password.length <= 0) {
+        this.showNotif('Mật khẩu không được để trống!!!!', 'warning')
+        return
+      }
+      data.password = this.password
+
+      const login = await AuthService.login(data)
+      if (login.code == 404) {
+        if (login.message == "Sai mật khẩu") {
+          this.showNotif('Bạn đã nhập sai mật khẩu vui lòng kiểm tra lại mật khẩu!!!!', 'negative')
+          return
+        }
+        else if (login.message == "Không tìm thấy email") {
+          this.showNotif('Bạn đã nhập sai email hoặc email này chưa được đăng ký, hãy liên hệ với quản lý trang web để biết thêm thông tin!!!!', 'negative')
+          return
+        }
+      }
+      else {
         this.showLoading()
+        this.showNotif('Chào mừng bạn đến trang web, Mong bạn sẽ có những trải nghiệm tốt!!!!', 'positive')
         this.$router.push('/admin/products')
+      }
 
+      return
 
 
     }

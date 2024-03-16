@@ -61,6 +61,12 @@ const createApiAdmin = (baseURL) => {
 
     }
 
+    // if (code && code === 404) {
+    //   if(response.data.message == 'Sai mật khẩu') {
+    //     console.log(response.data.message);
+    //   }
+    // }
+
     if (code && code === 500) {
       console.log("Bad request!!!", response.data);
     }

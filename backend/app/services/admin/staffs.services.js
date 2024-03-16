@@ -108,7 +108,7 @@ class StaffServices {
     )
   }
 
-  async login(record, res) {
+  async login(record) {
     const existStaff = await StaffModel.findOne({
       email: record.email,
       deleted: false
@@ -123,18 +123,13 @@ class StaffServices {
 
         const accessToken = genarate.genarateAccessToken(existStaff._id, existStaff.role_id)
         const refreshToken = genarate.genarateRefreshToken(existStaff._id)
-
-        // existStaff.tokenUser = accessToken
-        // existStaff.refreshTokenUser = refreshToken
-        // existStaff.save()
-
         return { accessToken, refreshToken }
 
 
       }
       else {
-        res.json({
-          code: 400,
+        return ({
+          code: 404,
           message: 'Sai mật khẩu',
         })
       }
@@ -143,9 +138,9 @@ class StaffServices {
     }
 
     else {
-      res.json({
-        code: 400,
-        message: 'Email is not exist!',
+      return ({
+        code: 404,
+        message: 'Không tìm thấy email',
       })
     }
   }

@@ -183,8 +183,8 @@
 
       const staffService = new StaffService()
 
-      const data  = await staffService.login(record, res)
-      if (data) {
+      const data  = await staffService.login(record)
+      if (data && (data.accessToken || data.refreshToken) ) {
 
         const { accessToken, refreshToken } = data
         const [headerAccessToken, payloadAccessToken, singatureAccessToken] = accessToken.split('.')  
@@ -220,12 +220,9 @@
         })
       }
       else {
-        console.log({ message: 'Staffs account not found!',});
-        // return
-        return res.status(400).json({
-          code: 404,
-          message: 'Staffs account not found!',
-          // accessToken,
+        // console.log(data);
+        return res.status(200).json({
+          ...data
         })
       }
 
@@ -233,11 +230,10 @@
 
     }
     catch(err) {
-      console.log(err);
-      // return res.status(400).json({
-      //   code: 400,
-      //   message: 'Could not login!',
-      // })
+      return res.status(400).json({
+        code: 400,
+        message: 'Could not login!',
+      })
     }
   }
 
