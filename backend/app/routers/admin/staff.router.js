@@ -1,4 +1,4 @@
-const express = require('express') 
+const express = require('express')
 const controllers = require('../../controllers/admin/staffs.controllers')
 
 const router = express.Router()
@@ -40,20 +40,26 @@ router.route('/delete/:slug')
   .delete(controllers.delete)
 
 
-router.route('/login') 
+router.route('/login')
   .post(controllers.login)
 
-router.route('/get-staff') 
+router.route('/logout')
+  .post(
+    middlewares.verifyAccessTokenTwoAuth,
+    controllers.logout
+  )
+
+router.route('/get-staff')
   .get(
     middlewares.verifyAccessTokenTwoAuth,
     controllers.getStaffByAccessToken
-    )
+  )
 
 router.route('/refreshtoken')
-    .get(
-      middlewares.verifyRefreshToken,
-      controllers.getAccessToken
-    )
+  .get(
+    middlewares.verifyRefreshToken,
+    controllers.getAccessToken
+  )
 
 module.exports = router
 

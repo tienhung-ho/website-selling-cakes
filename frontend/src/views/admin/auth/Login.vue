@@ -22,4 +22,8 @@ export default {
 
 <style lang="scss" scoped>
 
+body {
+  padding-left: 0 !important;
+}
+
 </style>

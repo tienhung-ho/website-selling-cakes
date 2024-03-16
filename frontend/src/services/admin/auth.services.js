@@ -13,6 +13,10 @@ class authService {
     })).data
   }
 
+  async logout(){
+    return (await this.api.post("logout")).data
+  }
+
 
 }
 

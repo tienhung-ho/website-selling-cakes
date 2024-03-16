@@ -135,8 +135,8 @@
                 <q-item clickable class="GL__menu-link">
                   <q-item-section>Settings</q-item-section>
                 </q-item>
-                <q-item clickable class="GL__menu-link">
-                  <q-item-section>Sign out</q-item-section>
+                <q-item clickable class="GL__menu-link" @click="onLogOut">
+                  <q-item-section>Log out</q-item-section>
                 </q-item>
               </q-list>
             </q-menu>
@@ -167,6 +167,8 @@ import { ref } from 'vue'
 import { fabGithub, fasCakeCandles} from '@quasar/extras/fontawesome-v6'
 
 import { staff } from '@/helpers/admin/get-staff.helpers'
+import AuthServices from '@/services/admin/auth.services'
+import { useQuasar } from 'quasar'
 
 const stringOptions = [
   'quasarframework/quasar',
@@ -181,6 +183,7 @@ export default {
     const options = ref(null)
     const filteredOptions = ref([])
     const search = ref(null) // $refs.search
+    const $q = useQuasar()
 
     function filter(val, update) {
       if (options.value === null) {
@@ -224,7 +227,18 @@ export default {
       options,
       filteredOptions,
       search,
-      filter
+      filter,
+      showNotif(message, color) {
+        $q.notify({
+          message: "Trang web này cho biết: " + message,
+          color: color,
+          multiLine: true,
+          avatar: 'https://cdn.quasar.dev/img/boy-avatar.png',
+          actions: [
+            { label: 'Close', color: 'yellow', handler: () => { /* ... */ } }
+          ]
+        })
+      }
     }
   },
   data() {
@@ -244,6 +258,13 @@ export default {
     },
   },
   methods: {
+    async onLogOut () {
+      const logout = await AuthServices.logout()
+      if (logout.code == 200 && logout.message == 'Đăng xuất thành công!') {
+        this.showNotif("Bạn đã đăng xuất thành công!!", 'positive')
+        this.$router.push('/staff/auth/login')
+      } 
+    }
     
   },
   created() {

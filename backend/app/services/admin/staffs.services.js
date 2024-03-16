@@ -145,6 +145,18 @@ class StaffServices {
     }
   }
 
+  async logout(res) {
+    res.clearCookie('SingatureAccessToken');
+    res.clearCookie('PayloadAccessToken');
+    res.clearCookie('SingatureRefreshToken');
+    res.clearCookie('PayloadRefreshToken');
+
+    return {
+      code: 200,
+      message: 'Đăng xuất thành công!'
+    }
+  }
+
   async getStaffWithAccessToken(payload) {
     if (payload) {
 
