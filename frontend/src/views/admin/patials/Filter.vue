@@ -9,7 +9,7 @@
         <div class="filter__ops d-flex justify-content-between">
           <div class="filter__ops--button active" v-for="item, index in filters">
             <ButtonCustom :content="item.name" width="6rem" borderColor="black" borderRadius="10px" color="black"
-              :backgroundColor="item.isActive ? '#98E695' : ''" @click="onChoseOps(index)" />
+              :backgroundColor="item.isActive ? '#98E695' : ''" @click="onChoseOps(index, item.name)" />
           </div>
 
         </div>
@@ -71,8 +71,22 @@ import { Form, Field, ErrorMessage } from "vee-validate"
 import ProductsServices from '@/services/admin/products.services';
 import ChangeMultiple from '@/components/admin/filters/ChangeMultiple.vue'
 
+import { useQuasar } from 'quasar'
+
 export default {
   name: 'Filter',
+  setup () {
+    const $q = useQuasar()
+
+    return {
+      triggerPositive (name) {
+        $q.notify({
+          type: 'positive',
+          message: `Filter focus ${name} status successfully!`
+        })
+      },
+    }
+  },
 
   components: {
     ButtonCustom,
@@ -145,7 +159,7 @@ export default {
   },
 
   methods: {
-    onChoseOps(index) {
+    onChoseOps(index, name) {
       for (const filter of this.filters) {
         filter.isActive = false
       }
@@ -153,6 +167,8 @@ export default {
       this.filters[index].isActive = true
 
       this.$emit('update:changeStatus', this.filters[index].status)
+      this.triggerPositive(name)
+      return
     },
 
     onSearch() {

@@ -6,11 +6,14 @@ const routesClient = [
     redirect: '/home', 
     name: 'Layout',
     component: () => import('@/views/client/layout/Layout.vue'),
+    meta: { requiresAuth: false },
     children: [
       {
         path: '/home',
         name: 'Home',
+        meta: { requiresAuth: false },
         component: () => import('@/views/client/home/Home.vue')
+
       },
       {
         path: '/contact',

@@ -113,9 +113,11 @@
                   </q-item-section>
                 </q-item>
                 <q-separator />
-                <q-item clickable class="GL__menu-link">
-                  <q-item-section>Your profile</q-item-section>
-                </q-item>
+                <router-link :to="{ name: 'ProfileStaff' }">
+                  <q-item clickable class="GL__menu-link">
+                    <q-item-section>Your profile</q-item-section>
+                  </q-item>
+                </router-link>
                 <q-item clickable class="GL__menu-link">
                   <q-item-section>Your repositories</q-item-section>
                 </q-item>
@@ -146,7 +148,7 @@
     </q-header>
 
     <q-page-container>
-      <div class="title">
+      <div class="title" v-if="isContent">
 
         <div class="title__content q-layout">
           <h1>
@@ -250,6 +252,10 @@ export default {
     title: {
       type: String,
       // default: 'Admin'
+    },
+    isContent: {
+      type: Boolean,
+      default: true
     },
 
     content: {

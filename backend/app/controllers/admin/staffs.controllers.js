@@ -204,12 +204,12 @@ module.exports.login = async (req, res) => {
 
       res.cookie('SingatureRefreshToken', singatureRefreshToken, {
         httpOnly: true,
-        // maxAge: 1 * 60 * 60 * 1000,
+        maxAge: 30 * 24 * 60 * 60 * 1000,
       })
 
       res.cookie('PayloadRefreshToken', headerRefreshToken + '.' + payloadRefreshToken, {
         // httpOnly: true,
-        maxAge: 1 * 60 * 60 * 1000,
+        maxAge: 30 * 24 * 60 * 60 * 1000,
       })
 
 

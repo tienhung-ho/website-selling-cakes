@@ -67,12 +67,13 @@ class ProductServices {
     const products = await Product.find(query).sort({
       position: 'desc',
     }).limit(pagiObj.limit).skip(pagiObj.skip)
-    
+  
 
     return { products, totalPage: pagiObj.totalPage }
 
   }
 
+  
 
   async findLike() {
     const products = await Product.find({

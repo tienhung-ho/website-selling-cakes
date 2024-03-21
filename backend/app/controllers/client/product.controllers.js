@@ -9,7 +9,7 @@ module.exports.find =  async (req, res, next) => {
   try {
     const productServices = new ProductServices()
     const products = await productServices.find()
-    return res.send(products)
+    return res.json(products)
 
   }
   catch (err) {

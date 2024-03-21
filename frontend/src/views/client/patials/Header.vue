@@ -142,6 +142,10 @@ export default {
 @import url('https://fonts.cdnfonts.com/css/double-pivot');
 @import '../../../assets//client//css/variables.scss';
 
+ul {
+    list-style-type: none;
+  }
+
 a {
   text-decoration: none;
   color: white;

@@ -3,33 +3,31 @@
   <div class="edit">
     <Title :title="title" />
     <Form @submit="isEdit ? onEdit($event) : onCreate($event)" class="edit-form  q-container"
-      :validation-schema="productFormSchema">
+      >
 
+      <label for="name">Title:</label>
       <Field v-model="product.name" class="edit-form__name" type="text" name="name" id="name" placeholder="Name..." />
-      <ErrorMessage name="name" class="error-feedback" />
-      <!-- 
-        <Field v-model="product.flavor" class="edit-form__flavor" type="text" name="flavor" id="flavor"
-          placeholder="Flavor..." /> -->
-      <Multiselect v-model="defaultFlavor" :selected="flavorValue" :track-by="'value'" mode="multiple"
+      
+      <label for="flavor">Flavor:</label>
+      <Multiselect id="flavor" v-model="defaultFlavor" :selected="flavorValue" :track-by="'value'" mode="multiple"
         :close-on-select="false" :options="flavorArray" placeholder="Flavor" class="multiselect" />
-      <ErrorMessage name="flavor" class="error-feedback" />
+      
 
       <label for="description">Description:</label>
-      <!-- <textarea v-model="product.description" class="edit-form__description" name="description" id="description" cols="30"
-        rows="10"></textarea> -->
 
       <TextArea id="description" :initialDescription="product.description" @editorData="setDescription"/>
 
 
+      <label for="price">Price:</label>
       <Field v-model="product.price" class="edit-form__price" type="number" name="price" id="price"
         placeholder="Price..." />
-      <ErrorMessage name="price" class="error-feedback" />
+      
 
       <Multiselect v-model="product.ingredients" :selected="value" :track-by="'value'" mode="multiple"
         :close-on-select="false" :options="options" placeholder="Choose ingredients" class="multiselect" />
 
-      <div class="quantity-status justify-content-space-between w-100">
-
+        <div class="quantity-status justify-content-space-between w-100">
+          
         <Field v-model="product.quantity" class="edit-form__quantity w-50 me-5" type="number" name="quantity"
           id="quantity" placeholder="Quantity..." />
 
@@ -43,7 +41,7 @@
           <label for="unavailable" class="text-center">Unavailable</label>
         </div>
       </div>
-      <ErrorMessage name="quantity" class="error-feedback" />
+      
       <div class="position-discount q-flex row wrap justify-between  items-center content-center text-center w-100">
         <Field v-model="product.discountPercentage" class="edit-form__discountPercentage flex-break" type="number"
           name="discountPercentage" id="discountPercentage" placeholder="Discount Percentage" />
@@ -51,13 +49,6 @@
         <Field v-model="product.position" class="edit-form__position" type="number" name="position" id="position"
           placeholder="Position..." />
       </div>
-
-      <!-- <div class="mb-3 w-100">
-        <label for="formFile" class="form-label">Chọn ảnh</label>
-        <input :v-model="product.thumbnail" class="form-control h-100 p-3" type="file" id="thumbnail" name="thumbnail"
-          accept="image/*" @change="handleImageUpload($event)">
-      </div> -->
-
       <q-file color="teal" class="q-mb-md" filled :v-model="product.thumbnail || product.name + '-image'" label="Đăng tải hình ảnh" @update:model-value="handleImageUpload($event)">
         <template v-slot:prepend >
           <q-icon name="cloud_upload" />
@@ -66,7 +57,7 @@
 
       <img v-if="this.image || this.product.thumbnail" :v-model="this.thumbnail"
         :src="this.image || this.product.thumbnail" :alt="product.slug" class="q-mb-md shadow-up-2">
-      <!-- <ErrorMessage name="thumbnail" class="error-feedback" /> -->
+
       <q-btn :loading="loading" color="secondary" @click="isEdit ? onEdit($event) : onCreate($event)" class="submit" label="Submit"/>
     </Form>
   </div>
@@ -81,15 +72,8 @@ import ButtonCustom from '@/views/admin/patials/ButtonCustom.vue';
 import ProductsServices from '@/services/admin/products.services'
 import Editor from '@tinymce/tinymce-vue'
 import TextArea from '../Text.Area.vue';
-
-
-import * as yup from "yup"
 import { Form, Field, ErrorMessage } from "vee-validate"
-import { ref } from 'vue'
 
-// import 'bootstrap/dist/css/bootstrap.css';
-// import 'popper.js';
-// import 'bootstrap/dist/js/bootstrap';
 
 
 export default {
@@ -109,21 +93,7 @@ export default {
 
   },
   data() {
-    const productFormSchema = yup.object().shape({
-      name: yup
-        .string()
-        .required("Name is required.")
-        .min(2, "Name must be at least 2 characters.")
-        .max(50, "Name can be at most 50 characters."),
-      price: yup
-        .number()
-        .required("Price is required.")
-        .positive("Price must be a positive number."),
-      quantity: yup
-        .number()
-        .required("Quantity is required.")
-        .positive("Quantity must be a positive number."),
-    })
+
     return {
       value: [],  // Ensure value is initialized as an array
       options: [
@@ -153,7 +123,6 @@ export default {
       quantity: '',
       thumbnail: '',
       product: {},
-      productFormSchema,
       editProduct: {},
       success: false,
       defaultFlavor: [],

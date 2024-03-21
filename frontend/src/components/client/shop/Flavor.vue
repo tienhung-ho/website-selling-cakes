@@ -29,15 +29,9 @@
     </div>
     <div class="products__show" v-if="isShowLess">
       <ButtonCustom @click="showMore" :content="'Show More'" :color="'grey'" :borderColor="'#292E36'"/>
-       <!-- <button @click="showMore">
-        Show More
-       </button> -->
     </div>
     <div class="products__show" v-else>
         <ButtonCustom @click="showLess" :content="'Show Less'" :color="'grey'" :borderColor="'#292E36'"/>
-       <!-- <button @click="showLess">
-        Show Less
-       </button> -->
     </div>
   </div>
 

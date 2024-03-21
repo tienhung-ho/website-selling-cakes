@@ -48,33 +48,6 @@ export default createStore({
     SET_AUTH(state, auth) {
       state.authenticated = auth
     },
-
-    addToCart(state, item) {
-      if (state.user && state.user.cart) {
-        const existingItemIndex = state.user.cart.findIndex(existingItem => existingItem._id === item._id);
-        if (existingItemIndex !== -1) {
-          // If item already exists, update quantity
-          state.user.cart[existingItemIndex].quantity += item.quantity;
-        } else {
-          // If item doesn't exist, add it to the cart
-          state.user.cart.push(item);
-          state.cart = [...state.cart, item]
-        }
-      }
-      else {
-        state.user.cart.push(item)
-        console.log(3);
-        state.cart = [...state.cart, item]
-      }
-
-    },
-
-    // Mutation to remove an item from the cart
-    removeFromCart(state, itemId) {
-      state.user.cart = state.user.cart.filter(item => item._id !== itemId);
-      console.log(state.user.cart);
-      state.cart = state.cart.filter(item => item._id !== itemId);
-    },
     
   },
   actions: {
@@ -117,25 +90,10 @@ export default createStore({
       await commit('setMyObject', payload);
     },
 
-    // Action to add an item to the cart
-    async addItemToCart({ commit, state }, item) {
-      let data = {}
-      data.user = state.user._id
-      data.item = { ...item }
-      await UsersService.findAndUpdate(data)
-      commit('addToCart', item)
-    },
-    // Action to remove an item from the cart
-    async removeItemFromCart({ commit }, itemId) {
-      console.log(itemId);
-      commit('removeFromCart', itemId);
-    },
-
   },
 
   getters: {
     getUser: state => state.user,
-    getCartItems: state => state.user.cart,
   },
 
 });

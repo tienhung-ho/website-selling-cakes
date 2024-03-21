@@ -30,7 +30,7 @@ class ProductServices {
     const products = await Product.find({
       available: true,
       deleted: false,
-    }).sort({ position: 'desc' })
+    }).sort({ position: 'desc' }).select('-createdBy -createdAt ')
     
     return products
   }

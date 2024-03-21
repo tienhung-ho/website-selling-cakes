@@ -55,6 +55,12 @@ const routesAdmin = [
         component: () => import('@/views/admin/staffs/Create.vue'),
         meta: { requiresAuth: true }
       },
+      {
+        path: 'staff/profile',
+        name: 'ProfileStaff',
+        component: () => import('@/views/admin/staffs/Profile.vue'),
+        meta: { requiresAuth: true }
+      },
 
       {
         path: 'staff/edit/:slug',
@@ -89,6 +95,8 @@ const routesAdmin = [
         meta: { requiresAuth: true }
       },
 
+
+
       
     ]
   },
@@ -96,7 +104,7 @@ const routesAdmin = [
     path: '/staff/auth/login',
     name: 'LoginAdmin',
     component: () => import('@/views/admin/auth/Login.vue'),
-    // meta: { requiresAuth: false }
+    meta: { requiresAuth: false }
   },
 
 ]
