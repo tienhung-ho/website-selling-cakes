@@ -3,7 +3,8 @@ import { defineStore } from 'pinia'
 export const useAccountOfStaff = defineStore('setAccountOfStaff', () => {
   const state = {
     staff: {},
-    permissions: []
+    permissions: [],
+    cart: JSON.parse(localStorage.getItem("cart")) || []
   }
 
   const mutations = {
@@ -14,6 +15,11 @@ export const useAccountOfStaff = defineStore('setAccountOfStaff', () => {
     async setPermissions(permissions) {
       state.permissions = await permissions;
       // console.log('Setting staff in store:', state.staff);
+    },
+
+    setCart() {
+      state.cart = JSON.parse(localStorage.getItem("cart")) || []
+      return
     }
 
 
@@ -25,6 +31,33 @@ export const useAccountOfStaff = defineStore('setAccountOfStaff', () => {
     },
     getPermissions() {
       return state.permissions;
+    },
+    getCart() {
+      return state.cart
+    }
+  }
+
+  return { ...state, ...mutations, ...getters }
+})
+
+
+export const useCart = defineStore('setCart', () => {
+  const state = {
+    cart: JSON.parse(localStorage.getItem("cart")) || []
+  }
+
+  const mutations = {
+    setCart() {
+      state.cart = JSON.parse(localStorage.getItem("cart")) || []
+      return
+    }
+
+
+  }
+
+  const getters = {
+    getCart() {
+      return state.cart
     }
   }
 

@@ -33,6 +33,7 @@
 <script>
 
 import { addToCart } from '@/helpers/client/carts.helpers.js'
+import { useCart } from '@/store/pinia.store.js'
 
 export default {
   name: 'Cakes',
@@ -52,6 +53,7 @@ export default {
     return {
       isFlipped: false,
       isDetails: false,
+      // store: useCart()
 
     }
   },
@@ -76,12 +78,15 @@ export default {
         });
 
         addToCart(data)
-        
+        const store = useCart()
+        store.setCart()        
+        console.log(store.getCart());
 
     },
 
   },
   created() {
+    // this.store = useCart()
 
   }
 }
