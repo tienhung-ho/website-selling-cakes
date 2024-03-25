@@ -25,10 +25,13 @@
                     <div class="p-2 px-3 text-uppercase">Product</div>
                   </th>
                   <th scope="col" class="border-0 bg-light">
-                    <div class="py-2 text-uppercase">Price</div>
+                    <div class="py-2 text-uppercase  text-center">Price</div>
                   </th>
                   <th scope="col" class="border-0 bg-light">
-                    <div class="py-2 text-uppercase">Quantity</div>
+                    <div class="py-2 text-uppercase  text-center">Quantity</div>
+                  </th>
+                  <th scope="col" class="border-0 bg-light">
+                    <div class="py-2 text-uppercase  text-center">Total for product</div>
                   </th>
                   <th scope="col" class="border-0 bg-light">
                     <div class="py-2 text-uppercase">Remove</div>
@@ -52,12 +55,30 @@
                       </div>
                     </div>
                   </th>
-                  <td class="border-0 align-middle"><strong> {{ parseFloat(parseFloat(parseFloat(item.value.price) -
-                    (parseFloat(item.value.price) * parseFloat(item.value.discountPercentage / 100))) *
-                    parseFloat(item.quantity)) }} </strong></td>
-                  <td class="border-0 align-middle"><strong> {{ item.quantity }} </strong></td>
+                  <td class="border-0 align-middle text-center"><strong> {{ parseFloat(parseFloat(item.value.price) -
+                    (parseFloat(item.value.price) * parseFloat(item.value.discountPercentage / 100))) }} </strong></td>
+
+                  <td class="border-0 align-middle text-center">
+                    <button class="btn" @click="decreaseQuantity(item)">
+                      <i class='bx bx-minus'></i>
+                    </button>
+                    <strong>
+                      <input style="width: 1.4rem;" class="text-center" :value="item.quantity" disabled/>
+                    </strong>
+
+                    <button class="btn" @click="increaseQuantity(item)">
+                      <i class='bx bx-plus'></i>
+                    </button>
+
+                  </td>
+
+                  <td class="border-0 align-middle text-center"><strong> {{
+                    parseFloat(parseFloat(parseFloat(item.value.price) -
+                      (parseFloat(item.value.price) * parseFloat(item.value.discountPercentage / 100))) *
+                      parseFloat(item.quantity)) }} </strong></td>
+
                   <td class="border-0 align-middle ps-4">
-                    <a href="#" class="text-dark text-center">
+                    <a href="#" class="text-dark">
                       <i class='bx bx-x-circle'></i>
                     </a>
                   </td>
@@ -66,6 +87,15 @@
             </table>
           </div>
           <!-- End Shopping cart table -->
+          <div class="row d-flex justify-content-end">
+            <strong class="align-end w-25">Tổng tiền sản phẩm: {{ totalPrice() }}</strong>
+          </div>
+          <div class="row d-flex justify-content-end">
+            <strong class="align-end w-25">Tax: {{ 10 }}%</strong>
+          </div>
+          <!-- <div class="row d-flex justify-content-end">
+            <strong class="align-end w-25">Thành tiền: {{ totalPrice() + totalPrice() * 10 / 100 }}</strong>
+          </div> -->
         </div>
       </div>
 
@@ -75,7 +105,7 @@
           <div class="p-4">
             <p class="italic mb-4">Hãy điền thông tin địa chỉ nơi giao hàng</p>
             <div class="city-district-street row">
-              <div class="input-group mb-4 border rounded-pill p-2 w-25">
+              <div class="input-group ms-3 mb-4 border rounded-pill p-2 w-25">
                 <input type="text" placeholder="Thành phố" aria-describedby="button-addon3" class="form-control border-0">
               </div>
               <div class="input-group mb-4 border rounded-pill p-2 w-25 ms-3">
@@ -109,7 +139,7 @@
               </li>
 
             </ul>
-            <a href="#" class="btn btn-dark rounded-pill py-2 d-block">Lưu thông tin</a>
+            <!-- <a href="#" class="btn btn-dark rounded-pill py-2 d-block">Lưu thông tin</a> -->
           </div>
         </div>
       </div>
@@ -185,13 +215,13 @@ export default {
   },
   setup() {
     const store = useCart()
-    const cart = ref([])
+    const cart = ref([])  
 
 
     // Thiết lập giỏ hàng ban đầu từ store
     onMounted(() => {
       cart.value = store.getCart()
-      
+
     })
 
     // Watcher để theo dõi thay đổi của giỏ hàng trong store
@@ -211,6 +241,20 @@ export default {
         return totalPrice
       }
     }
+  },
+  methods: {
+    decreaseQuantity(item) {
+      if (item.quantity > 1) {
+        item.quantity--
+        // Cập nhật giỏ hàng trong store khi số lượng thay đổi
+        this.updateCart()
+      }
+    },
+    increaseQuantity(item) {
+      item.quantity++
+      // Cập nhật giỏ hàng trong store khi số lượng thay đổi
+      this.updateCart()
+    },
   },
   watch: {
   }
