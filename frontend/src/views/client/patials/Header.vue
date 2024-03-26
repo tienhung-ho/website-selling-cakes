@@ -22,21 +22,21 @@
           </router-link>
         </div>
 
-        <div class="header__ops--user" v-if="user">
+        <!-- <div class="header__ops--user" >
           <span>
             <font-awesome-icon :icon="['far', 'user']" style="color: #f7f7f7;" />
           </span>
           <span>
             {{ user.username }}
           </span>
-          <span class="logout" v-if="user" @click="logout">
+          <span class="logout" @click="">
             Logout
           </span>
-        </div>
-        <div class="header__ops--login" v-else>
+        </div> -->
+        <div class="header__ops--login">
           <router-link :to="{ name: 'Login' }" class="btn">
             Login/Register
-            {{ user }}
+            <!-- {{ user }} -->
           </router-link>
         </div>
 
@@ -101,7 +101,6 @@
 
 <script>
 
-import usersServices from '@/services/user/users.services';
 
 export default {
   name: 'Header',
@@ -112,26 +111,10 @@ export default {
     }
   },
   methods: {
-    async logout() {
-      try {
-        // Reload the current page
-        location.reload();
-
-        return await usersServices.logout()
-
-      }
-      catch (err) {
-        console.log(err);
-      }
-    }
 
   },
 
   computed: {
-    user() {
-      // Lấy dữ liệu user từ store
-      return this.$store.getters.getUser;
-    },
   }
 }
 

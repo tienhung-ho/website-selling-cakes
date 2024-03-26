@@ -1,7 +1,6 @@
 // store.js
 import { createStore } from 'vuex';
 import ProductsServices from '@/services/admin/products.services';
-import UsersService from '@/services/user/users.services'
 
 export default createStore({
   state: {

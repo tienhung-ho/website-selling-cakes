@@ -109,7 +109,7 @@
 <script>
 
 import ButtonCustom from '@/components/ButtonCustom.vue'
-import usersServices from '../../../services/user/users.services';
+
 
 export default {
   name: 'LoginRegister',
@@ -138,7 +138,6 @@ export default {
           showConfirmButton: false,
           timer: 1500
         });
-        const response = await usersServices.register(this.acc)
         this.$router.push('/login')
 
       } catch (error) {

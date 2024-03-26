@@ -11,7 +11,7 @@
     </div>
   </div>
 
-  <div class="pb-5">
+  <div class="pb-5" v-if="cart.length > 0">
     <div class="container">
       <div class="row">
         <div class="col-lg-12 p-5 bg-white rounded shadow mb-5">
@@ -63,7 +63,7 @@
                       <i class='bx bx-minus'></i>
                     </button>
                     <strong>
-                      <input style="width: 1.4rem;" class="text-center" :value="item.quantity" disabled/>
+                      <input style="width: 1.4rem;" class="text-center" :value="item.quantity" disabled />
                     </strong>
 
                     <button class="btn" @click="increaseQuantity(item)">
@@ -106,14 +106,16 @@
             <p class="italic mb-4">Hãy điền thông tin địa chỉ nơi giao hàng</p>
             <div class="city-district-street row">
               <div class="input-group ms-3 mb-4 border rounded-pill p-2 w-25">
-                <input type="text" placeholder="Thành phố" aria-describedby="button-addon3" class="form-control border-0">
+                <input v-model="user.city" type="text" placeholder="Thành phố" aria-describedby="button-addon3"
+                  class="form-control border-0">
               </div>
               <div class="input-group mb-4 border rounded-pill p-2 w-25 ms-3">
-                <input type="text" placeholder="Quận/Huyện" aria-describedby="button-addon3"
+                <input v-model="user.distric" type="text" placeholder="Quận/Huyện" aria-describedby="button-addon3"
                   class="form-control border-0">
               </div>
               <div class="input-group mb-4 border rounded-pill p-2 ms-3">
-                <input type="text" placeholder="Tên đường" aria-describedby="button-addon3" class="form-control border-0">
+                <input v-model="user.street" type="text" placeholder="Tên đường" aria-describedby="button-addon3"
+                  class="form-control border-0">
 
               </div>
 
@@ -122,7 +124,7 @@
           <div class="bg-light rounded-pill px-4 py-3 text-uppercase fw-bold">Ghi chú thông tin dành cho người bán</div>
           <div class="p-4">
             <p class="italic mb-4">Nếu có thông tin cần ghi chú hãy điền thêm vào ô phía dưới!</p>
-            <textarea name="" cols="30" rows="2" class="form-control"></textarea>
+            <textarea v-model="user.note" name="" cols="30" rows="2" class="form-control"></textarea>
           </div>
         </div>
         <div class="col-lg-6">
@@ -131,10 +133,11 @@
             <p class="italic mb-4">Thông tin để nhãn hàng có thể liên hệ!</p>
             <ul class="list-unstyled mb-4">
               <li class="d-flex justify-content-between py-3 border-bottom">
-                <input type="text" placeholder="Họ và Tên" aria-describedby="button-addon3" class="form-control border-0">
+                <input v-model="user.fullName" type="text" placeholder="Họ và Tên" aria-describedby="button-addon3"
+                  class="form-control border-0">
               </li>
               <li class="d-flex justify-content-between py-3 border-bottom">
-                <input type="number" placeholder="Số điên thoại" aria-describedby="button-addon3"
+                <input v-model="user.phone" type="number" placeholder="Số điên thoại" aria-describedby="button-addon3"
                   class="form-control border-0">
               </li>
 
@@ -189,15 +192,14 @@
                 <h5 class="fw-bold"> {{ totalPrice() }} </h5>
               </li>
             </ul>
-            <a href="#" class="btn btn-dark rounded-pill py-2 d-block">Proceed to checkout</a>
+            <button class="w-50 btn btn-dark rounded-pill py-2 d-block" @click="sendCart">Proceed to checkout</button>
           </div>
         </div>
       </div>
-
-
-
     </div>
-    {{ cart.length }}
+  </div>
+  <div class="pb-5 text-center">
+    Chưa có sản phẩm nào!
   </div>
 </template>
 
@@ -206,6 +208,9 @@
 import { useCart } from '@/store/pinia.store.js'
 import { ref, onMounted, watch } from 'vue'
 import { calPrice } from '@/helpers/client/prices.helpers.js'
+import UsersServices from '@/services/client/users.services.js'
+import { updateCart } from '@/helpers/client/carts.helpers.js'
+import { useQuasar } from 'quasar'
 
 export default {
   name: "Cart",
@@ -214,8 +219,10 @@ export default {
     }
   },
   setup() {
+    const $q = useQuasar()
     const store = useCart()
-    const cart = ref([])  
+    const cart = ref([])
+    const user = ref({})
 
 
     // Thiết lập giỏ hàng ban đầu từ store
@@ -233,6 +240,20 @@ export default {
 
     return {
       cart,
+      store,
+      user,
+      showNotif(clr ,message) {
+        $q.notify({
+          message: `Trang web này cho biết: ${message}`,
+          color: clr,
+          multiLine: true,
+          // avatar: 'https://cdn.quasar.dev/img/boy-avatar.png',
+          actions: [
+            { label: 'Close', color: 'yellow', handler: () => { /* ... */ } }
+          ]
+        })
+      }
+      ,
       totalPrice() {
         let totalPrice = cart.value.reduce((sum, item) => {
           const discountedPrice = parseFloat(item.value.price) * (1 - parseFloat(item.value.discountPercentage / 100))
@@ -244,17 +265,48 @@ export default {
   },
   methods: {
     decreaseQuantity(item) {
+
       if (item.quantity > 1) {
+
         item.quantity--
-        // Cập nhật giỏ hàng trong store khi số lượng thay đổi
-        this.updateCart()
+        updateCart(this.cart)
       }
     },
+
     increaseQuantity(item) {
+
       item.quantity++
-      // Cập nhật giỏ hàng trong store khi số lượng thay đổi
-      this.updateCart()
+      updateCart(this.cart)
     },
+
+    async sendCart() {
+      console.log(this.user);
+      if (!this.user.phone) {
+        this.showNotif('negative', 'Vui lòng kiểm tra, nhập số điện thoại!!')
+        return
+      }
+
+      else if (!this.user.fullName) {
+        this.showNotif('negative', 'Vui lòng điền đầy đủ thông tin cá nhân, họ tên!!')
+        return
+      }
+
+      else if (!this.user.city || !this.user.distric || !this.user.street) {
+        this.showNotif('negative', 'Vui lòng điền đầy đủ địa chỉ chính xác!!')
+        return
+      }
+
+      else {
+
+        this.showNotif('primary', 'Chúc mừng bạn đã mua hàng thành công!! Xin cám ơn bạn về hành động này, mong chúng tôi sẽ lại được phục vụ bạn.')
+        updateCart(this.cart)
+        
+        await UsersServices.setOrder(this.cart, this.user)
+        return
+      }
+
+
+    }
   },
   watch: {
   }

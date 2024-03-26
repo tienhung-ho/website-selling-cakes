@@ -20,7 +20,16 @@ const orderSchema = new mongoose.Schema(
       price: Number,
       discountPercentage: Number
     }
-  ]
+  ],
+  status: {
+    type: String,
+    default: 'active' // pending, completed, unactive, cancel
+  },
+  deleted: {
+    type: Boolean,
+    default: false
+  },
+
 },
 { timestamps: true })
 

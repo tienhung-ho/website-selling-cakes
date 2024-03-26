@@ -7,7 +7,7 @@ const database = require('./app/config/database.js')
 
 const clientRoute = require('./app/routers/client')
 const adminRoute = require('./app/routers/admin')
-const userRoute = require('./app/routers/user')
+
 // const Products = require('./app/models/products.model.js')
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser')
@@ -29,7 +29,7 @@ app.use(express.json())
 
 clientRoute(app)
 adminRoute(app)
-userRoute(app)
+  
 
 
 

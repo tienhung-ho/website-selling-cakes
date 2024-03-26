@@ -45,11 +45,13 @@ export const useCart = defineStore('setCart', () => {
   const state = {
     cart: JSON.parse(localStorage.getItem("cart")) || []
   }
-
   const mutations = {
     setCart() {
       state.cart = JSON.parse(localStorage.getItem("cart")) || []
       return
+    },
+    updateCart(data) {
+      
     }
 
 

@@ -100,7 +100,7 @@
 <script>
 
 import ButtonCustom from '@/components/ButtonCustom.vue'
-import userServices from '../../../services/user/users.services'
+
 
 export default {
   name: 'Login',
@@ -121,7 +121,7 @@ export default {
   methods: {
     async login() {
       try {
-        const response = await userServices.login(this.acc)
+        // const response = await userServices.login(this.acc)
         if (response) {
           console.log(response);
           this.$swal.fire({

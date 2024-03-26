@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import userServices from '../../../services/user/users.services'
+
 
 
 export default {
@@ -22,7 +22,7 @@ export default {
 
     try {
 
-      const response = await userServices.user()
+      
       console.log(response);
       this.$store.dispatch('updateMyObject', response);
     }

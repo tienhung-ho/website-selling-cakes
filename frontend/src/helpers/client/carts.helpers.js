@@ -39,6 +39,10 @@ export function addToCart(item) {
   }
 }
 
+export function updateCart(data) {
+  localStorage.setItem("cart", JSON.stringify(data))
+}
+
 
 // Mutation to remove an item from the cart
 export function removeFromCart (itemId) {
