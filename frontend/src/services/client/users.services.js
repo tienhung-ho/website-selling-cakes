@@ -14,6 +14,12 @@ class UsersServices {
     })).data
   }
 
+  async getOrderTracking (user) {
+    return (await this.api.get("/order/tracking", {
+      user
+    })).data
+  }
+
   
 
 }

@@ -43,6 +43,10 @@ export function updateCart(data) {
   localStorage.setItem("cart", JSON.stringify(data))
 }
 
+export function clearCart() {
+  localStorage.removeItem('cart');
+}
+
 
 // Mutation to remove an item from the cart
 export function removeFromCart (itemId) {

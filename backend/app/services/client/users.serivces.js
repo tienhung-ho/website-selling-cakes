@@ -25,6 +25,7 @@ class UsersServices {
     data.forEach(item => {
       const productInfor = {
         product_id: item.value._id,
+        slug: item.value.slug,
         quantity: item.quantity,
         price: item.value.price,
         discountPercentage: item.value.discountPercentage
@@ -36,6 +37,14 @@ class UsersServices {
 
     const result = new this.UserModel(payload)
     result.save()
+
+    return result
+  }
+
+  async orderTracking (user) {
+    const result = await this.UserModel.find({
+      deleted: false
+    })
 
     return result
   }

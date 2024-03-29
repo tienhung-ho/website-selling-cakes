@@ -25,3 +25,28 @@ module.exports.createOrder =  async (req, res, next) => {
 
 }
 
+// [GET] /api/user/order
+module.exports.orderTracking =  async (req, res, next) => {
+
+  try {
+    
+    const user = req.body
+    const userServices = new UsersServices()
+
+    const result = await userServices.orderTracking()
+
+    return res.status(200).json({
+      code: 200,
+      data: result
+    })
+
+  }
+  catch(err) {
+    res.status(200).json({
+      code: 500,
+      message: 'Wrong at get Oder!'
+    })
+  }
+
+}
+

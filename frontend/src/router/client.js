@@ -55,7 +55,12 @@ const routesClient = [
         path: '/cart',
         name: 'Cart',
         component: () => import('@/views/client/cart/Cart.vue')
-      }
+      },
+      {
+        path: '/order/tracking',
+        name: 'Tracking',
+        component: () => import('@/views/client/orders/Orders-tracking.vue')
+      },
       
     ]
   }
