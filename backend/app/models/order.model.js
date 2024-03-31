@@ -26,10 +26,13 @@ const orderSchema = new mongoose.Schema(
     type: String,
     default: 'active' // pending, completed, unactive, cancel
   },
+  totalPrice: Number,
   deleted: {
     type: Boolean,
     default: false
   },
+  description: String,
+  position: Number
 
 },
 { timestamps: true })

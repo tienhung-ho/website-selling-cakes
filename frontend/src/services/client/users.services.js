@@ -7,10 +7,11 @@ class UsersServices {
     this.api = createApiClient(baseUrl);
   }
 
-  async setOrder (data, user) {
+  async setOrder (data, user, order) {
     return (await this.api.post("/order", {
       data,
-      user
+      user,
+      order
     })).data
   }
 

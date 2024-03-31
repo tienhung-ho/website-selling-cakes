@@ -54,6 +54,9 @@ export default {
           link: { name: 'Permissions' }, name: "Permissions", tooltip: "Permissons", icon: "bx-shield"
         },
         {
+          link: { name: 'OrderAdmin' }, name: "Orders", tooltip: "Order", icon: "bx-cart"
+        },
+        {
           link: "/admin", name: "Setting", tooltip: "Setting", icon: "bx-cog"
         },
       ],

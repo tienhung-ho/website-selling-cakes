@@ -124,7 +124,7 @@
           <div class="bg-light rounded-pill px-4 py-3 text-uppercase fw-bold">Ghi chú thông tin dành cho người bán</div>
           <div class="p-4">
             <p class="italic mb-4">Nếu có thông tin cần ghi chú hãy điền thêm vào ô phía dưới!</p>
-            <textarea v-model="user.note" name="" cols="30" rows="2" class="form-control"></textarea>
+            <textarea v-model="order.description" name="" cols="30" rows="2" class="form-control"></textarea>
           </div>
         </div>
         <div class="col-lg-6">
@@ -207,7 +207,6 @@
 
 import { useCart } from '@/store/pinia.store.js'
 import { ref, onMounted, watch } from 'vue'
-import { calPrice } from '@/helpers/client/prices.helpers.js'
 import UsersServices from '@/services/client/users.services.js'
 import { updateCart, clearCart } from '@/helpers/client/carts.helpers.js'
 import { useQuasar } from 'quasar'
@@ -216,6 +215,7 @@ export default {
   name: "Cart",
   data() {
     return {
+      order: {}
     }
   },
   setup() {
@@ -280,37 +280,39 @@ export default {
     },
 
     async sendCart() {
-      // console.log(this.user);
-      // if (!this.user.phone) {
-      //   this.showNotif('negative', 'Vui lòng kiểm tra, nhập số điện thoại!!')
-      //   return
-      // }
+      console.log(this.user);
+      this.order.totalPrice = this.totalPrice()
+      if (!this.user.phone) {
+        this.showNotif('negative', 'Vui lòng kiểm tra, nhập số điện thoại!!')
+        return
+      }
 
-      // else if (!this.user.fullName) {
-      //   this.showNotif('negative', 'Vui lòng điền đầy đủ thông tin cá nhân, họ tên!!')
-      //   return
-      // }
+      else if (!this.user.fullName) {
+        this.showNotif('negative', 'Vui lòng điền đầy đủ thông tin cá nhân, họ tên!!')
+        return
+      }
 
-      // else if (!this.user.city || !this.user.distric || !this.user.street) {
-      //   this.showNotif('negative', 'Vui lòng điền đầy đủ địa chỉ chính xác!!')
-      //   return
-      // }
+      else if (!this.user.city || !this.user.distric || !this.user.street) {
+        this.showNotif('negative', 'Vui lòng điền đầy đủ địa chỉ chính xác!!')
+        return
+      }
 
-      // else {
+      else {
 
       this.showNotif('primary', 'Chúc mừng bạn đã mua hàng thành công!! Xin cám ơn bạn về hành động này, mong chúng tôi sẽ lại được phục vụ bạn.')
       try {
         updateCart()
         clearCart()
         this.$router.push('/order/tracking');
-        await UsersServices.setOrder(this.cart, this.user);
+        await UsersServices.setOrder(this.cart, this.user, this.order);
+        
       } catch (error) {
         console.error('Error occurred:', error);
       }
 
 
-      // return
-      // }
+      return
+      }
 
 
     }

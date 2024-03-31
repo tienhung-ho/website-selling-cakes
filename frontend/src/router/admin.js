@@ -95,6 +95,13 @@ const routesAdmin = [
         meta: { requiresAuth: true }
       },
 
+      {
+        path: 'users/order',
+        name: 'OrderAdmin',
+        component: () => import('@/views/admin/users/Orders.vue'),
+        meta: { requiresAuth: true }
+      },
+
 
 
       

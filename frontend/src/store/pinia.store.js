@@ -2,9 +2,10 @@ import { defineStore } from 'pinia'
 
 export const useAccountOfStaff = defineStore('setAccountOfStaff', () => {
   const state = {
+    
     staff: {},
     permissions: [],
-    cart: JSON.parse(localStorage.getItem("cart")) || []
+    cart: getValidCart()
   }
 
   const mutations = {
@@ -18,7 +19,7 @@ export const useAccountOfStaff = defineStore('setAccountOfStaff', () => {
     },
 
     setCart() {
-      state.cart = JSON.parse(localStorage.getItem("cart")) || []
+      state.cart = getValidCart()
       return
     }
 
@@ -43,11 +44,11 @@ export const useAccountOfStaff = defineStore('setAccountOfStaff', () => {
 
 export const useCart = defineStore('setCart', () => {
   const state = {
-    cart: JSON.parse(localStorage.getItem("cart")) || []
+    cart: getValidCart()
   }
   const mutations = {
     setCart() {
-      state.cart = JSON.parse(localStorage.getItem("cart")) || []
+      state.cart = getValidCart()
       return
     },
     updateCart(data) {
@@ -65,3 +66,20 @@ export const useCart = defineStore('setCart', () => {
 
   return { ...state, ...mutations, ...getters }
 })
+
+
+function getValidCart() {
+  const cartFromLocalStorage = localStorage.getItem("cart");
+  let cart;
+
+  try {
+    cart = JSON.parse(cartFromLocalStorage);
+  } catch (error) {
+    console.error('Error parsing cart from localStorage:', error);
+    // Nếu có lỗi, xóa cart khỏi localStorage và thiết lập cart mới là một mảng rỗng
+    localStorage.removeItem("cart");
+    cart = [];
+  }
+
+  return cart || []; // Trả về cart hoặc một mảng rỗng nếu không tồn tại cart
+}

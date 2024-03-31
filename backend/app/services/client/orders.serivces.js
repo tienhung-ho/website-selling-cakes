@@ -1,13 +1,13 @@
 
-const UserModel = require('../../models/order.model')
+const OrdersModel = require('../../models/order.model')
 
 class UsersServices {
 
   constructor () {
-    this.UserModel =  UserModel
+    this.OrdersModel =  OrdersModel
   }
 
-  async createOffer (data, user) {
+  async createOffer (data, user, order) {
     const payload = {
       userInfo: {
         fullName: user.fullName,
@@ -19,7 +19,9 @@ class UsersServices {
         phone: user.phone
       },
       products: [
-      ]
+      ],
+      description: order.description,
+      totalPrice: order.totalPrice
     }
 
     data.forEach(item => {
@@ -32,17 +34,17 @@ class UsersServices {
       }
 
       payload.products.push(productInfor)
-      
     })
-
-    const result = new this.UserModel(payload)
+    const numberOfOrders = await this.OrdersModel.countDocuments()
+    payload.position = numberOfOrders
+    const result = new this.OrdersModel(payload)
     result.save()
 
     return result
   }
 
   async orderTracking (user) {
-    const result = await this.UserModel.find({
+    const result = await this.OrdersModel.find({
       deleted: false
     })
 

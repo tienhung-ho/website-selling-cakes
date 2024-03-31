@@ -1,32 +1,22 @@
 
-const OrdersServices = require('../../services/client/orders.serivces')
+const OrdersServices = require('../../services/admin/orders.services')
 
-
-// [POST] /api/user/order
-module.exports.createOrder =  async (req, res, next) => {
-
+// [GET] /api/user/order
+module.exports.getAllOrders = async (req, res, next) => {
   try {
-    const { data, user, order } = req.body
-    
     const ordersServices = new OrdersServices()
-  
-    const result = await ordersServices.createOffer(data, user, order)
-    
-  
-    return res.status(200).json({
-      code: 200,
-      message: 'Created!'
-    })
+    const result = await ordersServices.getAllOrders()
 
+    res.json(result)
   }
   catch(err) {
     res.status(200).json({
       code: 500,
-      message: 'Wrong at create Oder!'
+      message: 'Could not get orders!'
     })
   }
-
 }
+
 
 // [GET] /api/user/order
 module.exports.orderTracking =  async (req, res, next) => {
@@ -34,7 +24,7 @@ module.exports.orderTracking =  async (req, res, next) => {
   try {
     
     const user = req.body
-    const userServices = new OrdersServices()
+    const userServices = new UsersServices()
 
     const result = await userServices.orderTracking()
 
