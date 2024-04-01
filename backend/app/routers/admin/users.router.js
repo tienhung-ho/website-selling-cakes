@@ -7,7 +7,7 @@ const router = express.Router()
 router.route('/order/tracking')
   .get(controllers.orderTracking)
 
-router.route('/order')
+router.route('/order')  
   .get(controllers.getAllOrders)
 
 

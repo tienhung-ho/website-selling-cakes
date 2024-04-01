@@ -4,8 +4,15 @@ const OrdersServices = require('../../services/admin/orders.services')
 // [GET] /api/user/order
 module.exports.getAllOrders = async (req, res, next) => {
   try {
+    let conditions = {}
+    if (!req.query || Object.keys(req.query).length === 0) {
+      console.log('req.query is empty or does not exist');
+    }
+    else {
+      conditions.createdAtDate = req.query.date
+    }
     const ordersServices = new OrdersServices()
-    const result = await ordersServices.getAllOrders()
+    const result = await ordersServices.getAllOrders(conditions)
 
     res.json(result)
   }

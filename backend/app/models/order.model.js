@@ -32,7 +32,7 @@ const orderSchema = new mongoose.Schema(
     default: false
   },
   description: String,
-  position: Number
+  position: Number,
 
 },
 { timestamps: true })

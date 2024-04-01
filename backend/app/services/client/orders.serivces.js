@@ -21,7 +21,8 @@ class UsersServices {
       products: [
       ],
       description: order.description,
-      totalPrice: order.totalPrice
+      totalPrice: order.totalPrice,
+      createdAtDate: order.createdAtDate
     }
 
     data.forEach(item => {

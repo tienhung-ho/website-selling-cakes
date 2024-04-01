@@ -7,10 +7,13 @@ class userService {
     this.api = createApiClient(baseUrl);
   }
 
-  async getAllOrders() {
-    return (await this.api.get("order")).data
-  }
+  async getAllOrders(conditions) {
+    return (await this.api.get('order', {
+      
+      params: conditions,
 
+    })).data
+  }
 
 }
 

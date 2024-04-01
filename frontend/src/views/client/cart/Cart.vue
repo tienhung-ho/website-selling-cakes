@@ -278,9 +278,17 @@ export default {
       item.quantity++
       updateCart(this.cart)
     },
+    formatTime() {
+      const date = new Date();
+      const year = date.getFullYear();
+      const month = ('0' + (date.getMonth() + 1)).slice(-2); // Tháng bắt đầu từ 0
+      const day = ('0' + date.getDate()).slice(-2);
+      const hours = ('0' + date.getHours()).slice(-2);
+      const minutes = ('0' + date.getMinutes()).slice(-2);
+      return `${year}-${month}-${day} ${hours}:${minutes}`;
+    },
 
     async sendCart() {
-      console.log(this.user);
       this.order.totalPrice = this.totalPrice()
       if (!this.user.phone) {
         this.showNotif('negative', 'Vui lòng kiểm tra, nhập số điện thoại!!')
@@ -315,7 +323,9 @@ export default {
       }
 
 
-    }
+    },
+
+
   },
   watch: {
   }
