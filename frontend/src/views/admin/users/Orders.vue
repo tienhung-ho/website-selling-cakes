@@ -6,7 +6,7 @@
       <template v-slot:prepend>
         <q-icon name="event" class="cursor-pointer">
           <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-            <q-date v-model="date" @update:model-value="getAllOrders(date)" mask="YYYY-MM-DD HH:mm">
+            <q-date color="info" v-model="date" @update:model-value="getAllOrders(date)" mask="YYYY-MM-DD HH:mm">
               <div class="row items-center justify-end">
                 <q-btn v-close-popup label="Close" color="primary" flat />
               </div>
@@ -18,7 +18,7 @@
       <template v-slot:append>
         <q-icon name="access_time" class="cursor-pointer">
           <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-            <q-time v-model="date" mask="YYYY-MM-DD HH:mm" format24h>
+            <q-time color="info" v-model="date" mask="YYYY-MM-DD HH:mm" format24h>
               <div class="row items-center justify-end">
                 <q-btn v-close-popup label="Close" color="primary" flat />
               </div>
@@ -34,7 +34,7 @@
       <q-card-section horizontal>
         <q-card-section class="q-pt-xs">
           <div class="text-overline">Overline</div>
-          <div class="text-h5 q-mt-sm q-mb-xs">Đơn hàng số {{ order.position + 1 }}</div>
+          <div class="text-h5 q-mt-sm q-mb-xs">Đơn hàng số {{ order.position }}</div>
           <div class="text-caption text-grey">
             {{ order.description || 'Does not have description' }}
           </div>
@@ -48,11 +48,17 @@
       <q-separator />
 
       <q-card-actions>
-        <q-btn class="w-25" label="Cancel"></q-btn>
-        <q-btn class="w-25" label="Recall"></q-btn>
-
+        Status:
+        <q-btn style="width: 100%;"  disabled :label="order.status"></q-btn>
+        <q-linear-progress dark rounded indeterminate color="positive" class="q-mt-sm" />
       </q-card-actions>
 
+
+      <q-card-actions>
+        <q-btn class="w-25" label="Cancel" @click="changeStatus(order._id, { status: 'cancel' })"></q-btn>
+        <q-btn class="w-25" label="Recall" @click="changeStatus(order._id, { status: 'recall' })"></q-btn>
+      </q-card-actions>
+      
       <q-card-actions>
         <div class="q-pa-md" style="max-width: 300px">
           <q-input filled v-model="order.createdAt">
@@ -85,6 +91,10 @@
           </div>
         </div>
       </q-card-actions>
+
+      <div class="over" v-if="order.status == 'cancel'">
+        {{ order.status.toUpperCase() }}
+      </div>
     </q-card>
   </div>
 </template>
@@ -92,7 +102,8 @@
 <script>
 import Title from '@/views/admin/patials/Title.vue';
 import { ref, watchEffect } from 'vue'
-import usersServices from '@/services/admin/users.services';
+import OrdersServices from '@/services/admin/orders.services'
+import { useQuasar } from 'quasar'
 
 export default {
   name: 'Orders',
@@ -100,6 +111,7 @@ export default {
     Title
   },
   setup() {
+    const $q = useQuasar()
 
     const date = ref(formatTime());
 
@@ -124,13 +136,20 @@ export default {
     return {
       date,
       lorem: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+      triggerPositive (name) {
+        $q.notify({
+          type: 'positive',
+          message: `${name} successfully!`
+        })
+      },
     }
   },
 
   data() {
     return {
       orderDate: ref(''),
-      orders: []
+      orders: [],
+      status: ['comfirmed', 'picked', 'transport', 'ready']
     }
   },
 
@@ -160,12 +179,24 @@ export default {
         conditions.date = date
       }
       console.log(conditions.date);
-      this.orders = await usersServices.getAllOrders(conditions)
+      this.orders = await OrdersServices.getAllOrders(conditions)
       console.log(this.orders);
       for (const item of this.orders) {
         item.createdAt = this.formatIsoDateToQuasar(item.createdAt)
       }
     },
+
+    async changeStatus(query, conditions) {
+      const data = {
+        _id: query,
+        conditions
+      }
+      
+      await OrdersServices.changeStatusOrder(data)
+      this.triggerPositive(data.conditions.status)
+      this.getAllOrders()
+
+    }
   },
 
   created() {
@@ -178,6 +209,23 @@ export default {
 <style lang="scss" scoped>
 .my-card {
   width: 100%;
-  max-width: 350px
+  max-width: 350px;
+  position: relative;
+}
+
+.over {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(239, 242, 244, 0.7);
+  top: 0;
+  bottom: 0;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  vertical-align: middle;
+  font-size: 1.5rem;
+  color: red;
 }
 </style>

@@ -17,14 +17,6 @@ class OrdersServices {
 
   }
 
-  // async getAllOrders (conditions) {
-  
-  //   const result = await this.OrdersModel.find(
-  //     conditions
-  //   ).sort({position: 'desc'})
-  //   return result
-  // }
-
   async getAllOrders(conditions) {
     let query = {}; // Khởi tạo truy vấn rỗng
   
@@ -42,11 +34,20 @@ class OrdersServices {
     }
   
     // Tìm kiếm các bản ghi theo query đã tạo và sắp xếp theo position giảm dần
-    const result = await this.OrdersModel.find(query).sort({ position: 'desc' });
+    const result = await this.OrdersModel.find(query).sort({ createdAt: 'desc' });
   
     return result;
   }
   
+  async update (id, conditions) {
+
+    const order = await this.OrdersModel.findOneAndUpdate({
+      _id: id
+    }, conditions)
+
+    
+    return order
+  }
 
 
 

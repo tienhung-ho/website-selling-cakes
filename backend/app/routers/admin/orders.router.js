@@ -4,10 +4,15 @@ const controllers = require('../../controllers/admin/order.controllers')
 const router = express.Router()
 
 
-router.route('/order/tracking')
+router.route('/tracking')
   .get(controllers.orderTracking)
 
-router.route('/order')  
+
+router.route('/change-status')
+  .patch(controllers.changeStatus)
+
+
+router.route('/')  
   .get(controllers.getAllOrders)
 
 

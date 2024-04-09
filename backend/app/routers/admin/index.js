@@ -2,7 +2,7 @@ const productRouter = require('./products.routers')
 const flavorRouter = require('./flavor.router')
 const staffRouter = require('./staff.router')
 const rolesRouter = require('./roles.router')
-const usersRouter = require('./users.router')
+const ordersRouter = require('./orders.router')
 
 function Routes (app) {
   const prefixApi = app.locals.prefixApi
@@ -12,7 +12,7 @@ function Routes (app) {
   app.use(`${prefixApi}/${prefixAdmin}/flavor`, flavorRouter)
   app.use(`${prefixApi}/${prefixAdmin}/staff`, staffRouter)
   app.use(`${prefixApi}/${prefixAdmin}/roles`, rolesRouter)
-  app.use(`${prefixApi}/${prefixAdmin}/users`, usersRouter)
+  app.use(`${prefixApi}/${prefixAdmin}/orders`, ordersRouter)
 }
 
 module.exports = Routes
