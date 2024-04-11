@@ -29,10 +29,7 @@ class staffService {
     })).data
   }
 
-
-
   async editRole(data) {
-    console.log(data.slug);
     return (await this.api.patch(`/edit/${data.slug}`, {
       params: data
     })).data

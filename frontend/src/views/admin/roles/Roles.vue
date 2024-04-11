@@ -39,7 +39,7 @@
         </div>
 
         <div class="col-5 ">
-          <Options :slug="role.slug"
+          <Options :slug="role.slug" @changeDeleted="getRoles"
             slug="test"
           />
         </div>
@@ -72,7 +72,8 @@ export default {
     return {
       roles: [
 
-      ]
+      ],
+      
     }
   },
 
@@ -85,7 +86,7 @@ export default {
       this.roles = await RolesServices.getAllRoles()
     }
     catch(err) {
-
+      console.log(err);
     }
    }
 

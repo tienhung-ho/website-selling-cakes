@@ -3,7 +3,7 @@
     <router-link :to="{ name: 'EditRoles', params: { slug: slug  } }">
       <span class="action__edit" title="Edit" @click="onEdit">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-          style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+          style="fill: rgba(0, 0, 0, 1);transform: msFilter">
           <path
             d="M19.045 7.401c.378-.378.586-.88.586-1.414s-.208-1.036-.586-1.414l-1.586-1.586c-.378-.378-.88-.586-1.414-.586s-1.036.208-1.413.585L4 13.585V18h4.413L19.045 7.401zm-3-3 1.587 1.585-1.59 1.584-1.586-1.585 1.589-1.584zM6 16v-1.585l7.04-7.018 1.586 1.586L7.587 16H6zm-2 4h16v2H4z">
           </path>
@@ -13,7 +13,7 @@
 
     <span class="action__detail" title="Detail">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-        style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+        style="fill: rgba(0, 0, 0, 1);transform: msFilter">
         <path
           d="M16 2H8C4.691 2 2 4.691 2 8v13a1 1 0 0 0 1 1h13c3.309 0 6-2.691 6-6V8c0-3.309-2.691-6-6-6zm4 14c0 2.206-1.794 4-4 4H4V8c0-2.206 1.794-4 4-4h8c2.206 0 4 1.794 4 4v8z">
         </path>
@@ -23,7 +23,7 @@
 
     <span class="action-delete" title="Delete" @click="onDelete">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-        style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+        style="fill: rgba(0, 0, 0, 1);transform: msFilter">
         <path
           d="m16.192 6.344-4.243 4.242-4.242-4.242-1.414 1.414L10.535 12l-4.242 4.242 1.414 1.414 4.242-4.242 4.243 4.242 1.414-1.414L13.364 12l4.242-4.242z">
         </path>
@@ -45,7 +45,6 @@ export default {
     }
   },
 
-
   props: {
     slug: {
       type: String,
@@ -55,7 +54,12 @@ export default {
 
   methods: {
     async onDelete() {
-      
+      const data = {
+        slug: this.slug,
+        deleted: true
+      }
+      await rolesServices.editRole(data)
+      this.$emit('changeDeleted')
 
     }
   },
