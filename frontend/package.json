@@ -33,7 +33,7 @@
     "tailwindcss-animate": "^1.0.7",
     "vee-validate": "^4.5.8",
     "vue-cookies": "^1.8.3",
-    "vue-multiselect": "^3.0.0-beta.3",
+    "vue-multiselect": "^3.0.0",
     "vue-router": "^4.2.5",
     "vue-sidebar-menu-akahon": "^1.0.2",
     "vue-sweetalert2": "^5.0.5",

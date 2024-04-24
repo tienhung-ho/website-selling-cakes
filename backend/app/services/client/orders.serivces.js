@@ -15,6 +15,7 @@ class UsersServices {
           city: user.city,
           district: user.district,
           street: user.street,
+          ward: user.ward
         },
         phone: user.phone
       },

@@ -1,15 +1,18 @@
 const express = require('express') 
-const controllers = require('../../controllers/client/order.controllers')
+const controllersOrders = require('../../controllers/client/order.controllers')
+const controllers = require('../../controllers/client/users.controllers')
 
 const router = express.Router()
 
 
 router.route('/order/tracking')
-  .get(controllers.orderTracking)
+  .get(controllersOrders.orderTracking)
 
 router.route('/order')
-  .post(controllers.createOrder)
+  .post(controllersOrders.createOrder)
 
+router.route('/login')
+  .post(controllers.login)
 
 
 

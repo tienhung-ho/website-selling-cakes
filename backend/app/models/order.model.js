@@ -9,7 +9,8 @@ const orderSchema = new mongoose.Schema(
     address: {
       city: String,
       district: String,
-      street: String,
+      ward: String,
+      street: String
     },
     phone: String
   },

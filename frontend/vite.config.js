@@ -39,6 +39,11 @@ export default defineConfig({
         target: "http://localhost:3000/",
         changeOrigin: true,
       },
+      "/external-api": {
+        target: "https://vapi.vnappmob.com/api/", // Thay bằng địa chỉ thực tế của máy chủ bên ngoài
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/external-api/, ''), // Loại bỏ tiền tố /external-api
+      },
     }
   }
 })
