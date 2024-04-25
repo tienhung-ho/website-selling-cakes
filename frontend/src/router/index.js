@@ -1,14 +1,15 @@
 
 import { createWebHistory, createRouter } from "vue-router"
 
-import StaffServices from '@/services/admin/staffs.services'
+// import StaffServices from '@/services/admin/staffs.services'
+import staffsServices from "@/services/admin/staffs.services"
+import usersServices from "@/services/client/users.services"
 import RolesServices from '@/services/admin/roles.services'
 
 import routesAdmin from "./admin"
 import routesClient from "./client"
 
-import { useAccountOfStaff } from '@/store/pinia.store'
-import staffsServices from "@/services/admin/staffs.services"
+import { useAccountOfStaff, useAccountOfUser } from '@/store/pinia.store'
 
 // middlewares
 
@@ -170,35 +171,103 @@ const router = createRouter({
   routes, // short for `routes: routes`
 })
 
+// router.beforeEach(async (to, from, next) => {
+
+//   try {
+
+//     if (to.meta.requiresAuth) {
+//       const record = await staffsServices.getStaffWithAccessToken()
+//       await useAccountOfStaff().setStaff(record._doc)
+//       if (to.name !== 'LoginAdmin' && !record._doc) {
+//         next({ name: 'LoginAdmin' })
+        
+//       }
+//       else {
+//         const staff = record._doc
+//         const permissions = await RolesServices.getRolesPermissionById(staff.role_id)
+//         useAccountOfStaff().setPermissions(permissions)
+//         next()
+//       }
+
+//     } else {
+//       // Cho phép tiếp tục điều hướng đến các route không yêu cầu đăng nhập
+//       next();
+//     }
+//   }
+//   catch (err) {
+//     // console.log(err.config.url);
+//     console.log(err);
+//       return next('/staff/auth/login')
+//   }
+
+//   try {
+    
+//     const record = await usersServices.getStaffWithAccessToken()
+//     await useAccountOfUser().setUser(record._doc)
+//     if (to.meta.requiresUserAuth) {
+//       if (to.name !== 'Login' && !record._doc) {
+//         next({ name: 'Login' })
+//         return
+//       }
+//       else {
+//         await useAccountOfUser().setUser(record._doc)
+//         return next()
+//       }
+
+//     } else {
+//       // Cho phép tiếp tục điều hướng đến các route không yêu cầu đăng nhập
+//       return next();
+//     }
+//   }
+//   catch (err) {
+//     // console.log(err.config.url);
+//     console.log(err);
+//       // return next('/login')
+//   }
+
+// });
+
 router.beforeEach(async (to, from, next) => {
-
-  try {
-
-    if (to.meta.requiresAuth) {
+  
+  const record = await usersServices.getStaffWithAccessToken()
+  await useAccountOfUser().setUser(record._doc)
+  if (to.meta.requiresAuth) {
+    // Check if it's admin login
+    try {
       const record = await staffsServices.getStaffWithAccessToken()
-      useAccountOfStaff().setStaff(record._doc)
+      await useAccountOfStaff().setStaff(record._doc)
       if (to.name !== 'LoginAdmin' && !record._doc) {
-        next({ name: 'LoginAdmin' })
-        // return
-      }
-      else {
+        return next({ name: 'LoginAdmin' })
+      } else {
         const staff = record._doc
         const permissions = await RolesServices.getRolesPermissionById(staff.role_id)
         useAccountOfStaff().setPermissions(permissions)
-        next()
+        return next()
       }
-
-    } else {
-      // Cho phép tiếp tục điều hướng đến các route không yêu cầu đăng nhập
-      next();
+    } catch (err) {
+      console.log(err)
+      return next('/staff/auth/login')
+    }
+  } else if (to.meta.requiresUserAuth) {
+    // Check if it's regular user login
+    try {
+      
+      if (to.name !== 'Login' && !record._doc) {
+        return next({ name: 'Login' })
+      } else {
+        await useAccountOfUser().setUser(record._doc)
+        return next()
+      }
+    } catch (err) {
+      console.log(err)
+      return next('/login')
     }
   }
-  catch (err) {
-    // console.log(err.config.url);
-    console.log(err);
-      return next('/staff/auth/login')
-  }
-});
+
+  // If route doesn't require authentication, allow access
+  next()
+})
+
 router.beforeEach((to, from, next) => {
   window.scrollTo(0, 0);
   next();

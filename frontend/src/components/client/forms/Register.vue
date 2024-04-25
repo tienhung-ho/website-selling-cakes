@@ -109,7 +109,7 @@
 <script>
 
 import ButtonCustom from '@/components/ButtonCustom.vue'
-
+import AuthServices from '@/services/client/auth.services';
 
 export default {
   name: 'LoginRegister',
@@ -131,6 +131,8 @@ export default {
 
     async register() {
       try {
+        console.log(this.acc);
+        const user = await AuthServices.register(this.acc)
         this.$swal.fire({
           position: "center",
           icon: "success",

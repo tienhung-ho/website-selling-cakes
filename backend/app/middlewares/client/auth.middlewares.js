@@ -3,12 +3,10 @@ const jwt = require('jsonwebtoken')
 module.exports.verifyRefreshToken = async (req, res, next) => {
 
   try {
-    if (req.cookies.UserPayloadRefreshToken && req.cookies.UserSingatureRefreshToken) {
-      if (req?.headers?.authorization?.startsWith('UserRefreshToken.Header.Payload')) {
-        
-        const headerPayloadRefreshToken = req.headers.authorization.split(' ')[1]
+    if (req.cookies.UserRefreshToken) {
 
-        const token = headerPayloadRefreshToken + '.' + req.cookies.UserSingatureRefreshToken
+        const token = req.cookies.UserRefreshToken
+    
         jwt.verify(token, process.env.KEY_SECRET_REFRESH_TOKEN, (err, decode) => {
           if (err) {
 
@@ -43,10 +41,10 @@ module.exports.verifyRefreshToken = async (req, res, next) => {
             })
           }
 
-          req.staff = decode
+          req.user = decode
+          
           return next()
         })
-      }
     }
     else {
       return res.status(400).json({
@@ -77,21 +75,17 @@ module.exports.verifyRefreshToken = async (req, res, next) => {
 
 module.exports.verifyAccessTokenTwoAuth = async (req, res, next) => {
 
-  // console.log(req?.headers?.authorization?.startsWith('Bearer'));
   try {
-    if (req.cookies.UserPayloadAccessToken && req.cookies.UserSingatureAccessToken) {
-      if (req?.headers?.authorization?.startsWith('UserAccessToken.Header.Payload')) {
-
-        const headerPayloadAccessToken = req.headers.authorization.split(' ')[1]
-        const token = headerPayloadAccessToken + '.' + req.cookies.UserSingatureAccessToken
+    if (req.cookies.UserAccessToken) {
+        const token = req.cookies.UserAccessToken
+        
         jwt.verify(token, process.env.KEY_SECRET_TOKEN, (err, decode) => {
           if (err) {
-
             if (err.message === 'jwt expired') {
               return res.status(200).json({
                 code: 401,
                 success: false,
-                message: 'Expired Token!',
+                message: 'Expired Token at User!',
               })
             }
 
@@ -118,11 +112,10 @@ module.exports.verifyAccessTokenTwoAuth = async (req, res, next) => {
             })
           }
 
-          req.staff = decode
-          // console.log(decode);
+          req.user = decode    
           return next()
         })
-      }
+      
     }
     else {
       return res.status(400).json({

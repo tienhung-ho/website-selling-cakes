@@ -59,6 +59,7 @@ const routesClient = [
       {
         path: '/order/tracking',
         name: 'Tracking',
+        meta: { requiresUserAuth: true },
         component: () => import('@/views/client/orders/Orders-tracking.vue')
       },
       

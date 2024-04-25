@@ -22,21 +22,21 @@
           </router-link>
         </div>
 
-        <!-- <div class="header__ops--user" >
-          <span>
-            <font-awesome-icon :icon="['far', 'user']" style="color: #f7f7f7;" />
-          </span>
-          <span>
-            {{ user.username }}
-          </span>
-          <span class="logout" @click="">
-            Logout
-          </span>
-        </div> -->
-        <div class="header__ops--login">
+        <div v-if="user === null || {}" class="dropdown text-end">
+          <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="https://github.com/mdo.png" alt="mdo" width="40" height="40" class="rounded-circle">
+          </a>
+          <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1" style="">
+            <li><a class="dropdown-item item" >New project...</a></li>
+            <li><a class="dropdown-item item" >Settings</a></li>
+            <li><a class="dropdown-item item" >Profile</a></li>
+            <li><hr class="dropdown-divider item"></li>
+            <li><a class="dropdown-item item">Sign out</a></li>
+          </ul>
+        </div>
+        <div v-else class="header__ops--login">
           <router-link :to="{ name: 'Login' }" class="btn">
             Login/Register
-            <!-- {{ user }} -->
           </router-link>
         </div>
 
@@ -101,20 +101,27 @@
 
 <script>
 
+import { useAccountOfUser } from '@/store/pinia.store';
 
 export default {
+
   name: 'Header',
   data() {
 
     return {
-      isUser: false
+      user: null
     }
   },
   methods: {
 
+
   },
 
   computed: {
+  },
+  created() {
+    this.user = useAccountOfUser().getUser()
+    console.log(this.user);
   }
 }
 
@@ -124,6 +131,10 @@ export default {
 @import url('https://fonts.cdnfonts.com/css/mignone');
 @import url('https://fonts.cdnfonts.com/css/double-pivot');
 @import '../../../assets//client//css/variables.scss';
+
+.item {
+  color: black;
+}
 
 ul {
     list-style-type: none;
@@ -296,5 +307,9 @@ p {
     cursor: pointer;
   }
 
+  
+  .dropdown-toggle::after {
+    color: white;
+  }
 }
 </style>

@@ -41,6 +41,27 @@ export const useAccountOfStaff = defineStore('setAccountOfStaff', () => {
   return { ...state, ...mutations, ...getters }
 })
 
+export const useAccountOfUser = defineStore('setAccountOfUser', () => {
+  const state = {
+    user: {},
+  }
+
+  const mutations = {
+    async setUser(user) {
+      state.user = await user;
+    },
+
+  }
+
+  const getters = {
+    getUser() {
+      return state.user;
+    },
+   
+  }
+
+  return { ...state, ...mutations, ...getters }
+})
 
 export const useCart = defineStore('setCart', () => {
   const state = {

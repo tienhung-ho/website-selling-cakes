@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const UsersModel = require('../../models/users.model')
-const RolesServices = require('../../services/admin/roles.services')
+const UsersModel = require('../../models/user.model')
+
 
 // genarate
 const genarate = require('../../helpers/genarate.helpers')
@@ -47,8 +47,7 @@ class UsersServices {
     return record
   }
 
-  async create(payload) {
-
+  async register(payload) {
     const salt = await bcrypt.genSalt(parseInt(process.env.SALT))
     const hashedPassword = await bcrypt.hash(payload.password, salt)
     payload.password = hashedPassword
@@ -105,20 +104,17 @@ class UsersServices {
   }
 
   async login(record) {
-    const existStaff = await UsersModel.findOne({
-      email: record.email,
+    const existUser = await UsersModel.findOne({
+      username: record.username,
       deleted: false
     })
 
-
-    if (existStaff) {
-
-      const corectUser = await bcrypt.compare(record.password, existStaff.password)
-
+    if (existUser) {
+      const corectUser = await bcrypt.compare(record.password, existUser.password)
       if (corectUser) {
 
-        const accessToken = genarate.genarateAccessToken(existStaff._id, existStaff.role_id)
-        const refreshToken = genarate.genarateRefreshToken(existStaff._id)
+        const accessToken = genarate.genarateAccessTokenOfUser(existUser._id, existUser.username)
+        const refreshToken = genarate.genarateRefreshToken(existUser._id)
         return { accessToken, refreshToken }
 
 
@@ -136,16 +132,15 @@ class UsersServices {
     else {
       return ({
         code: 404,
-        message: 'Không tìm thấy email',
+        message: 'Không tìm thấy username',
       })
     }
   }
 
   async logout(res) {
-    res.clearCookie('UserSingatureAccessToken');
-    res.clearCookie('UserPayloadAccessToken');
-    res.clearCookie('UserSingatureRefreshToken');
-    res.clearCookie('UserPayloadRefreshToken');
+    res.clearCookie('UserAccessToken');
+    res.clearCookie('UserRefreshToken');
+  
 
     return {
       code: 200,
@@ -153,19 +148,12 @@ class UsersServices {
     }
   }
 
-  async getStaffWithAccessToken(payload) {
+  async getUserWithAccessToken(payload) {
     if (payload) {
-
-      const rolesServices = new RolesServices()
 
       const user = await UsersModel.findOne({
         _id: payload._id
       }).select('-password')
-
-
-
-      // const permissions = await rolesServices.findPermissionById(user.role_id)
-
 
       return user
     }
@@ -176,10 +164,10 @@ class UsersServices {
 
       const user = await UsersModel.findOne({
         _id: payload._id
-      }).select('_id role_id')
+      }).select('_id username')
 
       // console.log(user);
-      const newAccesToken = genarate.genarateAccessToken(user._id, user.role_id)
+      const newAccesToken = genarate.genarateAccessTokenOfUser(user._id, user.username)
       
       return newAccesToken
     }

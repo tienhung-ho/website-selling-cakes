@@ -49,7 +49,12 @@ const createApiAdmin = (baseURL) => {
     }
     if (code && code === 401) {
       try {
-
+        if (response.data.message == 'Expired Token at User!') {
+          console.log(response.data);
+          await setUserNewAccessToken()
+          console.log("Invailid Token!!");
+          return instance(config)  
+        }
         await setNewAccessToken($cookies.get('PayloadRefreshToken'))
         console.log("Invailid Token!!");
         return instance(config)
@@ -60,6 +65,7 @@ const createApiAdmin = (baseURL) => {
       }
 
     }
+
 
     // if (code && code === 404) {
     //   if(response.data.message == 'Sai mật khẩu') {
@@ -92,6 +98,13 @@ async function setNewAccessToken (token) {
  }
  )).data
 }
+
+async function setUserNewAccessToken () {
+  const api = createApiAdmin(`/api/user`)
+  // console.log((await api.get(`/refreshtoken`)).data);
+  return (await api.get(`/refreshtoken`)).data
+  // return
+ }
 
 // async function getStaffWithAccessToken (token) {
 //   const api = createApiAdmin(`/api/admin/staff`)

@@ -21,6 +21,9 @@ class UsersServices {
     })).data
   }
 
+  async getStaffWithAccessToken() {
+    return (await this.api.get(`/get-user`, )).data
+  }
   
 
 }

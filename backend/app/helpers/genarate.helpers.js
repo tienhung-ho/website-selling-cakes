@@ -28,8 +28,14 @@ module.exports.genarateRanNumber = (length) => {
   return result;
 }
 
+module.exports.genarateAccessTokenOfUser = (id, username) => {
+  const token = jwt.sign({ _id: id, username}, keySecret, { expiresIn: '40m' })
+
+  return token
+}
+
 module.exports.genarateAccessToken = (id, role) => {
-  const token = jwt.sign({ _id: id, role}, keySecret, { expiresIn: '30m' })
+  const token = jwt.sign({ _id: id, role}, keySecret, { expiresIn: '40m' })
 
   return token
 }

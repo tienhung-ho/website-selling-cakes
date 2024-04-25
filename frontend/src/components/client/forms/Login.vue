@@ -100,7 +100,7 @@
 <script>
 
 import ButtonCustom from '@/components/ButtonCustom.vue'
-
+import AuthServices from '@/services/client/auth.services'
 
 export default {
   name: 'Login',
@@ -121,21 +121,22 @@ export default {
   methods: {
     async login() {
       try {
-        // const response = await userServices.login(this.acc)
-        if (response) {
-          console.log(response);
-          this.$swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Login succes!",
-            showConfirmButton: false,
-            timer: 1500
-          });
-          setTimeout(() => {
-            this.$router.push('/infor')
+        const response = await AuthServices.login(this.acc)
+        console.log(response);
+        // if (response) {
+        //   console.log(response);
+        //   this.$swal.fire({
+        //     position: "center",
+        //     icon: "success",
+        //     title: "Login succes!",
+        //     showConfirmButton: false,
+        //     timer: 1500
+        //   });
+        //   setTimeout(() => {
+        //     this.$router.push('/infor')
 
-          }, 1600)
-        }
+        //   }, 1600)
+        // }
 
       } catch (error) {
         this.$swal.fire({

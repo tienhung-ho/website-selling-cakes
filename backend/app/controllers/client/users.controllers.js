@@ -1,41 +1,27 @@
-
+const UsersService = require('../../services/client/users.services')
 
 // [POST] /user/login
 module.exports.login = async (req, res) => {
   try {
-    const record = req.body.data
+    const record = req.body.user
 
-    const staffService = new StaffService()
+    const userService = new UsersService()
 
-    const data = await staffService.login(record)
+    const data = await userService.login(record)
     if (data && (data.accessToken || data.refreshToken)) {
 
       const { accessToken, refreshToken } = data
-      const [headerAccessToken, payloadAccessToken, singatureAccessToken] = accessToken.split('.')
-      const [headerRefreshToken, payloadRefreshToken, singatureRefreshToken] = refreshToken.split('.')
+    
 
-
-
-      res.cookie('UserSingatureAccessToken', singatureAccessToken, {
+      res.cookie('UserAccessToken', accessToken, {
         httpOnly: true,
-        // maxAge: 1 * 60 * 60 * 1000,
-      })
-
-      res.cookie('UserPayloadAccessToken', headerAccessToken + '.' + payloadAccessToken, {
-        // httpOnly: true,
         maxAge: 1 * 60 * 60 * 1000,
       })
 
-      res.cookie('UserSingatureRefreshToken', singatureRefreshToken, {
+      res.cookie('UserRefreshToken', refreshToken, {
         httpOnly: true,
         maxAge: 30 * 24 * 60 * 60 * 1000,
       })
-
-      res.cookie('UserPayloadRefreshToken', headerRefreshToken + '.' + payloadRefreshToken, {
-        // httpOnly: true,
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-      })
-
 
       return res.status(200).json({
         code: 200,
@@ -61,13 +47,38 @@ module.exports.login = async (req, res) => {
   }
 }
 
+// [POST] user/register
+module.exports.register = async (req, res, next) => {
+  try {
+
+    const data = req.body.user
+    if (data.username) {
+      const userService = new UsersService()
+      const records = await userService.register(data)
+
+      if (!records) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      return res.json(records)
+    }
+
+  }
+  catch (err) {
+    return res.json({
+      code: 400,
+      message: "Can not register!!"
+    })
+  }
+}
+
 // [POST] /admin/staff/logout
 module.exports.logout = async (req, res) => {
   if (req.cookies.PayloadAccessToken) {
 
-    const staffService = new StaffService()
+    const userService = new UsersService()
 
-    const data = await staffService.logout(res)
+    const data = await userService.logout(res)
 
     res.status(200).json({
       ...data
@@ -85,12 +96,10 @@ module.exports.logout = async (req, res) => {
 module.exports.getUserByAccessToken = async (req, res) => {
   try {
 
-    const staffService = new StaffService()
+    const userService = new UsersService()
 
-    const record = req.staff
-
-    const data = await staffService.getStaffWithAccessToken(record)
-
+    const record = req.user
+    const data = await userService.getUserWithAccessToken(record)
 
     return res.status(200).json(
       {
@@ -108,25 +117,19 @@ module.exports.getUserByAccessToken = async (req, res) => {
 // [GET] /admin/staff/refreshtoken
 module.exports.getAccessToken = async (req, res) => {
   try {
+    const userService = new UsersService()
 
-    const staffService = new StaffService()
+    const record = req.user
 
-    const record = req.staff
-
-    const data = await staffService.getAccessTokenWithRefreshToken(record)
+    const data = await userService.getAccessTokenWithRefreshToken(record)
 
     if (data) {
 
       const accessToken = data
-      const [headerAccessToken, payloadAccessToken, singatureAccessToken] = accessToken.split('.')
 
-      res.cookie('UserSingatureAccessToken', singatureAccessToken, {
+
+      res.cookie('UserAccessToken', accessToken, {
         httpOnly: true,
-        // maxAge: 1 * 60 * 60 * 1000,
-      })
-
-      res.cookie('UserPayloadAccessToken', headerAccessToken + '.' + payloadAccessToken, {
-        // httpOnly: true,
         maxAge: 1 * 60 * 60 * 1000,
       })
 

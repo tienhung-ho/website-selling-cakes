@@ -18,6 +18,10 @@ const usersSchema = new Schema({
     required: true
   },
   phone: String,
+  deleted: {
+    type: Boolean,
+    default: false
+  }
 }, {
   timestamps: true
 });
