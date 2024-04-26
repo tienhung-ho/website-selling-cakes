@@ -8,6 +8,8 @@ module.exports.createOrder =  async (req, res, next) => {
   try {
     const { data, user, order } = req.body
     
+    console.log(user);
+
     const ordersServices = new OrdersServices()
   
     const result = await ordersServices.createOffer(data, user, order)
@@ -33,10 +35,11 @@ module.exports.orderTracking =  async (req, res, next) => {
 
   try {
     
-    const user = req.body
+    const user = req.body.user
+    
     const userServices = new OrdersServices()
 
-    const result = await userServices.orderTracking()
+    const result = await userServices.orderTracking(user)
 
     return res.status(200).json({
       code: 200,

@@ -61,7 +61,7 @@
 
 <script>
 
-import { useCart } from '@/store/pinia.store.js'
+import { useCart, useAccountOfUser } from '@/store/pinia.store.js'
 import { ref, onMounted, watch } from 'vue'
 import { calPrice } from '@/helpers/client/prices.helpers.js'
 import UsersServices from '@/services/client/users.services.js'
@@ -74,7 +74,8 @@ export default {
   data() {
     return {
       orders: [],
-      products: []
+      products: [],
+      user: null
     }
   },
   setup() {
@@ -124,8 +125,9 @@ export default {
         return totalPrice
       }
     },
+
     async getOrder() {
-      const data = await UsersServices.getOrderTracking('123123')
+      const data = await UsersServices.getOrderTracking(this.user._id)
       this.orders = data.data
       await Promise.all(this.orders.map(async order => {
         let result = [];
@@ -143,8 +145,10 @@ export default {
   },
 
   created() {
+    this.user = useAccountOfUser().getUser()
     this.getOrder()
   }
+
 }
 </script>
 

@@ -180,7 +180,7 @@ const router = createRouter({
 //       await useAccountOfStaff().setStaff(record._doc)
 //       if (to.name !== 'LoginAdmin' && !record._doc) {
 //         next({ name: 'LoginAdmin' })
-        
+
 //       }
 //       else {
 //         const staff = record._doc
@@ -201,7 +201,7 @@ const router = createRouter({
 //   }
 
 //   try {
-    
+
 //     const record = await usersServices.getStaffWithAccessToken()
 //     await useAccountOfUser().setUser(record._doc)
 //     if (to.meta.requiresUserAuth) {
@@ -228,9 +228,7 @@ const router = createRouter({
 // });
 
 router.beforeEach(async (to, from, next) => {
-  
-  const record = await usersServices.getStaffWithAccessToken()
-  await useAccountOfUser().setUser(record._doc)
+
   if (to.meta.requiresAuth) {
     // Check if it's admin login
     try {
@@ -248,10 +246,13 @@ router.beforeEach(async (to, from, next) => {
       console.log(err)
       return next('/staff/auth/login')
     }
-  } else if (to.meta.requiresUserAuth) {
+  }
+  else if (to.meta.requiresUserAuth) {
+    const record = await usersServices.getStaffWithAccessToken()
+    await useAccountOfUser().setUser(record._doc)
     // Check if it's regular user login
     try {
-      
+
       if (to.name !== 'Login' && !record._doc) {
         return next({ name: 'Login' })
       } else {

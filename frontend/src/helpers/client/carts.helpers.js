@@ -49,6 +49,18 @@ export function clearCart() {
 
 
 // Mutation to remove an item from the cart
-export function removeFromCart (itemId) {
- 
+export function removeFromCart(itemId) {
+  try {
+    const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    // Lọc ra tất cả các mục không có itemId
+    const updatedCart = existingCart.filter(item => item.value._id !== itemId);
+
+    // Lưu giỏ hàng mới sau khi đã xóa mục có ID tương ứng
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    
+  } catch (err) {
+    console.log(err);
+  }
 }
+

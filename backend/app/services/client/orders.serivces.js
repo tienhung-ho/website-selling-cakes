@@ -10,6 +10,7 @@ class UsersServices {
   async createOffer (data, user, order) {
     const payload = {
       userInfo: {
+        user_id: user.user_id,
         fullName: user.fullName,
         address: {
           city: user.city,
@@ -37,6 +38,7 @@ class UsersServices {
 
       payload.products.push(productInfor)
     })
+    
     const numberOfOrders = await this.OrdersModel.countDocuments()
     payload.position = numberOfOrders
     const result = new this.OrdersModel(payload)
@@ -47,6 +49,7 @@ class UsersServices {
 
   async orderTracking (user) {
     const result = await this.OrdersModel.find({
+      'userInfo.user_id': user,
       deleted: false
     })
 

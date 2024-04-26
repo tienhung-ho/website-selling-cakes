@@ -21,9 +21,10 @@
             </svg>
           </router-link>
         </div>
-
-        <div v-if="user === null || {}" class="dropdown text-end">
+        
+        <div v-if="user != {} || ''" class="dropdown text-end">
           <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+            <span style="color: white">{{ user.username }}</span>
             <img src="https://github.com/mdo.png" alt="mdo" width="40" height="40" class="rounded-circle">
           </a>
           <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1" style="">
@@ -44,7 +45,6 @@
       </div>
 
     </div>
-
     <div class="nav row">
 
       <div class="nav__logo col-2">
@@ -101,7 +101,8 @@
 
 <script>
 
-import { useAccountOfUser } from '@/store/pinia.store';
+import { useAccountOfStaff, useAccountOfUser } from '@/store/pinia.store'
+import usersServices from '@/services/client/users.services'
 
 export default {
 
@@ -119,9 +120,12 @@ export default {
 
   computed: {
   },
-  created() {
+  async created() {
+    const record = await usersServices.getStaffWithAccessToken()
+    await useAccountOfUser().setUser(record._doc)
     this.user = useAccountOfUser().getUser()
     console.log(this.user);
+
   }
 }
 

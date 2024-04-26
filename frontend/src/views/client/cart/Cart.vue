@@ -78,8 +78,8 @@
         (parseFloat(item.value.price) * parseFloat(item.value.discountPercentage / 100))) *
         parseFloat(item.quantity)) }} </strong></td>
 
-                    <td class="border-0 align-middle ps-4">
-                      <a href="#" class="text-dark">
+                    <td class="border-0 align-middle ps-4" @click="deleteItem(item.value._id)">
+                      <a class="text-dark">
                         <i class='bx bx-x-circle'></i>
                       </a>
                     </td>
@@ -208,10 +208,10 @@
 
 <script>
 
-import { useCart } from '@/store/pinia.store.js'
+import { useCart, useAccountOfUser } from '@/store/pinia.store.js'
 import { ref, onMounted, watch } from 'vue'
 import UsersServices from '@/services/client/users.services.js'
-import { updateCart, clearCart } from '@/helpers/client/carts.helpers.js'
+import { updateCart, clearCart, removeFromCart } from '@/helpers/client/carts.helpers.js'
 import { useQuasar } from 'quasar'
 import Multiselect from '@vueform/multiselect'
 import ProvincesServices from '@/services/client/provinces.services.js'
@@ -226,7 +226,8 @@ export default {
       citysName: [],
       districtsName: [],
       wards: [],
-      wardsName: []
+      wardsName: [],
+      // user: null
 
 
     }
@@ -294,6 +295,7 @@ export default {
       item.quantity++
       updateCart(this.cart)
     },
+
     formatTime() {
       const date = new Date();
       const year = date.getFullYear();
@@ -328,6 +330,7 @@ export default {
           updateCart()
           clearCart()
           this.$router.push('/order/tracking');
+          
           await UsersServices.setOrder(this.cart, this.user, this.order);
 
         } catch (error) {
@@ -364,19 +367,20 @@ export default {
       this.citysName = this.citys.map(item => item.province_name)
     },
 
+    deleteItem(id) {
+      removeFromCart(id)
+      updateCart()
+    }
+
   },
   watch: {
-
-    // districts: {
-    //   handler(newValue) {
-    //     this.districts = newValue
-    //   },
-    //   deep: true // Theo dõi sâu vào các thay đổi bên trong districts (nếu có)
-    // }
 
   },
   created() {
     this.getCity()
+    if (useAccountOfUser().getUser()._id) {
+      this.user.user_id = useAccountOfUser().getUser()._id
+    }
   }
 }
 </script>

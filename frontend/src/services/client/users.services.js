@@ -16,7 +16,8 @@ class UsersServices {
   }
 
   async getOrderTracking (user) {
-    return (await this.api.get("/order/tracking", {
+    console.log(user);
+    return (await this.api.post("/order/tracking", {
       user
     })).data
   }

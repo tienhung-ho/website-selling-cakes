@@ -8,7 +8,7 @@ const router = express.Router()
 const middlewares = require('../../middlewares/client/auth.middlewares.js')
 
 router.route('/order/tracking')
-  .get(controllersOrders.orderTracking)
+  .post(controllersOrders.orderTracking)
 
 router.route('/order')
   .post(controllersOrders.createOrder)
