@@ -35,9 +35,9 @@ export default {
   data() {
     return {
       menuItems: [
-        // {
-        //   link: "/admin",name: "Dashboard", tooltip: "Dashboard", icon: "bx-grid-alt" 
-        // },
+        {
+          link: { name: 'Dashboards'} ,name: "Dashboard", tooltip: "Dashboard", icon: "bx-grid-alt" 
+        },
         {
           link: { name: 'Products' }, name: "Products", tooltip: "Products", icon: "bx-cabinet"
         },

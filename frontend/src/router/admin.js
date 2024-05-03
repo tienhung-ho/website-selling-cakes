@@ -101,6 +101,13 @@ const routesAdmin = [
         component: () => import('@/views/admin/users/Orders.vue'),
         meta: { requiresAuth: true }
       },
+      {
+        path: 'dashboards',
+        name: 'Dashboards',
+        component: () => import('@/views/admin/dashboards/BarChart.vue'),
+        meta: { requiresAuth: true }
+      },
+    
 
 
 

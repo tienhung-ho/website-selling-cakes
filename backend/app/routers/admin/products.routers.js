@@ -17,6 +17,9 @@ const router = express.Router()
 router.route('/')
   .get(controllers.find)
 
+router.route('/all')
+  .get(controllers.all)
+
 router.route('/liked')
   .get(controllers.findLike)
 

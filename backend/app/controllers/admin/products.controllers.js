@@ -220,3 +220,22 @@ module.exports.findBySlug = async (req, res, next) => {
     return res.status(400).json({ error: "Invalid request" });
   }
 };
+
+// [GET], /api/admin/products/all
+module.exports.all = async (req, res, next) => {
+
+    try {
+      const productServices = new ProductServices()
+      const product = await productServices.all()
+      if (!product) {
+        // Nếu không tìm thấy sản phẩm, trả về một phản hồi lỗi hoặc xử lý theo nhu cầu của bạn.
+        return res.status(404).json({ error: "Product not found" });
+      }
+      // Trả về sản phẩm nếu tìm thấy.
+      return res.json(product);
+    } catch (err) {
+      // Xử lý lỗi nếu có.
+      console.error(err);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+};

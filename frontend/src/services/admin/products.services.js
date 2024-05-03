@@ -67,6 +67,13 @@ class ProductsServices {
   }
 
 
+  async getAll() {
+    return (await this.api.get('products/all', {
+      
+
+    })).data
+  }
+
 }
 
 

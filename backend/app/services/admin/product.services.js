@@ -245,6 +245,11 @@ class ProductServices {
     }
   };
 
+  async all () {
+
+    return await Product.find({})
+  }
+
 }
 
 module.exports = ProductServices

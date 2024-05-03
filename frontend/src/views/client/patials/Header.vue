@@ -22,9 +22,9 @@
           </router-link>
         </div>
         
-        <div v-if="user != {} || ''" class="dropdown text-end">
+        <div v-if="user != null && user != {}" class="dropdown text-end">
           <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-            <span style="color: white">{{ user.username }}</span>
+            <!-- <span v-if="user.username != undefined" style="color: white">{{ user.username }}</span> -->
             <img src="https://github.com/mdo.png" alt="mdo" width="40" height="40" class="rounded-circle">
           </a>
           <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1" style="">
@@ -121,6 +121,7 @@ export default {
   computed: {
   },
   async created() {
+    console.log(this.user);
     const record = await usersServices.getStaffWithAccessToken()
     await useAccountOfUser().setUser(record._doc)
     this.user = useAccountOfUser().getUser()

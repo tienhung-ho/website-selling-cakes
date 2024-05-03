@@ -1,5 +1,6 @@
 
 const OrdersModel = require('../../models/order.model')
+const ProductModel = require('../../models/products.model')
 
 class UsersServices {
 
@@ -27,7 +28,7 @@ class UsersServices {
       createdAtDate: order.createdAtDate
     }
 
-    data.forEach(item => {
+    data.forEach(async item => {
       const productInfor = {
         product_id: item.value._id,
         slug: item.value.slug,
@@ -35,6 +36,11 @@ class UsersServices {
         price: item.value.price,
         discountPercentage: item.value.discountPercentage
       }
+
+      await ProductModel.findOneAndUpdate(
+        { _id: item.value._id },
+        { $inc: { quantity: -item.quantity } } // Trừ đi số lượng mới từ số lượng hiện tại
+      );
 
       payload.products.push(productInfor)
     })
